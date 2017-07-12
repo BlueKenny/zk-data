@@ -12,3 +12,6 @@ def Key(key):
 	pyautogui.hotkey(key)
 def Write(key):
 	pyautogui.typewrite(str(key))
+
+while True:
+	print(pyautogui.position())
