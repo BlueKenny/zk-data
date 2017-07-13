@@ -6,7 +6,7 @@ import sys
 from debug import *
 from RoundUp import *
 from searchbarcode import *
-from StartGSInfo import *
+from GSInfo import *
 
 title = "eurogarden"
 
@@ -42,7 +42,7 @@ for file in os.listdir("text/"):
 
 			Debug(" ")
 			Debug("Linie : " + Linie)
-			Art = Worte[0]
+			Art = Worte[0].lower()
 			Debug("Art : " + Art)
 			Filepath = DataPreis + Art
 			Debug("Filepath : " + Filepath)
@@ -52,13 +52,15 @@ for file in os.listdir("text/"):
 			PreisVKH = PreisVKH.replace(",", ".")
 			PreisVKH = float(PreisVKH) / 100.0000
 			Debug("PreisVKH : " + str(PreisVKH))
-			Name = Linie.split(Worte[0] + " " + Worte[1] + " ")[1]
-			Name = Name.split(" " + Worte[len(Worte)-6] + " " + Worte[len(Worte)-5] + " " + Worte[len(Worte)-4] + " " + Worte[len(Worte)-3] + " " + Worte[len(Worte)-2] + " " + Worte[len(Worte)-1])[0]
+
+			Name = Linie.split(Worte[0] + " ")[1]
+			Name = Name.split(" " + Worte[-5] + " " + Worte[-4] + " " + Worte[-3] + " " + Worte[-2] + " " + Worte[-1])[0]
 			Debug("Name : " + Name)
 			BurkardtCode = GetBurkardtCode(title, Art)
 			Debug("BurkardtCode : " + BurkardtCode)
 			
 			PreisVK = float(PreisVKH) * 1.2100
+			PreisVK = RoundUp05(PreisVK)
 			Debug("PreisVK : " + str(PreisVK))
 			PreisEK = Worte[len(Worte)-1]
 			Debug("PreisEK : " + str(PreisEK))
@@ -67,7 +69,7 @@ for file in os.listdir("text/"):
 			BlueSave("Name", Name, Filepath)
 			BlueSave("Anzahl", Anzahl, Filepath)
 			BlueSave("PreisVKH", PreisVKH, Filepath)
-			BlueSave("PreisVK", RoundUp05(PreisVK), Filepath)
+			BlueSave("PreisVK", PreisVK, Filepath)
 			BlueSave("PreisEK", PreisEK, Filepath)
 			BlueSave("BurkardtCode", BurkardtCode, Filepath)
 

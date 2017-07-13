@@ -1,17 +1,22 @@
 #!/usr/bin/env python
-
-import pyautogui
+#from pynput import *
+from pynput.mouse import *
+#from pynput.keyboard import *
 
 def Click():
 	print("Click")
-	pyautogui.click()
+	Controller().press(Button.left)
+	Controller().release(Button.left)
 def Maus(x, y):
 	print("Maus x:" + str(x) + " y:" + str(y))
-	pyautogui.moveTo(x, y)
+	Controller().position = (int(x), int(y))
 def Key(key):
-	pyautogui.hotkey(key)
-def Write(key):
-	pyautogui.typewrite(str(key))
+	print("Key " + str(key))
+	Controller().press(str(key))
+	Controller().release(str(key))
+def Write(text):
+	print("Type " + str(key))
+	Controller().type(str(text))
 
-while True:
-	print(pyautogui.position())
+def Pos():
+	print(Controller().position)
