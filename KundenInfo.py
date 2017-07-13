@@ -71,21 +71,24 @@ def GetKundenInfo(KundeID):
 		FDaten = FDaten.replace("+", "\n\n			+ ")
 		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFDaten", FDaten)
 
-		#	000FUnterschrift
+		#	OOOFUnterschrift
 		FUnterschrift = open(app.openBox(title="Unterschrift", dirName="Unterschrift", fileTypes=None, asFile=False), "r").readlines()[0]
 		open("Arbeitskarte.txt", "w").write(ArbeitskarteDaten)
 		BlueLen("Arbeits")
 
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("000FUnterschrift", FUnterschrift)
+		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFUnterschrift", FUnterschrift)
 
+		#	OOOID
+		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOID", KartenID)
+	
 		open("Arbeitskarte.txt", "w").write(ArbeitskarteDaten)
 		open("Arbeitskarten/" + str(KartenID) + ".txt", "w").write(ArbeitskarteDaten)
 
 		try: os.startfile("Arbeitskarte.txt", "print")
 		except: os.system("gedit Arbeitskarte.txt")
 
-	def RechnungS(btn):
-		print("RechnungS")
+	def Rechnung(btn):
+		print("Rechnung")
 		ArbeitskarteDaten = open("VorlageRechnung", "r").read()
 
 		#SchonGedruckt = app.yesNoBox("Rechnung :", "Liegt die Vorlage schon im drucker?")
@@ -141,9 +144,12 @@ def GetKundenInfo(KundeID):
 		#	000FUnterschrift
 		if not SchonGedruckt:
 			FUnterschrift = open(app.openBox(title="Unterschrift", dirName="Unterschrift", fileTypes=None, asFile=False), "r").readlines()[0]
-			ArbeitskarteDaten = ArbeitskarteDaten.replace("000FUnterschrift", FUnterschrift)
+			ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFUnterschrift", FUnterschrift)
 		else:
-			ArbeitskarteDaten = ArbeitskarteDaten.replace("000FUnterschrift", "")
+			ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFUnterschrift", "")
+
+		#	OOOID
+		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOID", KartenID)
 
 		open("Rechnung.txt", "w").write(ArbeitskarteDaten)
 		open("Rechnung/" + str(KartenID) + ".txt", "w").write(ArbeitskarteDaten)
@@ -161,7 +167,6 @@ def GetKundenInfo(KundeID):
 
 	app.addButton("Speichern", Speichern)
 	app.addButton("Arbeitskarte", Arbeitskarte)
-	#app.addButton("Rechnung vorlage", Rechnung)
-	app.addButton("Rechnung schreiben", RechnungS)
+	app.addButton("Rechnung schreiben", Rechnung)
 	app.bindKey("<Return>", Speichern)
 	app.go()
