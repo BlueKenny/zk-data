@@ -12,7 +12,7 @@ from Data import *
 app = gui("Kunden", "800x600")  
 app.setLocation(1000, 200)
 
-VERSION = "17.07.01.5"
+VERSION = BlueLoad("Version", "version")
 Welcom = "By Zaunz Kenny \nVersion : " + str(VERSION) + "\nCopyright : Gnu GPL v3"
 app.infoBox("KS", Welcom)
 
