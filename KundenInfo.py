@@ -79,7 +79,7 @@ def GetKundenInfo(KundeID):
 		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFUnterschrift", FUnterschrift)
 
 		#	OOOID
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOID", KartenID)
+		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOID", str(KartenID))
 	
 		open("Arbeitskarte.txt", "w").write(ArbeitskarteDaten)
 		open("Arbeitskarten/" + str(KartenID) + ".txt", "w").write(ArbeitskarteDaten)
@@ -149,7 +149,7 @@ def GetKundenInfo(KundeID):
 			ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFUnterschrift", "")
 
 		#	OOOID
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOID", KartenID)
+		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOID", str(KartenID))
 
 		open("Rechnung.txt", "w").write(ArbeitskarteDaten)
 		open("Rechnung/" + str(KartenID) + ".txt", "w").write(ArbeitskarteDaten)
