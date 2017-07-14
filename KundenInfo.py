@@ -130,15 +130,18 @@ def GetKundenInfo(KundeID):
 			Anzahl = app.textBox("Rechnung :", "Anzahl :") 
  
 			Art = app.textBox("Rechnung :", "Artikel :")
-			BurkardtCode = Art[-7] + Art[-6] + Art[-5] + Art[-4] + Art[-3] + Art[-2]
-			print("BurkardtCode : " + BurkardtCode)
-			if os.path.exists("stock/" + Art[-4] + Art[-3] + Art[-2] + "/"):
+			if len(Art) == 13:
+				BurkardtCode = Art[-7] + Art[-6] + Art[-5] + Art[-4] + Art[-3] + Art[-2]
+				print("BurkardtCode : " + BurkardtCode)
 				pfadArt = "stock/" + Art[-4] + Art[-3] + Art[-2] + "/" + BurkardtCode
-				Art = str(BurkardtCode) + " " + str(BlueLoad("Name", pfadArt))
-			
-			
-			Preis = BlueLoad("PreisVK", pfadArt)
-			if Preis == None: Preis = app.textBox("Rechnung :", "Preis :")
+				if os.path.exists(pfadArt):
+					Art = str(BurkardtCode) + " " + str(BlueLoad("Name", pfadArt))
+				print(pfadArt)
+				print(BlueLoad("PreisVK", pfadArt))
+				try: Preis = float(BlueLoad("PreisVK", pfadArt))
+				except:  Preis = app.textBox("Rechnung :", "Preis :")
+			else:
+				Preis = app.textBox("Rechnung :", "Preis :")
 			Total = float(Anzahl) * float(Preis)
 			TTotal = TTotal + Total
 			Weiter = app.yesNoBox("Weiter Artikel ?", "Weiter Artikel ?")
