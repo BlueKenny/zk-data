@@ -6,7 +6,7 @@ import sys
 from debug import *
 from RoundUp import *
 from searchbarcode import *
-from GSInfo import *
+from Stock import *
 
 title = "eurogarden"
 
@@ -73,4 +73,4 @@ for file in os.listdir("text/"):
 			BlueSave("PreisEK", PreisEK, Filepath)
 			BlueSave("BurkardtCode", BurkardtCode, Filepath)
 
-StartIt()
+	StockIt()
