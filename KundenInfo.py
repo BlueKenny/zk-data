@@ -133,11 +133,12 @@ def GetKundenInfo(KundeID):
 			BurkardtCode = Art[-7] + Art[-6] + Art[-5] + Art[-4] + Art[-3] + Art[-2]
 			print("BurkardtCode : " + BurkardtCode)
 			if os.path.exists("stock/" + Art[-4] + Art[-3] + Art[-2] + "/"):
-				pfadArt = "barcode/" + Art[-4] + Art[-3] + Art[-2] + "/" + BurkardtCode
-				Art = BurkardtCode + " " + BlueLoad("PreisVK", pfadArt)
-
-
-			Preis = app.textBox("Rechnung :", "Preis :")
+				pfadArt = "stock/" + Art[-4] + Art[-3] + Art[-2] + "/" + BurkardtCode
+				Art = str(BurkardtCode) + " " + str(BlueLoad("Name", pfadArt))
+			
+			
+			Preis = BlueLoad("PreisVK", pfadArt)
+			if Preis == None: Preis = app.textBox("Rechnung :", "Preis :")
 			Total = float(Anzahl) * float(Preis)
 			TTotal = TTotal + Total
 			Weiter = app.yesNoBox("Weiter Artikel ?", "Weiter Artikel ?")
