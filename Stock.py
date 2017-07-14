@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from keybinder import *
+#from keybinder import *
 import os
 from BlueVar import *
 from debug import *
