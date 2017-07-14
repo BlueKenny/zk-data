@@ -43,5 +43,6 @@ def StockIt():
 				#	Anzahl
 				stockAnzahl = BlueLoad("Anzahl", stockdatei)
 				if stockAnzahl == None: stockAnzahl = 0
-				BlueSave("Anzahl", int(stockAnzahl) + int(Anzahl), stockdatei)
-	
+				BlueSave("Anzahl", int(stockAnzahl) + int(Anzahl), stockdatei)	
+				#	Artikel
+				BlueSave("Artikel", str(Artikel), stockdatei)					
