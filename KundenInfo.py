@@ -135,9 +135,9 @@ def GetKundenInfo(KundeID):
 				print("BurkardtCode : " + BurkardtCode)
 				pfadArt = "stock/" + Art[-4] + Art[-3] + Art[-2] + "/" + BurkardtCode
 				if os.path.exists(pfadArt):
+					print(pfadArt)
 					Art = str(BurkardtCode) + " " + str(BlueLoad("Name", pfadArt))
-				print(pfadArt)
-				print(BlueLoad("PreisVK", pfadArt))
+					print(BlueLoad("PreisVK", pfadArt))
 				try: Preis = float(BlueLoad("PreisVK", pfadArt))
 				except:  Preis = app.textBox("Rechnung :", "Preis :")
 			else:

@@ -7,7 +7,7 @@ from debug import *
 def StockIt():
 	for jedenLieferant in os.listdir("barcode/"):
 		if os.path.exists(jedenLieferant + "-preis/"):
-			print("Start " + jedenLieferant)
+			print("Start Stock : " + jedenLieferant)
 			for Artikel in os.listdir(jedenLieferant + "-preis/"):
 				print("Artikel : " + Artikel)
 				datei = jedenLieferant + "-preis/" + Artikel
@@ -18,22 +18,23 @@ def StockIt():
 				PreisVK = BlueLoad("PreisVK", datei)
 				PreisEK = BlueLoad("PreisEK", datei)
 				BurkardtCode = BlueLoad("BurkardtCode", datei)
+				Lieferant = BlueLoad("Lieferant", datei)
 				Debug("BurkardtCode : " + str(BurkardtCode))
 				if not BurkardtCode == "0": # IM STOCK
 					print("Im Stock")
 					BurkardtCodeChar = BurkardtCode[-3] + BurkardtCode[-2] + BurkardtCode[-1]
-				else:# IM STOCK
+				else:# NICHT IM STOCK
 					print("Nicht im Stock")
-					BurkardtCode = 0
 					while True:
-						if os.path.exists("stock/000/" + str(BurkardtCode)):
+						if os.path.exists("stock/AAA/" + str(BurkardtCode)):
 							BurkardtCode = int(BurkardtCode) + 1
 						else: break
-					BurkardtCodeChar = "000"
+					BurkardtCodeChar = "AAA"
 
 				if not os.path.exists("stock/" + str(BurkardtCodeChar)): os.mkdir("stock/" + str(BurkardtCodeChar))
 				stockdatei = "stock/" + str(BurkardtCodeChar) + "/" + str(BurkardtCode)
-					
+				#	Lieferant
+				BlueSave("Lieferant", Lieferant, stockdatei)
 				#	Name
 				BlueSave("Name", Name, stockdatei)
 				#	Preise

@@ -2,7 +2,7 @@
 import os
 
 def GetBurkardtCode(lieferant, artikel):
-	Pfad = "barcode/" + lieferant + "/" + str(len(artikel)) + "/"
+	Pfad = "barcode/" + lieferant + "/" + artikel[-3] + artikel[-2] + artikel[-1] + "/"
 	print(Pfad)
 	if os.path.exists(Pfad + str(artikel)):
 		print("OK")
@@ -13,4 +13,3 @@ def GetBurkardtCode(lieferant, artikel):
 		print("NO")
 		return "0"
 
-GetBurkardtCode("eurogarden", "mrcp052033")
