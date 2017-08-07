@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import os
+import codecs
 SplitIt = "&zKz&"
 
 def BlueLoad(VarName, File):
 	if os.path.exists(File): 
-		Datei = open(File, "r")
+		Datei = codecs.open(File, "r", encoding="utf-8")
 		DateiDatenIndex = Datei.readlines()
 		Datei.close()
 		Gefunden=False
@@ -16,7 +17,7 @@ def BlueLoad(VarName, File):
 
 def BlueSave(VarName, VarData, File):
 	if os.path.exists(File): 
-		Datei = open(File, "r")
+		Datei = codecs.open(File, "r", encoding="utf-8")
 		DateiDatenIndex = Datei.readlines()
 		Datei.close()
 		Gefunden=False
@@ -26,11 +27,11 @@ def BlueSave(VarName, VarData, File):
 				Gefunden=True
 				LinienVarData = AlleLinien.split(SplitIt)[1]
 
-				Datei = open(File, "r")
+				Datei = codecs.open(File, "r", encoding="utf-8")
 				DateiDaten = Datei.read()
 				Datei.close()
 
-				Datei = open(File, "w")
+				Datei = codecs.open(File, "w", encoding="utf-8")
 				Datei.write(DateiDaten.replace(str(LinienVarName) + str(SplitIt) + str(LinienVarData), str(VarName) + str(SplitIt) + str(VarData) + "\n"))
 				Datei.close()
 		if not Gefunden:
