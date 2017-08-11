@@ -1,184 +1,170 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.6
 from appJar import gui  
+from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
+from debug import Debug
 import os
 import sys
-import pickle
-import time
 import datetime
-from BlueVar import *
-from BlueFunc import *
-from Data import *
+import subprocess
+from random import randint
+# PC ID setzen, damit mehrere PCs gleichzeitig dieses program benutzen können
+pcid = os.getenv("HOSTNAME")
+Debug("pcid : " + pcid)
+TMP = "tmp/" + pcid
+# Min und Max KundenID die dieser PC erstellen darf
+IDMin = BlueLoad("IDMin", TMP)
+IDMax = BlueLoad("IDMax", TMP)
 
+ID = sys.argv[1]
+Debug("ID : " + str(ID))
 
+datei = "Kunden/" + ID[-1] + "/" + ID
 
-def GetKundenInfo(KundeID):
-	print("GetKundenInfo")
-	app = gui("Kunden", "600x400")
-	app.setLocation(0, 200)
+appInfo = gui("Kunden", "800x600") 
 
-	for ESTRING in AlleDaten:
-		app.addLabelEntry(ESTRING)
-		app.setEntryDefault(ESTRING, ESTRING)
+text = "ID"; appInfo.addLabel(text, ID)
+text = "Name"; appInfo.addLabelEntry(text); appInfo.setEntry(text, BlueLoad(text, datei))
+text = "Tel"; appInfo.addLabelEntry(text); appInfo.setEntry(text, BlueLoad(text, datei))
+text = "Adr"; appInfo.addLabelEntry(text); appInfo.setEntry(text, BlueLoad(text, datei))
+text = "Notiz"; appInfo.addTextArea(text);
+if not BlueLoad(text, datei) == None: appInfo.setTextArea(text, BlueLoad(text, datei).replace("&+&", "\n"))
+else: appInfo.setTextArea(text, "")
 
-	for DW in AlleDaten:
-		app.setEntry(DW, BlueLoad(DW, "Kunden/" + str(KundeID)))
-		app.setEntryDefault(DW, DW)
-			
-	def Arbeitskarte(btn):
-		print("Arbeitskarte")
-		ArbeitskarteDaten = open("VorlageArbeitskarte", "r").read()
-		
-		#	OOOKartenID
-		KartenID = 0
-		while True:
-			if not os.path.exists("Arbeitskarten/" + str(KartenID) + ".txt"): break
-			else: KartenID = KartenID + 1
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOKartenID", str(KartenID))
-
-		#	OOODatum
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOODatum", time.strftime("%d/%m/%Y	%H:%M"))
-		
-		#	OOOKundeID
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOKundeID", str(KundeID))
-
-		#	OOOName
-		#	OOOTel
-		#	OOOAdresse
-		for XA in {"Name", "Tel", "Adresse"}:
-			ArbeitskarteDaten = ArbeitskarteDaten.replace("OOO" + XA, str(BlueLoad(XA, "Kunden/" + str(KundeID))))
-
-		#	OOOMachine
-		Machine = open(app.openBox(title="Machine", dirName="Machinen", fileTypes=None, asFile=False), "r").readlines()[0]
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOMachine", Machine)
-
-		#	OOOFDatum
-		while True:
-			FDatum = app.textBox("Fertigstellen bis...", time.strftime("%d/%m/%Y") + " oder " + time.strftime("%d.%m.%Y"))
-			try:
-				datetime.datetime.strptime(FDatum, '%d/%m/%Y')
-				break
-			except ValueError:
-				try:
-					datetime.datetime.strptime(FDatum, '%d.%m.%Y')
-					break
-				except ValueError:
-					app.errorBox("Fertigstellen bis...", "Bitte format beachten :\n" + str(time.strftime("%d/%m/%Y")) + "\n" + str(time.strftime("%d.%m.%Y")))
-			
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFDatum", FDatum)
-
-		#	OOOFDaten
-		FDaten = "+" + app.textBox("Arbeit :", "Auszufuehrende Arbeiten : \n + = Neue Zeile")
-		FDaten = FDaten.replace("+", "\n\n			+ ")
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFDaten", FDaten)
-
-		#	OOOFUnterschrift
-		FUnterschrift = open(app.openBox(title="Unterschrift", dirName="Unterschrift", fileTypes=None, asFile=False), "r").readlines()[0]
-		open("Arbeitskarte.txt", "w").write(ArbeitskarteDaten)
-		BlueLen("Arbeits")
-
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFUnterschrift", FUnterschrift)
-
-		#	OOOID
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOID", str(KartenID))
+def FuncSave(btn):
+	Debug("FuncSave")
+	appInfo.infoBox("Kunde speichern", "Kunde wurde gespeichert")
+	text = "Name"; BlueSave(text, appInfo.getEntry(text), datei); Debug("Speichere |" + appInfo.getEntry(text) + "| in |" + datei + "|")
+	text = "Tel"; BlueSave(text, appInfo.getEntry(text), datei); Debug("Speichere |" + appInfo.getEntry(text) + "| in |" + datei + "|")
+	text = "Adr"; BlueSave(text, appInfo.getEntry(text), datei); Debug("Speichere |" + appInfo.getEntry(text) + "| in |" + datei + "|")
+	text = "Notiz"; BlueSave(text, appInfo.getTextArea(text).replace("\n", "&+&"), datei); Debug("Speichere |" + appInfo.getTextArea(text) + "| in |" + datei + "|")
 	
-		open("Arbeitskarte.txt", "w").write(ArbeitskarteDaten)
-		open("Arbeitskarten/" + str(KartenID) + ".txt", "w").write(ArbeitskarteDaten)
+def FuncDelete(btn):	
+	Debug("FuncDelete")
+	while appInfo.yesNoBox("Löschen?", "Kunde wirklich löschen?"):
+		Debug("Lösche Kunde " + ID)
+		os.remove(datei)
+		appInfo.stop()
+		break
 
-		try: os.startfile("Arbeitskarte.txt", "print")
-		except: os.system("gedit Arbeitskarte.txt")
+def FuncNeuArbeitskarte(btn):	
+	Debug("FuncNeuArbeitskarte")
+	IDEnde = randint(int(IDMin), int(IDMax))
+	Debug("IDEnde : " + str(IDEnde))
+	AbID = int(IDEnde)
+	for x in os.listdir("Arbeitskarten/" + str(IDEnde)):
+		if int(AbID) < int(x) or int(AbID) == int(x):
+			AbID = int(x) + 10
+	Debug("AbID : " + str(AbID))
+	dateiA = "Arbeitskarten/" + str(IDEnde) + "/" + str(AbID)
+	BlueSave("KundeID", ID, dateiA)
+	print(datetime.datetime.today().strftime("%d/%m/%Y"))
+	BlueSave("Datum", datetime.datetime.today().strftime("%d/%m/%Y"), dateiA)
+	os.system("./KundeArbeitskarte.py " + str(AbID))
+	GESTARTET=False
+	FuncSearchArbeitskarten("")
 
-	def Rechnung(btn):
-		print("Rechnung")
-		ArbeitskarteDaten = open("VorlageRechnung", "r").read()
-
-		#SchonGedruckt = app.yesNoBox("Rechnung :", "Liegt die Vorlage schon im drucker?")
-		SchonGedruckt = False
-		#	OOOKartenID
-		KartenID = 0
-		while True:
-			if not os.path.exists("Rechnung/" + str(KartenID) + ".txt"): break
-			else: KartenID = KartenID + 1
-		if not SchonGedruckt: ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOKartenID", str(KartenID))
-		else: ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOKartenID", "")
-
-		#	OOODatum
-		if not SchonGedruckt: ArbeitskarteDaten = ArbeitskarteDaten.replace("OOODatum", time.strftime("%d/%m/%Y	%H:%M"))
-		else: ArbeitskarteDaten = ArbeitskarteDaten.replace("OOODatum", "")
+def FuncNeuRechnung(btn):	
+	Debug("FuncNeuRechnung")
+	IDEnde = randint(int(IDMin), int(IDMax))
+	Debug("IDEnde : " + str(IDEnde))
+	AbID = int(IDEnde)
+	for x in os.listdir("Rechnungen/" + str(IDEnde)):
+		if int(AbID) < int(x) or int(AbID) == int(x):
+			AbID = int(x) + 10
+	Debug("AbID : " + str(AbID))
+	dateiR = "Rechnungen/" + str(IDEnde) + "/" + str(AbID)
+	BlueSave("KundeID", ID, dateiR)
+	print(datetime.datetime.today().strftime("%d/%m/%Y"))
+	BlueSave("Datum", datetime.datetime.today().strftime("%d/%m/%Y"), dateiR)
+	os.system("./KundeRechnung.py " + str(AbID))
+	GESTARTET=False
+	FuncSearchRechnugen("")
 		
-		#	OOOKundeID
-		if not SchonGedruckt: ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOKundeID", str(KundeID))
-		else: ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOKundeID", "")
-
-		#	OOOName
-		#	OOOTel
-		#	OOOAdresse
-		for XA in {"Name", "Tel", "Adresse"}:
-			if not SchonGedruckt: ArbeitskarteDaten = ArbeitskarteDaten.replace("OOO" + XA, str(BlueLoad(XA, "Kunden/" + str(KundeID))))
-			else: ArbeitskarteDaten = ArbeitskarteDaten.replace("OOO" + XA, "")
-
-		#	OOOMachine
-		if not SchonGedruckt:
-			Machine = open(app.openBox(title="Machine", dirName="Machinen", fileTypes=None, asFile=False), "r").readlines()[0]
-			ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOMachine", Machine)
-		else: 
-			ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOMachine", "")
-
-		#	OOOFDaten
-		FDaten = ""
-		TTotal = 0
-		while True:
-			Anzahl = app.textBox("Rechnung :", "Anzahl :") 
- 
-			Art = app.textBox("Rechnung :", "Artikel :")
-			if len(Art) == 13:
-				BurkardtCode = Art[-7] + Art[-6] + Art[-5] + Art[-4] + Art[-3] + Art[-2]
-				print("BurkardtCode : " + BurkardtCode)
-				pfadArt = "stock/" + Art[-4] + Art[-3] + Art[-2] + "/" + BurkardtCode
-				if os.path.exists(pfadArt):
-					print(pfadArt)
-					Art = str(BurkardtCode) + " " + str(BlueLoad("Name", pfadArt))
-					print(BlueLoad("PreisVK", pfadArt))
-				try: Preis = float(BlueLoad("PreisVK", pfadArt))
-				except:  Preis = app.textBox("Rechnung :", "Preis :")
+def FuncSearchArbeitskarten(btn):
+	global AnzahlArbeitskarten
+	Debug("FuncSearchArbeitskarten")
+	BlueSave("Work", "Arbeitskarten", TMP)
+	BlueSave("ID", ID, TMP)
+	if os.path.exists(TMP + "-Arbeitskarten"):
+		for eachF in os.listdir(TMP + "-Arbeitskarten/"):
+			os.remove(TMP + "-Arbeitskarten/" + eachF);
+	else: os.mkdir(TMP + "-Arbeitskarten")
+	for z in os.listdir("Arbeitskarten/"):
+		open(TMP + str(z) + "GO", "w").write(" ")
+		subprocess.Popen(["./SucheProcess.py " + str(z)], shell = True)
+	while True:
+		Fertig = True
+		for z in os.listdir("Arbeitskarten/"):
+			if os.path.exists(TMP + str(z) + "GO"):
+				Fertig = False
 			else:
-				Preis = app.textBox("Rechnung :", "Preis :")
-			Total = float(Anzahl) * float(Preis)
-			TTotal = TTotal + Total
-			Weiter = app.yesNoBox("Weiter Artikel ?", "Weiter Artikel ?")
-			FDaten = FDaten + "\n                   " + str(Anzahl) + "x      " + str(Art)
-			for x in range(len(Art), 35): FDaten = FDaten + " "
-			FDaten = FDaten + str(Preis) + "     " + str(Total)
-			print(FDaten)
-			if not Weiter: break
-		FDaten = FDaten + "\n\n\n\n                          TOTAL = " + str(TTotal) + " Euro"
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFDaten", FDaten)
-		
-		#	000FUnterschrift
-		if not SchonGedruckt:
-			FUnterschrift = open(app.openBox(title="Unterschrift", dirName="Unterschrift", fileTypes=None, asFile=False), "r").readlines()[0]
-			ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFUnterschrift", FUnterschrift)
-		else:
-			ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOFUnterschrift", "")
+				if os.path.exists(TMP + str(z)):
+					for ArbeitskarteID in open(TMP + str(z), "r").readlines():
+						ArbeitskarteID = ArbeitskarteID.rstrip()	
+						ArbeitskarteDatei =  "Arbeitskarten/" + ArbeitskarteID[-1] + "/" + ArbeitskarteID
+						open(TMP + "-Arbeitskarten/" + ArbeitskarteID, "w").write(ArbeitskarteID)
+					os.remove(TMP + str(z))
+		if Fertig: break
+	if btn == "Arbeitskarten":
+		OpenArbeitskarte = appInfo.openBox(title="Arbeitskarten", dirName=TMP + "-Arbeitskarten/", fileTypes=None, asFile=False)
+		OpenArbeitskarte = open(OpenArbeitskarte, "r").read()
+		os.system("./KundeArbeitskarte.py " + OpenArbeitskarte + " &")
+	AnzahlArbeitskarten = len(os.listdir(TMP + "-Arbeitskarten/"))
+	appInfo.setButton("Arbeitskarten", str(AnzahlArbeitskarten) + " Arbeitskarten")
+	print("FERTIG")
 
-		#	OOOID
-		ArbeitskarteDaten = ArbeitskarteDaten.replace("OOOID", str(KartenID))
+def FuncSearchRechnungen(btn):
+	global AnzahlRechnungen
+	Debug("FuncSearchRechnungen")
+	BlueSave("Work", "Rechnungen", TMP)
+	BlueSave("ID", ID, TMP)
+	if os.path.exists(TMP + "-Rechnungen"):
+		for eachF in os.listdir(TMP + "-Rechnungen/"):
+			os.remove(TMP + "-Rechnungen/" + eachF);
+	else: os.mkdir(TMP + "-Rechnungen")
+	for z in os.listdir("Rechnungen/"):
+		open(TMP + str(z) + "GO", "w").write(" ")
+		subprocess.Popen(["./SucheProcess.py " + str(z)], shell = True)
+	while True:
+		Fertig = True
+		for z in os.listdir("Rechnungen/"):
+			if os.path.exists(TMP + str(z) + "GO"):
+				Fertig = False
+			else:
+				if os.path.exists(TMP + str(z)):
+					for RechnungID in open(TMP + str(z), "r").readlines():
+						RechnungID = RechnungID.rstrip()	
+						RechnungDatei =  "Rechnungen/" + RechnungID[-1] + "/" + RechnungID
+						open(TMP + "-Rechnungen/" + RechnungID, "w").write(RechnungID)
+					os.remove(TMP + str(z))
+		if Fertig: break
+	if btn == "Rechnungen":
+		OpenRechnung = appInfo.openBox(title="Rechnungen", dirName=TMP + "-Rechnungen/", fileTypes=None, asFile=False)
+		OpenRechnung = open(OpenRechnung, "r").read()
+		os.system("./KundeRechnung.py " + OpenRechnung + " &")
+	AnzahlRechnungen = len(os.listdir(TMP + "-Rechnungen/"))
+	appInfo.setButton("Rechnungen", str(AnzahlRechnungen) + " Rechnungen")
+	print("FERTIG")
 
-		open("Rechnung.txt", "w").write(ArbeitskarteDaten)
-		open("Rechnung/" + str(KartenID) + ".txt", "w").write(ArbeitskarteDaten)
+def FuncPrint(btn):
+	Debug("FuncPrint")
+	KundeDaten = open("Vorlage/Kunde", "r").read()
+	KundeDaten = KundeDaten.replace("OOOTel", BlueLoad("Tel", datei))
+	KundeDaten = KundeDaten.replace("OOOName", ID + "  " + BlueLoad("Name", datei))
+	KundeDaten = KundeDaten.replace("OOOAdresse", BlueLoad("Adr", datei))
+	open(TMP + "-PRINT", "w").write(KundeDaten)
+	os.system("gedit " + TMP + "-PRINT")
 
-		try: os.startfile("Rechnung.txt", "print")
-		except: os.system("gedit Rechnung.txt")
-		
-	def Speichern(btn):
-		print("Speichern")
-
-		for WX in AlleDaten:
-			BlueSave(WX, app.getEntry(WX), "Kunden/" + str(KundeID))
-
-		app.stop()	
-
-	app.addButton("Speichern", Speichern)
-	app.addButton("Arbeitskarte", Arbeitskarte)
-	app.addButton("Rechnung schreiben", Rechnung)
-	app.bindKey("<Return>", Speichern)
-	app.go()
+appInfo.addButton("Neue Arbeitskarte", FuncNeuArbeitskarte)
+appInfo.addButton("Neue Rechnung", FuncNeuRechnung)
+appInfo.addButton("Arbeitskarten", FuncSearchArbeitskarten)
+FuncSearchArbeitskarten("")
+appInfo.setButton("Arbeitskarten", str(AnzahlArbeitskarten) + " Arbeitskarten")
+appInfo.addButton("Rechnungen", FuncSearchRechnungen)
+FuncSearchRechnungen("")
+appInfo.setButton("Rechnungen", str(AnzahlRechnungen) + " Rechnungen")
+appInfo.bindKey("<Escape>", FuncSave)
+appInfo.bindKey("<Delete>", FuncDelete)
+appInfo.addButton("Speichern", FuncSave)
+appInfo.addButton("Drucken", FuncPrint)
+appInfo.go()
