@@ -13,10 +13,10 @@ Debug("ID : " + str(ID))
 appInfo = gui("Kunden", "800x600") 
 
 data = GetKunde(ID)
-Name = data.split(&KK&)[0]
-Tel = data.split(&KK&)[1]
-Adr = data.split(&KK&)[2]
-Notiz = data.split(&KK&)[3]
+Name = data.split("&KK&")[0]
+Tel = data.split("&KK&")[1]
+Adr = data.split("&KK&")[2]
+Notiz = data.split("&KK&")[3]
 
 text = "ID"; appInfo.addLabel(text, ID)
 text = "Name"; appInfo.addLabelEntry(text); appInfo.setEntry(text, Name)
