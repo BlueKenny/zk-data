@@ -117,7 +117,7 @@ while True:
 				for TeilAdrSuche in AdrSuche.split(" "):
 					if not TeilAdrSuche.lower() in AdrKunde.lower(): Gefunden = False
 				if Gefunden:
-					Antwort = Antwort + eachKunde + "&KK&" + NameKunde + "&KK&" + TelKunde + "&KK&" + AdrKunde + "&K()K&"
+					Antwort = Antwort + str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde) + "&K()K&"
 	
 
 		Antwort = "Suche erfolgreich"
