@@ -98,9 +98,9 @@ while True:
 			
 			Antwort = ""
 			for eachKunde in range(000000, 999999):
-				NameKunde = KundenNameList(eachKunde)
-				TelKunde = KundenTelList(eachKunde)
-				AdrKunde = KundenAdrList(eachKunde)
+				NameKunde = KundenNameList[eachKunde]
+				TelKunde = KundenTelList[eachKunde]
+				AdrKunde = KundenAdrList[eachKunde]
 				Gefunden = True
 				#	ID
 				if not IDSuche in eachKunde: Gefunden = False
