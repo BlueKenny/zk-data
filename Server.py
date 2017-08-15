@@ -95,6 +95,7 @@ while True:
 
 		mode = data.split("(zKz)")[0]; Debug("Mode : " + mode)
 
+		Antwort = ""
 
 		if mode == "AddKunde":
 			NameSuche = data.split("(zKz)")[1].split("(zkz)")[0]
@@ -126,7 +127,6 @@ while True:
 			AdrSuche = data.split("(zKz)")[1].split("(zkz)")[3]
 			Debug("Adr : " + AdrSuche)
 			
-			Antwort = ""
 			for eachKunde in range(0, 1000):
 				NameKunde = KundenNameList[eachKunde]
 				TelKunde = KundenTelList[eachKunde]
