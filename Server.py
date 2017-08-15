@@ -88,7 +88,24 @@ while True:
 
 		Antwort = ""
 
+		if mode == "SaveKunde":
+			ID = data.split("(zKz)")[1].split("(zkz)")[0]
+			Name = data.split("(zKz)")[1].split("(zkz)")[1]
+			Tel = data.split("(zKz)")[1].split("(zkz)")[2]
+			Adr = data.split("(zKz)")[1].split("(zkz)")[3]
+			Notiz = data.split("(zKz)")[1].split("(zkz)")[4]
+			datei = "Kunden/" + str(ID)[-1] + "/" + str(ID)
+			KundenNameList[ID] = Name
+			KundenTelList[ID] = Tel
+			KundenAdrList[ID] = Adr
+			KundenNotizList[ID] = Notiz
+			BlueSave("Name", Name, datei)
+			BlueSave("Tel", Tel, datei)
+			BlueSave("Adr", Adr, datei)
+			BlueSave("Notiz", Notiz, datei)
+
 		if mode == "GetArbeitskartenVonKunde":
+			Debug("")
 			
 
 		if mode == "GetKunde":
