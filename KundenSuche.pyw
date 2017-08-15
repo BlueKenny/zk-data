@@ -5,6 +5,11 @@ from debug import Debug
 import os
 import subprocess
 from random import randint
+import socket
+
+SERVER_IP = ("192.168.188.29", 22222)
+s = socket.socket()
+s.connect(SERVER_IP)
 
 # Ordner
 BlueMkDir("tmp")
