@@ -78,6 +78,11 @@ def FuncNeuRechnung(btn):
 def FuncSearchArbeitskarten(btn):
 	global AnzahlArbeitskarten
 	Debug("FuncSearchArbeitskarten")
+
+	Arbeitskarte = GetArbeitskartenVonKunde(ID)
+	# Datum FDatum Machine Unterschrift FDaten
+	
+
 	BlueSave("Work", "Arbeitskarten", TMP)
 	BlueSave("ID", ID, TMP)
 	if os.path.exists(TMP + "-Arbeitskarten"):
@@ -152,12 +157,12 @@ def FuncPrint(btn):
 
 appInfo.addButton("Neue Arbeitskarte", FuncNeuArbeitskarte)
 appInfo.addButton("Neue Rechnung", FuncNeuRechnung)
-appInfo.addButton("Arbeitskarten", FuncSearchArbeitskarten)
-FuncSearchArbeitskarten("")
-appInfo.setButton("Arbeitskarten", str(AnzahlArbeitskarten) + " Arbeitskarten")
-appInfo.addButton("Rechnungen", FuncSearchRechnungen)
-FuncSearchRechnungen("")
-appInfo.setButton("Rechnungen", str(AnzahlRechnungen) + " Rechnungen")
+#appInfo.addButton("Arbeitskarten", FuncSearchArbeitskarten)
+#FuncSearchArbeitskarten("")
+#appInfo.setButton("Arbeitskarten", str(AnzahlArbeitskarten) + " Arbeitskarten")
+#appInfo.addButton("Rechnungen", FuncSearchRechnungen)
+#FuncSearchRechnungen("")
+#appInfo.setButton("Rechnungen", str(AnzahlRechnungen) + " Rechnungen")
 appInfo.bindKey("<Escape>", FuncSave)
 appInfo.bindKey("<Delete>", FuncDelete)
 appInfo.addButton("Speichern", FuncSave)

@@ -88,6 +88,9 @@ while True:
 
 		Antwort = ""
 
+		if mode == "GetArbeitskartenVonKunde":
+			
+
 		if mode == "GetKunde":
 			IDSuche = int(data.split("(zKz)")[1])
 			Debug("ID : " + str(IDSuche))
