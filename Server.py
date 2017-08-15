@@ -120,8 +120,9 @@ while True:
 					Antwort = Antwort + str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde) + "&K()K&"
 	
 
-		Antwort = "Suche erfolgreich"
+		#Antwort = "Suche erfolgreich"
 
 		Antwort = Antwort.encode()
+		Debug("Sende : " + str(Antwort))
 		c.send(Antwort)
 c.close()
