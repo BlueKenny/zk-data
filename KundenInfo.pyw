@@ -27,7 +27,7 @@ appInfo.setTextArea(text, Notiz.replace("&+&", "\n"))
 
 def FuncSave(btn):
 	Debug("FuncSave")
-	SaveKunde(ID, appInfo.getEntry("Name"), appInfo.getEntry("Tel"), appInfo.getEntry("Adr"), appInfo.getEntry("Notiz"))
+	SaveKunde(ID, appInfo.getEntry("Name"), appInfo.getEntry("Tel"), appInfo.getEntry("Adr"), appInfo.getTextArea("Notiz"))
 	appInfo.infoBox("Kunde speichern", "Kunde wurde gespeichert")
 	
 def FuncDelete(btn):	
