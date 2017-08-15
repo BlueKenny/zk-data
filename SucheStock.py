@@ -47,5 +47,6 @@ for EntryText in EntryList:
 	else: 
 		appSuche.addLabelEntry(EntryText)
 
-appSuche.bindKey("<Return>", FuncSave)
+appSuche.bindKey("<Return>", FuncSuche)
+appSuche.bindKey("<Escape>", FuncSave)
 appSuche.go()
