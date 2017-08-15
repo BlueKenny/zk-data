@@ -127,7 +127,8 @@ while True:
 				for TeilAdrSuche in AdrSuche.split(" "):
 					if not TeilAdrSuche.lower() in AdrKunde.lower(): Gefunden = False
 				if Gefunden:
-					Antwort = Antwort + str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde) + "&K()K&"
+					if Antwort == "": Antwort = str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde)
+					else: Antwort = Antwort + "&K()K&" + str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde)
 
 		Debug("Sende : " + str(Antwort))
 		Antwort = Antwort.encode()
