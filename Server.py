@@ -103,7 +103,7 @@ while True:
 				AdrKunde = KundenAdrList[eachKunde]
 				Gefunden = True
 				#	ID
-				if not IDSuche in eachKunde: Gefunden = False
+				if not IDSuche in str(eachKunde): Gefunden = False
 				#	Name
 				for TeilNameSuche in NameSuche.split(" "):
 					if not TeilNameSuche.lower() in NameKunde.lower(): Gefunden = False
