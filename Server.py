@@ -98,6 +98,7 @@ while True:
 			
 			Antwort = ""
 			for eachKunde in range(000000, 999999):
+				Debug(eachKunde)
 				NameKunde = KundenNameList[eachKunde]
 				TelKunde = KundenTelList[eachKunde]
 				AdrKunde = KundenAdrList[eachKunde]
