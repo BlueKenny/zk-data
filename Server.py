@@ -29,9 +29,9 @@ for x in range(000000, 999999):
 
 # LOAD
 print("LOAD Database")
-for eachDirStock in os.listdir("stock/"):
-	for eachFileStock in os.listdir("stock/" + eachDirStock):
-		datei = "stock/" + eachDirStock + "/" + eachFileStock
+for eachDirStock in os.listdir("Stock/"):
+	for eachFileStock in os.listdir("Stock/" + eachDirStock):
+		datei = "Stock/" + eachDirStock + "/" + eachFileStock
 		eachFileStock = int(eachFileStock)
 		StockArtikelList.insert(eachFileStock, BlueLoad("Artikel", datei))
 		StockNameList.insert(eachFileStock, BlueLoad("Name", datei))
@@ -48,7 +48,7 @@ BlueMkDir("Kunden")
 for x in range(0, 10):	BlueMkDir("Kunden/" + str(x))
 BlueMkDir("Rechnungen")
 for x in range(0, 10):	BlueMkDir("Rechnungen/" + str(x))
-
+BlueMkDir("Stock")
 
 
 SERVER_IP = ("", 10000)
