@@ -103,6 +103,7 @@ while True:
 			BlueSave("Tel", Tel, datei)
 			BlueSave("Adr", Adr, datei)
 			BlueSave("Notiz", Notiz, datei)
+			Antwort = "SaveKundeOK"
 
 		if mode == "GetArbeitskartenVonKunde":
 			Debug("")
