@@ -7,7 +7,7 @@ import subprocess
 from random import randint
 import socket
 
-SERVER_IP = ("192.168.188.29", 22222)
+SERVER_IP = ("192.168.188.49", 10000)
 s = socket.socket()
 s.connect(SERVER_IP)
 
