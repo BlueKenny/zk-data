@@ -3,9 +3,17 @@ import os
 import codecs
 SplitIt = "&zKz&"
 
+def GetIndexPos(index, string):
+	Antwort = []
+	for x in range(000000, 999999):
+		if index[x] == string:
+			Antwort.append(x)
+	return Antwort
+
 def BlueLoad(VarName, File):
 	if os.path.exists(File): 
-		Datei = codecs.open(File, "r", encoding="utf-8")
+		#Datei = codecs.open(File, "r", encoding="utf-8")
+		Datei = codecs.open(File, "r", encoding="utf-8", errors="ignore")
 		DateiDatenIndex = Datei.readlines()
 		Datei.close()
 		Gefunden=False
