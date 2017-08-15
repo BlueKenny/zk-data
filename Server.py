@@ -89,6 +89,12 @@ while True:
 		if mode == "Kunden":
 			ID = data.split("(zKz)")[1].split("(zkz)")[0]
 			Debug("ID : " + ID)
+			Name = data.split("(zKz)")[1].split("(zkz)")[1]
+			Debug("Name : " + ID)
+			Tel = data.split("(zKz)")[1].split("(zkz)")[2]
+			Debug("Tel : " + ID)
+			Adr = data.split("(zKz)")[1].split("(zkz)")[3]
+			Debug("Adr : " + ID)
 
 
 
