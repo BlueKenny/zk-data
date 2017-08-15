@@ -97,8 +97,7 @@ while True:
 			Debug("Adr : " + AdrSuche)
 			
 			Antwort = ""
-			for eachKunde in range(000000, 999999):
-				Debug(eachKunde)
+			for eachKunde in range(0, 1000):
 				NameKunde = KundenNameList[eachKunde]
 				TelKunde = KundenTelList[eachKunde]
 				AdrKunde = KundenAdrList[eachKunde]
@@ -121,9 +120,7 @@ while True:
 					Antwort = Antwort + str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde) + "&K()K&"
 			Debug("Antwort : " + Antwort)
 
-		#Antwort = "Suche erfolgreich"
-
-		Antwort = Antwort.encode()
 		Debug("Sende : " + str(Antwort))
+		Antwort = Antwort.encode()
 		c.send(Antwort)
 c.close()
