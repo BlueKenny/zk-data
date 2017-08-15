@@ -27,11 +27,8 @@ appInfo.setTextArea(text, Notiz.replace("&+&", "\n"))
 
 def FuncSave(btn):
 	Debug("FuncSave")
+	SaveKunde(ID, appInfo.getEntry("Name"), appInfo.getEntry("Tel"), appInfo.getEntry("Adr"), appInfo.getEntry("Notiz"))
 	appInfo.infoBox("Kunde speichern", "Kunde wurde gespeichert")
-	text = "Name"; BlueSave(text, appInfo.getEntry(text), datei); Debug("Speichere |" + appInfo.getEntry(text) + "| in |" + datei + "|")
-	text = "Tel"; BlueSave(text, appInfo.getEntry(text), datei); Debug("Speichere |" + appInfo.getEntry(text) + "| in |" + datei + "|")
-	text = "Adr"; BlueSave(text, appInfo.getEntry(text), datei); Debug("Speichere |" + appInfo.getEntry(text) + "| in |" + datei + "|")
-	text = "Notiz"; BlueSave(text, appInfo.getTextArea(text).replace("\n", "&+&"), datei); Debug("Speichere |" + appInfo.getTextArea(text) + "| in |" + datei + "|")
 	
 def FuncDelete(btn):	
 	Debug("FuncDelete")
