@@ -27,7 +27,7 @@ def FuncSuchen(btn):
 
 	for Linien in List.split("&K()K&"):
 		addThis = Linien.split("&KK&")[0] + " | "+ Linien.split("&KK&")[1] + " | "+ Linien.split("&KK&")[2] + " | "+ Linien.split("&KK&")[3]
-		appSuche.addListItem("ListKunden")
+		appSuche.addListItem("ListKunden", addThis)
 	#				KundenDatei =  "Kunden/" + KundeID[-1] + "/" + KundeID	
 	#				addThis = str(KundeID)
 	#				for Entry in EntryList:
