@@ -2,6 +2,7 @@
 import sys
 import socket
 from debug import *
+from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 
 
 # Ordner
