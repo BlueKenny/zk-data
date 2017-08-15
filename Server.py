@@ -103,7 +103,7 @@ while True:
 			
 			Antwort = ""
 			for eachKunde in range(0, 1000):
-				Debug("eachKunde : " + eachKunde)
+				Debug("eachKunde : " + str(eachKunde))
 				NameKunde = KundenNameList[eachKunde]
 				TelKunde = KundenTelList[eachKunde]
 				AdrKunde = KundenAdrList[eachKunde]
