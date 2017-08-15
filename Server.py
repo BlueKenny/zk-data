@@ -99,8 +99,8 @@ while True:
 			KundeID = 0
 			while True:
 				Debug("KundeID : " + str(KundeID))
-				if KundenNameList[KundeID] == "x": KundeID = KundeID + 1
-				else: break
+				if KundenNameList[KundeID] == "x": break
+				else: KundeID = KundeID + 1
 			
 			KundenNameList[KundeID] = NameSuche
 			KundenTelList[KundeID] = TelSuche
