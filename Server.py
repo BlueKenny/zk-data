@@ -95,7 +95,28 @@ while True:
 
 		mode = data.split("(zKz)")[0]; Debug("Mode : " + mode)
 
-		if mode == "Kunden":
+
+		if mode == "AddKunde":
+			NameSuche = data.split("(zKz)")[1].split("(zkz)")[0]
+			Debug("Name : " + NameSuche)
+			TelSuche = data.split("(zKz)")[1].split("(zkz)")[1]
+			Debug("Tel : " + TelSuche)
+			AdrSuche = data.split("(zKz)")[1].split("(zkz)")[2]
+			Debug("Adr : " + AdrSuche)
+			
+			KundeID = 0
+			while True:
+				if KundenNameList[KundeID] == "x": KundeID = KundeID + 1
+				else: break
+			
+			KundenNameList[KundeID] = NameSuche
+			KundenTelList[KundeID] = TelSuche
+			KundenAdrList[KundeID] = AdrSuche
+		
+			Antwort = KundeID
+
+
+		if mode == "SearchKunden":
 			IDSuche = data.split("(zKz)")[1].split("(zkz)")[0]
 			Debug("ID : " + IDSuche)
 			NameSuche = data.split("(zKz)")[1].split("(zkz)")[1]
@@ -107,7 +128,6 @@ while True:
 			
 			Antwort = ""
 			for eachKunde in range(0, 1000):
-				Debug("eachKunde : " + str(eachKunde))
 				NameKunde = KundenNameList[eachKunde]
 				TelKunde = KundenTelList[eachKunde]
 				AdrKunde = KundenAdrList[eachKunde]

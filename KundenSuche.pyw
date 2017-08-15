@@ -29,24 +29,9 @@ def FuncSuchen(btn):
 		Debug("Linien : " + str(Linien))
 		addThis = Linien.split("&KK&")[0] + " | "+ Linien.split("&KK&")[1] + " | "+ Linien.split("&KK&")[2] + " | "+ Linien.split("&KK&")[3]
 		appSuche.addListItem("ListKunden", addThis)
-	#				KundenDatei =  "Kunden/" + KundeID[-1] + "/" + KundeID	
-	#				addThis = str(KundeID)
-	#				for Entry in EntryList:
-	#						if not Entry == "ID":
-	#							addThis = addThis + " | " + str(BlueLoad(Entry, KundenDatei))
-	#					appSuche.addListItem("ListKunden",  addThis)
-					
-		
 
 def FuncNeu(btn):
 	Debug("FuncNeu")
-	IDEnde = randint(int(IDMin), int(IDMax))
-	Debug("IDEnde : " + str(IDEnde))
-	KundenID = int(IDEnde)
-	for x in os.listdir("Kunden/" + str(IDEnde)):
-		if int(KundenID) < int(x) or int(KundenID) == int(x):
-			KundenID = int(x) + 10
-	Debug("KundenID : " + str(KundenID))
 	#	NeuerName
 	NameRichtig = False
 	while not NameRichtig:
@@ -69,11 +54,9 @@ def FuncNeu(btn):
 		AdrRichtig = True
 	NeueAdr = NeueAdr.title()
 	Debug("NeueAdr : " + NeueAdr)	
+
 	#	Kunde Speichern
-	NeueKundenDatei = "Kunden/" + str(KundenIDEnde) + "/" + str(KundenID)
-	BlueSave("Name", NeuerName, NeueKundenDatei)
-	BlueSave("Tel", NeueTel, NeueKundenDatei)
-	BlueSave("Adr", NeueAdr, NeueKundenDatei)
+	KundenID = AddKunde(NeuerName, NeueTel, NeueAdr)
 	Debug("Neuer Kunde Gespeichert")
 	appSuche.setEntry("ID", KundenID)
 	appSuche.setEntry("Name", NeuerName)
