@@ -111,9 +111,10 @@ while True:
 			KundenNameList[KundeID] = NameSuche
 			KundenTelList[KundeID] = TelSuche
 			KundenAdrList[KundeID] = AdrSuche
-			BlueSave("Name", NameSuche, "Kunden/" + str(KundeID[-1]) + "/" + str(KundeID))
-			BlueSave("Tel", TelSuche, "Kunden/" + str(KundeID[-1]) + "/" + str(KundeID))
-			BlueSave("Adr", AdrSuche, "Kunden/" + str(KundeID[-1]) + "/" + str(KundeID))
+			datei = "Kunden/" + str(KundeID[-1]) + "/" + str(KundeID)
+			BlueSave("Name", NameSuche, datei)
+			BlueSave("Tel", TelSuche, datei)
+			BlueSave("Adr", AdrSuche, datei)
 		
 			Antwort = str(KundeID)
 
