@@ -21,6 +21,10 @@ BlueSave("Name", "Zaunz Kenny", "Kunden/0/0")
 BlueSave("Tel", "0471520101", "Kunden/0/0")
 BlueSave("Adr", "Emmels Marianusstrasse 80", "Kunden/0/0")
 BlueSave("Notiz", ".", "Kunden/0/0")
+BlueSave("Name", "Zaunz Reiko", "Kunden/5/5")
+BlueSave("Tel", "04", "Kunden/5/5")
+BlueSave("Adr", "Emmels Marianusstrasse 80", "Kunden/5/5")
+BlueSave("Notiz", ".", "Kunden/5/5")
 
 Debug("Make Cache")
 for x in range(000000, 999999):
@@ -124,7 +128,6 @@ while True:
 					if not TeilAdrSuche.lower() in AdrKunde.lower(): Gefunden = False
 				if Gefunden:
 					Antwort = Antwort + str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde) + "&K()K&"
-			Debug("Antwort : " + Antwort)
 
 		Debug("Sende : " + str(Antwort))
 		Antwort = Antwort.encode()
