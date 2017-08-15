@@ -118,7 +118,7 @@ while True:
 					if not TeilAdrSuche.lower() in AdrKunde.lower(): Gefunden = False
 				if Gefunden:
 					Antwort = Antwort + str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde) + "&K()K&"
-	
+			Debug("Antwort : " + Antwort)
 
 		#Antwort = "Suche erfolgreich"
 
