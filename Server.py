@@ -3,7 +3,7 @@ import sys
 import socket
 from debug import *
 
-SERVER_IP = ("127.0.0.1", 22222)
+SERVER_IP = ("192.168.188.49", 22222)
 s = socket.socket()
 
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
