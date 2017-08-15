@@ -82,7 +82,7 @@ while True:
 	c, addr = s.accept()
 	Debug("Verbunden mit " + str(addr))
 	while True:
-		data = c.recv(4096)
+		data = c.recv(16384)
 		if not data:
 			Debug("Client sendet nicht mehr")
 			break
