@@ -92,7 +92,7 @@ while True:
 			IDSuche = data.split("(zKz)")[1]
 			Debug("ID : " + IDSuche)
 		
-			Antwort = str(KundenNameList[IDSuche] + "&KK&" + str(KundenTelList[IDSuche] + "&KK&" + str(KundenAdrList[IDSuche] + "&KK&" + str(KundenNotizList[IDSuche]))
+			Antwort = str(KundenNameList[IDSuche] + "&KK&" + str(KundenTelList[IDSuche] + "&KK&" + str(KundenAdrList[IDSuche] + "&KK&" + str(KundenNotizList[IDSuche])
 
 		if mode == "AddKunde":
 			NameSuche = data.split("(zKz)")[1].split("(zkz)")[0]
