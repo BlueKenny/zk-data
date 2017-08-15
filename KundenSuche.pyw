@@ -25,15 +25,16 @@ def FuncSuchen(btn):
 	for entry in EntryList:	
 		BlueSave(entry, appSuche.getEntry(entry), TMP)
 	
-	
-	for KundeID in open(TMP + str(z), "r").readlines():
-						KundeID = KundeID.rstrip()	
-						KundenDatei =  "Kunden/" + KundeID[-1] + "/" + KundeID	
-						addThis = str(KundeID)
-						for Entry in EntryList:
-							if not Entry == "ID":
-								addThis = addThis + " | " + str(BlueLoad(Entry, KundenDatei))
-						appSuche.addListItem("ListKunden",  addThis)
+	List = SearchKunden("", "", "", "")
+
+	#for KundeID in open(TMP + str(z), "r").readlines():
+	#	KundeID = KundeID.rstrip()	
+	#				KundenDatei =  "Kunden/" + KundeID[-1] + "/" + KundeID	
+	#				addThis = str(KundeID)
+	#				for Entry in EntryList:
+	#						if not Entry == "ID":
+	#							addThis = addThis + " | " + str(BlueLoad(Entry, KundenDatei))
+	#					appSuche.addListItem("ListKunden",  addThis)
 					
 		
 

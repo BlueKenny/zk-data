@@ -26,20 +26,34 @@ for x in range(000000, 999999):
 	StockPreisVKHList.insert(x, "x")
 	StockPreisVKList.insert(x, "x")
 	StockAnzahlList.insert(x, "x")
+	KundenNameList.insert(x, "x")
+	KundenAdrList.insert(x, "x")
+	KundenTelList.insert(x, "x")
+	KundenNotizList.insert(x, "x")
 
 # LOAD
-print("LOAD Database")
-for eachDirStock in os.listdir("Stock/"):
-	for eachFileStock in os.listdir("Stock/" + eachDirStock):
-		datei = "Stock/" + eachDirStock + "/" + eachFileStock
-		eachFileStock = int(eachFileStock)
-		StockArtikelList.insert(eachFileStock, BlueLoad("Artikel", datei))
-		StockNameList.insert(eachFileStock, BlueLoad("Name", datei))
-		StockOrtList.insert(eachFileStock, BlueLoad("Ort", datei))
-		StockPreisEKList.insert(eachFileStock, BlueLoad("PreisEK", datei))
-		StockPreisVKHList.insert(eachFileStock, BlueLoad("PreisVKH", datei))
-		StockPreisVKList.insert(eachFileStock, BlueLoad("PreisVK", datei))
-		StockAnzahlList.insert(eachFileStock, BlueLoad("Anzahl", datei))
+print("LOAD Database Stock")
+for eachDir in os.listdir("Stock/"):
+	for eachFile in os.listdir("Stock/" + eachDir):
+		datei = "Stock/" + eachDir + "/" + eachFile
+		eachFile = int(eachFile)
+		StockArtikelList.insert(eachFile, BlueLoad("Artikel", datei))
+		StockNameList.insert(eachFile, BlueLoad("Name", datei))
+		StockOrtList.insert(eachFile, BlueLoad("Ort", datei))
+		StockPreisEKList.insert(eachFile, BlueLoad("PreisEK", datei))
+		StockPreisVKHList.insert(eachFile, BlueLoad("PreisVKH", datei))
+		StockPreisVKList.insert(eachFile, BlueLoad("PreisVK", datei))
+		StockAnzahlList.insert(eachFile, BlueLoad("Anzahl", datei))
+
+print("LOAD Database Kunden")
+for eachDir in os.listdir("Kunden/"):
+	for eachFile in os.listdir("Kunden/" + eachDir):
+		datei = "Kunden/" + eachDir + "/" + eachFile
+		eachFile = int(eachFile)
+		KundenNameList.insert(eachFile, BlueLoad("Name", datei))
+		KundenAdrList.insert(eachFile, BlueLoad("Adr", datei))
+		KundenTelList.insert(eachFile, BlueLoad("Tel", datei))
+		KundenNotizList.insert(eachFile, BlueLoad("Notiz", datei))
 
 # Ordner
 BlueMkDir("Arbeitskarten")
