@@ -3,7 +3,43 @@ import sys
 import socket
 from debug import *
 from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
+import os
+from BlueVar import *
+StockArtikelList = []
+StockNameList = []
+StockOrtList = []
+StockPreisEKList = []
+StockPreisVKHList = []
+StockPreisVKList = []
+StockAnzahlList = []
+KundenNameList = []
+KundenAdrList = []
+KundenTelList = []
+KundenNotizList = []
 
+Debug("Make Cache")
+for x in range(000000, 999999):
+	StockArtikelList.insert(x, "x")
+	StockNameList.insert(x, "x")
+	StockOrtList.insert(x, "x")
+	StockPreisEKList.insert(x, "x")
+	StockPreisVKHList.insert(x, "x")
+	StockPreisVKList.insert(x, "x")
+	StockAnzahlList.insert(x, "x")
+
+# LOAD
+print("LOAD Database")
+for eachDirStock in os.listdir("stock/"):
+	for eachFileStock in os.listdir("stock/" + eachDirStock):
+		datei = "stock/" + eachDirStock + "/" + eachFileStock
+		eachFileStock = int(eachFileStock)
+		StockArtikelList.insert(eachFileStock, BlueLoad("Artikel", datei))
+		StockNameList.insert(eachFileStock, BlueLoad("Name", datei))
+		StockOrtList.insert(eachFileStock, BlueLoad("Ort", datei))
+		StockPreisEKList.insert(eachFileStock, BlueLoad("PreisEK", datei))
+		StockPreisVKHList.insert(eachFileStock, BlueLoad("PreisVKH", datei))
+		StockPreisVKList.insert(eachFileStock, BlueLoad("PreisVK", datei))
+		StockAnzahlList.insert(eachFileStock, BlueLoad("Anzahl", datei))
 
 # Ordner
 BlueMkDir("Arbeitskarten")

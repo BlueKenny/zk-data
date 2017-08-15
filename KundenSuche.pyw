@@ -5,11 +5,7 @@ from debug import Debug
 import os
 import subprocess
 from random import randint
-import socket
-
-SERVER_IP = ("192.168.188.29", 10000)
-s = socket.socket()
-s.connect(SERVER_IP)
+from send import *
 
 # appSuche definieren
 appSuche = gui("Kunden", "800x600") 
@@ -28,18 +24,9 @@ def FuncSuchen(btn):
 	EntryIstLeer = False
 	for entry in EntryList:	
 		BlueSave(entry, appSuche.getEntry(entry), TMP)
-	BlueSave("Work", "Kunden", TMP)
-	for z in os.listdir("Kunden/"):
-		open(TMP + str(z) + "GO", "w").write(" ")
-		subprocess.Popen(["./SucheProcess.py " + str(z)], shell = True)
-	while True:
-		Fertig = True
-		for z in os.listdir("Kunden/"):
-			if os.path.exists(TMP + str(z) + "GO"):
-				Fertig = False
-			else:
-				if os.path.exists(TMP + str(z)):
-					for KundeID in open(TMP + str(z), "r").readlines():
+	
+	
+	for KundeID in open(TMP + str(z), "r").readlines():
 						KundeID = KundeID.rstrip()	
 						KundenDatei =  "Kunden/" + KundeID[-1] + "/" + KundeID	
 						addThis = str(KundeID)
@@ -47,9 +34,8 @@ def FuncSuchen(btn):
 							if not Entry == "ID":
 								addThis = addThis + " | " + str(BlueLoad(Entry, KundenDatei))
 						appSuche.addListItem("ListKunden",  addThis)
-					os.remove(TMP + str(z))
-		if Fertig: break
-	print("FERTIG")
+					
+		
 
 def FuncNeu(btn):
 	Debug("FuncNeu")
