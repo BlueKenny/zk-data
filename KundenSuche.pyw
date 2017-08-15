@@ -7,25 +7,10 @@ import subprocess
 from random import randint
 import socket
 
-SERVER_IP = ("192.168.188.49", 10000)
+SERVER_IP = ("192.168.188.29", 10000)
 s = socket.socket()
 s.connect(SERVER_IP)
 
-# Ordner
-BlueMkDir("tmp")
-BlueMkDir("Arbeitskarten")
-for x in range(0, 10):	BlueMkDir("Arbeitskarten/" + str(x))
-BlueMkDir("Kunden")
-for x in range(0, 10):	BlueMkDir("Kunden/" + str(x))
-BlueMkDir("Rechnungen")
-for x in range(0, 10):	BlueMkDir("Rechnungen/" + str(x))
-# PC ID setzen, damit mehrere PCs gleichzeitig dieses program benutzen können
-pcid = os.getenv("HOSTNAME")
-Debug("pcid : " + pcid)
-TMP = "tmp/" + pcid
-# Min und Max KundenID die dieser PC erstellen darf
-IDMin = BlueLoad("IDMin", TMP)
-IDMax = BlueLoad("IDMax", TMP)
 # appSuche definieren
 appSuche = gui("Kunden", "800x600") 
 # Version
@@ -36,6 +21,7 @@ EntryList = ["ID", "Name", "Tel", "Adr"]
 for entry in EntryList:	
 	appSuche.addLabelEntry(entry)
 	appSuche.setEntryDefault(entry, entry)
+
 def FuncSuchen(btn):
 	Debug("FuncSuchen")
 	appSuche.clearListBox("ListKunden")
