@@ -132,23 +132,24 @@ while True:
 				TelKunde = KundenTelList[eachKunde]
 				AdrKunde = KundenAdrList[eachKunde]
 				Gefunden = True
-				#	ID
-				if not IDSuche in str(eachKunde): Gefunden = False
-				#	Name
-				for TeilNameSuche in NameSuche.split(" "):
-					if not TeilNameSuche.lower() in NameKunde.lower(): Gefunden = False
-				#	Tel
-				TelGefunden = False
-				for TeilTelSuche in TelSuche.split(" "):
-					if TeilTelSuche in TelKunde:
-						TelGefunden = True
-				if not TelGefunden: Gefunden = False
-				#	Adr
-				for TeilAdrSuche in AdrSuche.split(" "):
-					if not TeilAdrSuche.lower() in AdrKunde.lower(): Gefunden = False
-				if Gefunden:
-					if Antwort == "": Antwort = str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde)
-					else: Antwort = Antwort + "&K()K&" + str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde)
+				if not NameKunde == "x":
+					#	ID
+					if not IDSuche in str(eachKunde): Gefunden = False
+					#	Name
+					for TeilNameSuche in NameSuche.split(" "):
+						if not TeilNameSuche.lower() in NameKunde.lower(): Gefunden = False
+					#	Tel
+					TelGefunden = False
+					for TeilTelSuche in TelSuche.split(" "):
+						if TeilTelSuche in TelKunde:
+							TelGefunden = True
+					if not TelGefunden: Gefunden = False
+					#	Adr
+					for TeilAdrSuche in AdrSuche.split(" "):
+						if not TeilAdrSuche.lower() in AdrKunde.lower(): Gefunden = False
+					if Gefunden:
+						if Antwort == "": Antwort = str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde)
+						else: Antwort = Antwort + "&K()K&" + str(eachKunde) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde)
 
 		Debug("Sende : " + str(Antwort))
 		Antwort = Antwort.encode()
