@@ -90,11 +90,11 @@ while True:
 			ID = data.split("(zKz)")[1].split("(zkz)")[0]
 			Debug("ID : " + ID)
 			Name = data.split("(zKz)")[1].split("(zkz)")[1]
-			Debug("Name : " + ID)
+			Debug("Name : " + Name)
 			Tel = data.split("(zKz)")[1].split("(zkz)")[2]
-			Debug("Tel : " + ID)
+			Debug("Tel : " + Tel)
 			Adr = data.split("(zKz)")[1].split("(zkz)")[3]
-			Debug("Adr : " + ID)
+			Debug("Adr : " + Adr)
 
 
 
