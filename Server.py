@@ -82,16 +82,16 @@ while True:
 			Debug("Client sendet nicht mehr")
 			break
 		data = data.decode()
-		Debug(data)
+		Debug("Data : " + data)
 
-		mode = data.split("(zKz)")[0]; Debug(mode)
+		mode = data.split("(zKz)")[0]; Debug("Mode : " + mode)
+
+		
+
+
+
 
 		Antwort = "Suche erfolgreich"
-
-
-
-
-
 
 		Antwort = Antwort.encode()
 		c.send(Antwort)

@@ -22,10 +22,8 @@ def FuncSuchen(btn):
 	Debug("FuncSuchen")
 	appSuche.clearListBox("ListKunden")
 	EntryIstLeer = False
-	for entry in EntryList:	
-		BlueSave(entry, appSuche.getEntry(entry), TMP)
 	
-	List = SearchKunden("", "", "", "")
+	List = SearchKunden(appSuche.getEntry("ID"), appSuche.getEntry("Name"), appSuche.getEntry("Tel"), appSuche.getEntry("Adr"))
 
 	#for KundeID in open(TMP + str(z), "r").readlines():
 	#	KundeID = KundeID.rstrip()	
