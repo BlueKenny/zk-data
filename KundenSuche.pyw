@@ -25,8 +25,9 @@ def FuncSuchen(btn):
 	
 	List = SearchKunden(appSuche.getEntry("ID"), appSuche.getEntry("Name"), appSuche.getEntry("Tel"), appSuche.getEntry("Adr"))
 
-	#for KundeID in open(TMP + str(z), "r").readlines():
-	#	KundeID = KundeID.rstrip()	
+	for Linien in List.split("&K()K&"):
+		addThis = Linien.split("&KK&")[0] + " | "+ Linien.split("&KK&")[1] + " | "+ Linien.split("&KK&")[2] + " | "+ Linien.split("&KK&")[3]
+		appSuche.addListItem("ListKunden")
 	#				KundenDatei =  "Kunden/" + KundeID[-1] + "/" + KundeID	
 	#				addThis = str(KundeID)
 	#				for Entry in EntryList:
