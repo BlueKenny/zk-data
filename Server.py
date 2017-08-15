@@ -82,6 +82,7 @@ while True:
 			Debug("Client sendet nicht mehr")
 			break
 		data = data.decode()
+		Debug(data)
 
 		mode = data.split("(zKz)")[0]; Debug(mode)
 
