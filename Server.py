@@ -83,7 +83,7 @@ while True:
 			break
 		data = data.decode()
 
-		Debug(str(data) + " erhalten")
+		mode = data.split("(zKz)")[0]; Debug(mode)
 
 		Antwort = "Suche erfolgreich"
 
