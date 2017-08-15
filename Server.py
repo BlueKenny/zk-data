@@ -88,6 +88,12 @@ while True:
 
 		Antwort = ""
 
+		if mode == "GetKunde":
+			IDSuche = data.split("(zKz)")[1]
+			Debug("ID : " + IDSuche)
+		
+			Antwort = str(KundenNameList[IDSuche] + "&KK&" + str(KundenTelList[IDSuche] + "&KK&" + str(KundenAdrList[IDSuche] + "&KK&" + str(KundenNotizList[IDSuche]))
+
 		if mode == "AddKunde":
 			NameSuche = data.split("(zKz)")[1].split("(zkz)")[0]
 			Debug("Name : " + NameSuche)
@@ -105,6 +111,9 @@ while True:
 			KundenNameList[KundeID] = NameSuche
 			KundenTelList[KundeID] = TelSuche
 			KundenAdrList[KundeID] = AdrSuche
+			BlueSave("Name", NameSuche, "Kunden/" + KundeID[-1] + "/" + KundeID)
+			BlueSave("Tel", TelSuche, "Kunden/" + KundeID[-1] + "/" + KundeID)
+			BlueSave("Adr", AdrSuche, "Kunden/" + KundeID[-1] + "/" + KundeID)
 		
 			Antwort = str(KundeID)
 

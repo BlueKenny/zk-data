@@ -1,34 +1,29 @@
 #!/usr/bin/env python3.6
 from appJar import gui  
-from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 from debug import Debug
+from send import *
 import os
 import sys
 import datetime
 import subprocess
-from random import randint
-# PC ID setzen, damit mehrere PCs gleichzeitig dieses program benutzen können
-pcid = os.getenv("HOSTNAME")
-Debug("pcid : " + pcid)
-TMP = "tmp/" + pcid
-# Min und Max KundenID die dieser PC erstellen darf
-IDMin = BlueLoad("IDMin", TMP)
-IDMax = BlueLoad("IDMax", TMP)
 
 ID = sys.argv[1]
 Debug("ID : " + str(ID))
 
-datei = "Kunden/" + ID[-1] + "/" + ID
-
 appInfo = gui("Kunden", "800x600") 
 
+data = GetKunde(ID)
+Name = data.split(&KK&)[0]
+Tel = data.split(&KK&)[1]
+Adr = data.split(&KK&)[2]
+Notiz = data.split(&KK&)[3]
+
 text = "ID"; appInfo.addLabel(text, ID)
-text = "Name"; appInfo.addLabelEntry(text); appInfo.setEntry(text, BlueLoad(text, datei))
-text = "Tel"; appInfo.addLabelEntry(text); appInfo.setEntry(text, BlueLoad(text, datei))
-text = "Adr"; appInfo.addLabelEntry(text); appInfo.setEntry(text, BlueLoad(text, datei))
+text = "Name"; appInfo.addLabelEntry(text); appInfo.setEntry(text, Name)
+text = "Tel"; appInfo.addLabelEntry(text); appInfo.setEntry(text, Tel)
+text = "Adr"; appInfo.addLabelEntry(text); appInfo.setEntry(text, Adr)
 text = "Notiz"; appInfo.addTextArea(text);
-if not BlueLoad(text, datei) == None: appInfo.setTextArea(text, BlueLoad(text, datei).replace("&+&", "\n"))
-else: appInfo.setTextArea(text, "")
+appInfo.setTextArea(text, Notiz.replace("&+&", "\n"))
 
 def FuncSave(btn):
 	Debug("FuncSave")
