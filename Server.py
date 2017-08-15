@@ -86,7 +86,9 @@ while True:
 
 		mode = data.split("(zKz)")[0]; Debug("Mode : " + mode)
 
-		
+		if mode == "Kunden":
+			ID = data.split("(zKz)")[1].split("(zkz)")[0]
+			Debug("ID : " + ID)
 
 
 
