@@ -95,10 +95,10 @@ while True:
 			Adr = data.split("(zKz)")[1].split("(zkz)")[3]
 			Notiz = data.split("(zKz)")[1].split("(zkz)")[4]
 			datei = "Kunden/" + str(ID)[-1] + "/" + str(ID)
-			KundenNameList[ID] = Name
-			KundenTelList[ID] = Tel
-			KundenAdrList[ID] = Adr
-			KundenNotizList[ID] = Notiz
+			KundenNameList[int(ID)] = Name
+			KundenTelList[int(ID)] = Tel
+			KundenAdrList[int(ID)] = Adr
+			KundenNotizList[int(ID)] = Notiz
 			BlueSave("Name", Name, datei)
 			BlueSave("Tel", Tel, datei)
 			BlueSave("Adr", Adr, datei)
