@@ -105,7 +105,7 @@ while True:
 			KundenTelList[KundeID] = TelSuche
 			KundenAdrList[KundeID] = AdrSuche
 		
-			Antwort = KundeID
+			Antwort = str(KundeID)
 
 
 		if mode == "SearchKunden":
