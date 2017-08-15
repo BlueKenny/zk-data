@@ -87,17 +87,38 @@ while True:
 		mode = data.split("(zKz)")[0]; Debug("Mode : " + mode)
 
 		if mode == "Kunden":
-			ID = data.split("(zKz)")[1].split("(zkz)")[0]
-			Debug("ID : " + ID)
-			Name = data.split("(zKz)")[1].split("(zkz)")[1]
-			Debug("Name : " + Name)
-			Tel = data.split("(zKz)")[1].split("(zkz)")[2]
-			Debug("Tel : " + Tel)
-			Adr = data.split("(zKz)")[1].split("(zkz)")[3]
-			Debug("Adr : " + Adr)
-
-
-
+			IDSuche = data.split("(zKz)")[1].split("(zkz)")[0]
+			Debug("ID : " + IDSuche)
+			NameSuche = data.split("(zKz)")[1].split("(zkz)")[1]
+			Debug("Name : " + NameSuche)
+			TelSuche = data.split("(zKz)")[1].split("(zkz)")[2]
+			Debug("Tel : " + TelSuche)
+			AdrSuche = data.split("(zKz)")[1].split("(zkz)")[3]
+			Debug("Adr : " + AdrSuche)
+			
+			Antwort = ""
+			for eachKunde in range(000000, 999999):
+				NameKunde = KundenNameList(eachKunde)
+				TelKunde = KundenTelList(eachKunde)
+				AdrKunde = KundenAdrList(eachKunde)
+				Gefunden = True
+				#	ID
+				if not IDSuche in eachKunde: Gefunden = False
+				#	Name
+				for TeilNameSuche in NameSuche.split(" "):
+					if not TeilNameSuche.lower() in NameKunde.lower(): Gefunden = False
+				#	Tel
+				TelGefunden = False
+				for TeilTelSuche in TelSuche.split(" "):
+					if TeilTelSuche in TelKunde:
+						TelGefunden = True
+				if not TelGefunden: Gefunden = False
+				#	Adr
+				for TeilAdrSuche in AdrSuche.split(" "):
+					if not TeilAdrSuche.lower() in AdrKunde.lower(): Gefunden = False
+				if Gefunden:
+					Antwort = Antwort + eachKunde + "&KK&" + NameKunde + "&KK&" + TelKunde + "&KK&" + AdrKunde + "&K()K&"
+	
 
 		Antwort = "Suche erfolgreich"
 
