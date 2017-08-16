@@ -54,11 +54,13 @@ for eachDir in os.listdir("Stock/"):
 print("LOAD Database Kunden")
 for eachFile in range(0, KundenMAX):
 		datei = "Kunden/" + str(eachFile)[-1] + "/" + str(eachFile)
-		eachFile = int(eachFile)
-		KundenNameList.insert(eachFile, BlueLoad("Name", datei))
-		KundenAdrList.insert(eachFile, BlueLoad("Adr", datei))
-		KundenTelList.insert(eachFile, BlueLoad("Tel", datei))
-		KundenNotizList.insert(eachFile, BlueLoad("Notiz", datei))
+		if os.path.exists(datei):
+			eachFile = int(eachFile)
+			KundenNameList.insert(eachFile, BlueLoad("Name", datei))
+			KundenAdrList.insert(eachFile, BlueLoad("Adr", datei))
+			KundenTelList.insert(eachFile, BlueLoad("Tel", datei))
+			KundenNotizList.insert(eachFile, BlueLoad("Notiz", datei))
+		else: Debug("Kunde " + str(eachFile) + " nicht gefunden")
 
 # Ordner
 BlueMkDir("Arbeitskarten")
