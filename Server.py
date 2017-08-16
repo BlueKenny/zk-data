@@ -93,7 +93,7 @@ while True:
 
 		mode = data.split("(zKz)")[0]; Debug("Mode : " + mode)
 
-		Antwort = ""
+		Antwort = "x"
 
 		if mode == "SaveKunde":
 			ID = data.split("(zKz)")[1].split("(zkz)")[0]
@@ -158,7 +158,7 @@ while True:
 			while True:
 				#	ID
 				if not IDSuche == "":
-					if int(IDSuche) > int(KundenMAX): Antwort = "x";break
+					if int(IDSuche) > int(KundenMAX): break
 					Debug("Suche mit ID " + str(IDSuche))
 					IDSuche = int(IDSuche)
 					NameKunde = KundenNameList[IDSuche]
@@ -166,14 +166,15 @@ while True:
 					AdrKunde = KundenAdrList[IDSuche]
 					Antwort = str(IDSuche) + "&KK&" + str(NameKunde) + "&KK&" + str(TelKunde) + "&KK&" + str(AdrKunde)
 					break
+
+				
 			#for eachKunde in range(0, 1000):
 				#NameKunde = KundenNameList[eachKunde]
 				#TelKunde = KundenTelList[eachKunde]
 				#AdrKunde = KundenAdrList[eachKunde]
 				#Gefunden = True
 				#if not NameKunde == "x":
-					#	ID
-				#	if not IDSuche in str(eachKunde): Gefunden = False
+					
 					#	Name
 				#	for TeilNameSuche in NameSuche.split(" "):
 				#		if not TeilNameSuche.lower() in NameKunde.lower(): Gefunden = False
