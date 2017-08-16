@@ -52,7 +52,7 @@ for eachDir in os.listdir("Stock/"):
 		StockAnzahlList.insert(eachFile, BlueLoad("Anzahl", datei))
 
 print("LOAD Database Kunden")
-for eachFile in range(0, KundenMAX):
+for eachFile in range(0, KundenMAX + 1):
 		datei = "Kunden/" + str(eachFile)[-1] + "/" + str(eachFile)
 		if os.path.exists(datei):
 			eachFile = int(eachFile)
