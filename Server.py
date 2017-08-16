@@ -52,7 +52,7 @@ for eachDir in os.listdir("Stock/"):
 
 print("LOAD Database Kunden")
 for eachFile in range(0, KundenMAX):
-		datei = "Kunden/" + str(eachFile)[-1] + "/" + eachFile
+		datei = "Kunden/" + str(eachFile)[-1] + "/" + str(eachFile)
 		eachFile = int(eachFile)
 		KundenNameList.insert(eachFile, BlueLoad("Name", datei))
 		KundenAdrList.insert(eachFile, BlueLoad("Adr", datei))
