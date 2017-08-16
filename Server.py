@@ -158,6 +158,7 @@ while True:
 			while True:
 				#	ID
 				if not IDSuche == "":
+					if int(IDSuche) > int(KundenMax): break
 					Debug("Suche mit ID " + str(IDSuche))
 					IDSuche = int(IDSuche)
 					NameKunde = KundenNameList[IDSuche]
