@@ -5,6 +5,10 @@ from debug import *
 from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 import os
 from BlueVar import *
+
+BlueSave("KundenMAX", 0, "DATA")
+KundenMAX = int(BlueLoad("KundenMAX", "DATA"))
+
 StockArtikelList = []
 StockNameList = []
 StockOrtList = []
@@ -26,6 +30,7 @@ for x in range(000000, 999999):
 	StockPreisVKHList.insert(x, "x")
 	StockPreisVKList.insert(x, "x")
 	StockAnzahlList.insert(x, "x")
+for x in range(0, KundenMAX):
 	KundenNameList.insert(x, "x")
 	KundenAdrList.insert(x, "x")
 	KundenTelList.insert(x, "x")
@@ -46,9 +51,8 @@ for eachDir in os.listdir("Stock/"):
 		StockAnzahlList.insert(eachFile, BlueLoad("Anzahl", datei))
 
 print("LOAD Database Kunden")
-for eachDir in os.listdir("Kunden/"):
-	for eachFile in os.listdir("Kunden/" + eachDir):
-		datei = "Kunden/" + eachDir + "/" + eachFile
+for eachFile in range(0, KundenMAX):
+		datei = "Kunden/" + str(eachFile)[-1] + "/" + eachFile
 		eachFile = int(eachFile)
 		KundenNameList.insert(eachFile, BlueLoad("Name", datei))
 		KundenAdrList.insert(eachFile, BlueLoad("Adr", datei))
