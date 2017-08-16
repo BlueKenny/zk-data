@@ -153,6 +153,7 @@ while True:
 			while True:
 				#	ID
 				if not IDSuche == "":
+					IDSuche = int(IDSuche)
 					NameKunde = KundenNameList[IDSuche]
 					TelKunde = KundenTelList[IDSuche]
 					AdrKunde = KundenAdrList[IDSuche]
