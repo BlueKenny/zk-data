@@ -8,6 +8,7 @@ from BlueVar import *
 
 #BlueSave("KundenMAX", 0, "DATA")
 KundenMAX = int(BlueLoad("KundenMAX", "DATA"))
+Debug("KundenMAX : " + str(KundenMAX))
 
 StockArtikelList = []
 StockNameList = []
