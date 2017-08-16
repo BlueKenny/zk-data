@@ -153,6 +153,7 @@ while True:
 			while True:
 				#	ID
 				if not IDSuche == "":
+					Debug("Suche mit ID " + str(IDSuche))
 					IDSuche = int(IDSuche)
 					NameKunde = KundenNameList[IDSuche]
 					TelKunde = KundenTelList[IDSuche]
