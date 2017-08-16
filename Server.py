@@ -125,7 +125,7 @@ while True:
 			
 			KundeID = 0
 			while True:
-				Debug("KundeID : " + str(KundeID))
+				#Debug("KundeID : " + str(KundeID))
 				if KundenNameList[KundeID] == "x": break
 				else: KundeID = KundeID + 1
 			
