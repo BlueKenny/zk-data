@@ -127,11 +127,8 @@ while True:
 			AdrSuche = data.split("(zKz)")[1].split("(zkz)")[2]
 			Debug("Adr : " + AdrSuche)
 			
-			KundeID = 0
-			while True:
-				#Debug("KundeID : " + str(KundeID))
-				if KundenNameList[KundeID] == "x": break
-				else: KundeID = KundeID + 1
+			KundenMAX = KundenMAX + 1
+			KundeID = KundenMAX
 			
 			KundenNameList[KundeID] = NameSuche
 			KundenTelList[KundeID] = TelSuche
@@ -141,6 +138,7 @@ while True:
 			BlueSave("Tel", TelSuche, datei)
 			BlueSave("Adr", AdrSuche, datei)
 		
+			BlueSave("KundenMAX", KundenMAX, "DATA")
 			Antwort = str(KundeID)
 
 
