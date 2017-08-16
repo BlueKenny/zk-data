@@ -129,10 +129,10 @@ while True:
 			
 			KundenMAX = KundenMAX + 1
 			KundeID = KundenMAX
-			
-			KundenNameList[KundeID] = NameSuche
-			KundenTelList[KundeID] = TelSuche
-			KundenAdrList[KundeID] = AdrSuche
+
+			KundenNameList.insert(KundeID, NameSuche)
+			KundenTelList.insert(KundeID, TelSuche)
+			KundenAdrList.insert(KundeID, AdrSuche)
 			datei = "Kunden/" + str(KundeID)[-1] + "/" + str(KundeID)
 			BlueSave("Name", NameSuche, datei)
 			BlueSave("Tel", TelSuche, datei)
