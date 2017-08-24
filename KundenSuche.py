@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.6
 from appJar import gui  
-from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
+from BlueFunc import *
 from debug import Debug
 import os
 import subprocess
