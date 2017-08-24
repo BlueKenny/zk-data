@@ -9,6 +9,16 @@ if not os.path.exists("DATA"): BlueSave("KundenMAX", 0, "DATA")
 KundenMAX = int(BlueLoad("KundenMAX", "DATA"))
 Debug("KundenMAX : " + str(KundenMAX))
 
+
+# Ordner
+BlueMkDir("Arbeitskarten")
+for x in range(0, 10):	BlueMkDir("Arbeitskarten/" + str(x))
+BlueMkDir("Kunden")
+for x in range(0, 10):	BlueMkDir("Kunden/" + str(x))
+BlueMkDir("Rechnungen")
+for x in range(0, 10):	BlueMkDir("Rechnungen/" + str(x))
+BlueMkDir("Stock")
+
 StockArtikelList = []
 StockNameList = []
 StockOrtList = []
@@ -60,16 +70,6 @@ for eachFile in range(0, KundenMAX + 1):
 			KundenTelList.insert(eachFile, BlueLoad("Tel", datei))
 			KundenNotizList.insert(eachFile, BlueLoad("Notiz", datei))
 		else: Debug("Kunde " + str(eachFile) + " nicht gefunden")
-
-# Ordner
-BlueMkDir("Arbeitskarten")
-for x in range(0, 10):	BlueMkDir("Arbeitskarten/" + str(x))
-BlueMkDir("Kunden")
-for x in range(0, 10):	BlueMkDir("Kunden/" + str(x))
-BlueMkDir("Rechnungen")
-for x in range(0, 10):	BlueMkDir("Rechnungen/" + str(x))
-BlueMkDir("Stock")
-
 
 SERVER_IP = ("", 10000)
 s = socket.socket()
