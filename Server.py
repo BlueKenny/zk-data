@@ -5,7 +5,7 @@ from debug import *
 from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 import os
 
-#BlueSave("KundenMAX", 0, "DATA")
+if not os.path.exists("DATA"): BlueSave("KundenMAX", 0, "DATA")
 KundenMAX = int(BlueLoad("KundenMAX", "DATA"))
 Debug("KundenMAX : " + str(KundenMAX))
 
