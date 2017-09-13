@@ -1,5 +1,0 @@
-#!/usr/bin/env python3.6
-import os
-#msg = input(" Message : ")
-os.system('git commit')
-os.system("git push")
