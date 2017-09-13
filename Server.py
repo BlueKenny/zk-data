@@ -22,7 +22,7 @@ StockPreisVKList = []
 StockAnzahlList = []
 
 Debug("Make Cache")
-for x in range(0, 999999):
+for x in range(10000, 999999):
 	xx = x/999999*100
 	if int(xx) == xx: print(str(xx) + " %")
 	StockBarcodeList.insert(x, "x")
@@ -40,6 +40,8 @@ print("LOAD Database Stock")
 StockArtikelAnzahl = 0
 for eachDir in os.listdir("Stock/"):
 	for eachFile in os.listdir("Stock/" + eachDir):
+		xx = x/999999*100
+		if int(xx) == xx: print(str(xx) + " %")
 		print(StockArtikelAnzahl)
 		datei = "Stock/" + eachDir + "/" + eachFile
 		eachFile = int(eachFile)
