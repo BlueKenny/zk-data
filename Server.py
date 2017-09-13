@@ -22,7 +22,9 @@ StockPreisVKList = []
 StockAnzahlList = []
 
 Debug("Make Cache")
-for x in range(100000, 999999):
+for x in range(0, 999999):
+	xx = x/999999*100
+	if int(xx) == xx: print(str(xx) + " %")
 	StockBarcodeList.insert(x, "x")
 	StockArtikelList.insert(x, "x")
 	StockLieferantList.insert(x, "x")
