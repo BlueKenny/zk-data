@@ -38,6 +38,7 @@ print("LOAD Database Stock")
 StockArtikelAnzahl = 0
 for eachDir in os.listdir("Stock/"):
 	for eachFile in os.listdir("Stock/" + eachDir):
+		print(StockArtikelAnzahl)
 		datei = "Stock/" + eachDir + "/" + eachFile
 		eachFile = int(eachFile)
 		StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
