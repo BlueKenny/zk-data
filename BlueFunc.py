@@ -18,7 +18,7 @@ def BlueMkDir(directory):#	Macht ein verzeichnis wenn es noch nicht existiert
 SplitIt = "&zKz&"
 def BlueLoad(VarName, File):
 	if os.path.exists(File): 
-		Datei = open(File, "r")
+		Datei = open(File, "r", errors="ignore")
 		DateiDatenIndex = Datei.readlines()
 		Datei.close()
 		Gefunden=False
@@ -30,7 +30,7 @@ def BlueLoad(VarName, File):
 
 def BlueSave(VarName, VarData, File):
 	if os.path.exists(File): 
-		Datei = open(File, "r")
+		Datei = open(File, "r", errors="ignore")
 		DateiDatenIndex = Datei.readlines()
 		Datei.close()
 		Gefunden=False
@@ -40,7 +40,7 @@ def BlueSave(VarName, VarData, File):
 				Gefunden=True
 				LinienVarData = AlleLinien.split(SplitIt)[1]
 
-				Datei = open(File, "r")
+				Datei = open(File, "r", errors="ignore")
 				DateiDaten = Datei.read()
 				Datei.close()
 

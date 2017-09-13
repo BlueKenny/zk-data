@@ -4,6 +4,8 @@ import socket
 from debug import *
 from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 import os
+import datetime
+now = datetime.datetime.now()
 
 if not os.path.exists("DATA"): BlueSave("KundenMAX", 0, "DATA")
 KundenMAX = int(BlueLoad("KundenMAX", "DATA"))
@@ -18,8 +20,11 @@ for x in range(0, 10):	BlueMkDir("Kunden/" + str(x))
 BlueMkDir("Rechnungen")
 for x in range(0, 10):	BlueMkDir("Rechnungen/" + str(x))
 BlueMkDir("Stock")
+BlueMkDir("StockBewegung")
 
+StockBarcodeList = []
 StockArtikelList = []
+StockLieferantList = []
 StockNameList = []
 StockOrtList = []
 StockPreisEKList = []
@@ -32,8 +37,10 @@ KundenTelList = []
 KundenNotizList = []
 
 Debug("Make Cache")
-for x in range(000000, 999999):
+for x in range(100000, 999999):
+	StockBarcodeList.insert(x, "x")
 	StockArtikelList.insert(x, "x")
+	StockLieferantList.insert(x, "x")
 	StockNameList.insert(x, "x")
 	StockOrtList.insert(x, "x")
 	StockPreisEKList.insert(x, "x")
@@ -48,27 +55,32 @@ for x in range(0, KundenMAX):
 
 # LOAD
 print("LOAD Database Stock")
+StockArtikelAnzahl = 0
 for eachDir in os.listdir("Stock/"):
 	for eachFile in os.listdir("Stock/" + eachDir):
 		datei = "Stock/" + eachDir + "/" + eachFile
 		eachFile = int(eachFile)
-		StockArtikelList.insert(eachFile, BlueLoad("Artikel", datei))
-		StockNameList.insert(eachFile, BlueLoad("Name", datei))
-		StockOrtList.insert(eachFile, BlueLoad("Ort", datei))
-		StockPreisEKList.insert(eachFile, BlueLoad("PreisEK", datei))
-		StockPreisVKHList.insert(eachFile, BlueLoad("PreisVKH", datei))
-		StockPreisVKList.insert(eachFile, BlueLoad("PreisVK", datei))
-		StockAnzahlList.insert(eachFile, BlueLoad("Anzahl", datei))
+		StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
+		StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
+		StockLieferantList[eachFile]=BlueLoad("Lieferant", datei)
+		StockNameList[eachFile]=BlueLoad("Name", datei)
+		StockOrtList[eachFile]=BlueLoad("Ort", datei)
+		StockPreisEKList[eachFile]=BlueLoad("PreisEK", datei)
+		StockPreisVKHList[eachFile]=BlueLoad("PreisVKH", datei)
+		StockPreisVKList[eachFile]=BlueLoad("PreisVK", datei)
+		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
+		StockArtikelAnzahl  = StockArtikelAnzahl  + 1
+print(StockArtikelAnzahl)
 
 print("LOAD Database Kunden")
 for eachFile in range(0, KundenMAX + 1):
 		datei = "Kunden/" + str(eachFile)[-1] + "/" + str(eachFile)
 		if os.path.exists(datei):
 			eachFile = int(eachFile)
-			KundenNameList.insert(eachFile, BlueLoad("Name", datei))
-			KundenAdrList.insert(eachFile, BlueLoad("Adr", datei))
-			KundenTelList.insert(eachFile, BlueLoad("Tel", datei))
-			KundenNotizList.insert(eachFile, BlueLoad("Notiz", datei))
+			KundenNameList[eachFile]=BlueLoad("Name", datei)
+			KundenAdrList[eachFile]=BlueLoad("Adr", datei)
+			KundenTelList[eachFile]=BlueLoad("Tel", datei)
+			KundenNotizList[eachFile]=BlueLoad("Notiz", datei)
 		else: Debug("Kunde " + str(eachFile) + " nicht gefunden")
 
 SERVER_IP = ("", 10000)
@@ -77,6 +89,9 @@ s = socket.socket()
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(SERVER_IP)
 s.listen(1)
+
+def Date():
+	return now.strftime("%Y-%m-%d")
 
 while True:
 	Debug("Warte auf befehl...")
@@ -120,6 +135,118 @@ while True:
 			Debug("ID : " + str(IDSuche))
 		
 			Antwort = str(KundenNameList[IDSuche]) + "&KK&" + str(KundenTelList[IDSuche]) + "&KK&" + str(KundenAdrList[IDSuche]) + "&KK&" + str(KundenNotizList[IDSuche])
+		
+		if mode == "StockSetArtInfo":
+			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
+			VarName = str(data.split("(zKz)")[1].split("(zkz)")[1])
+			Var = str(data.split("(zKz)")[1].split("(zkz)")[2])
+			Debug("ID :  " + str(ID))
+			Debug("VarName :  " + str(VarName))
+			Debug("Var :  " + str(Var))
+			BlueMkDir("Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1])
+
+			if VarName == "Barcode": 
+				StockBarcodeList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Artikel": 
+				StockArtikelList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Lieferant": 
+				StockLieferantList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Name":  
+				StockNameList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Ort":  
+				StockOrtList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "PreisEK":  
+				StockPreisEKList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "PreisVKH":  
+				StockPreisVKHList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "PreisVK":  
+				StockPreisVKList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Anzahl":  
+				StockAnzahlList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+
+		if mode == "StockGetArtInfo":
+			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
+			Var = str(data.split("(zKz)")[1].split("(zkz)")[1])
+			Debug("ID :  " + str(ID))
+			Debug("Var :  " + str(Var))
+
+			try:
+				if Var == "Artikel":  Antwort = str(StockArtikelList[ID])
+				if Var == "Name":  Antwort = str(StockNameList[ID])
+				if Var == "Ort":  Antwort = str(StockOrtList[ID])
+				if Var == "PreisEK":  Antwort = str(StockPreisEKList[ID])
+				if Var == "PreisVKH":  Antwort = str(StockPreisVKHList[ID])
+				if Var == "PreisVK":  Antwort = str(StockPreisVKList[ID])
+				if Var == "Anzahl":  Antwort = str(StockAnzahlList[ID])
+				if Var == "Barcode":  Antwort = str(StockBarcodeList[ID])
+				if Var == "Lieferant":  Antwort = str(StockLieferantList[ID])
+			except:
+				Antwort = "None"
+			if Antwort == "": Antwort = "None"
+
+		if mode == "GetStockZahl":
+			Antwort = str(StockArtikelAnzahl)
+
+		if mode == "ChangeStock":
+			BcodeSuche = int(data.split("(zKz)")[1].split("(zkz)")[0])
+			Debug("BcodeSuche : " + str(BcodeSuche))
+			NewStock = data.split("(zKz)")[1].split("(zkz)")[1]
+			Debug("NewStock : " + NewStock)
+			AltStock = str(StockAnzahlList[BcodeSuche])
+			Debug("AltStock : " + AltStock )
+			StockAnzahlList[BcodeSuche] = int(AltStock) + int(NewStock)
+			BlueSave("Anzahl", StockAnzahlList[BcodeSuche], "Stock/" + str(BcodeSuche)[-3] + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
+			open( "StockBewegung/" + str(Date()), "a").write("\n" + str(BcodeSuche) + " from " + str(AltStock) + " to " + str(StockAnzahlList[BcodeSuche]))
+
+		if mode == "SearchStock":
+			BcodeSuche = data.split("(zKz)")[1].split("(zkz)")[0]
+			Debug("BcodeSuche : " + BcodeSuche)
+			BarcodeSuche = data.split("(zKz)")[1].split("(zkz)")[1]
+			Debug("BarcodeSuche : " + BarcodeSuche)
+			ArtikelSuche = data.split("(zKz)")[1].split("(zkz)")[2]
+			Debug("ArtikelSuche : " + ArtikelSuche)
+			OrtSuche = data.split("(zKz)")[1].split("(zkz)")[3]
+			Debug("OrtSuche : " + OrtSuche)
+			
+			if not BcodeSuche.rstrip() == "":
+				Debug("BcodeSuche")
+				try:
+					indices = [BcodeSuche]
+					Debug("BcodeSuche YES")
+				except: indices[0]
+			else:
+				Debug("BarcodeSuche")
+				if not BarcodeSuche.rstrip() == "":
+					try: indices = [StockBarcodeList.index(BarcodeSuche)]
+					except: indices = [0]
+				else:
+					Debug("ArtikelSuche")
+					if not ArtikelSuche == "":
+						indices = [i for i, x in enumerate(StockArtikelList) if ArtikelSuche in x]
+						indices = indices[:20]
+					else:
+						Debug("OrtSuche")
+						if not OrtSuche == "":
+							indices = [i for i, x in enumerate(StockOrtList) if OrtSuche in x]
+						else: indices = [0]
+			try:
+				Debug("indices : " + str(indices))
+				Antwort = " "
+				for eachDat in indices:
+					Debug("eachDat : " + str(eachDat))
+					eachDat = int(eachDat)
+					Antwort = Antwort + str(eachDat) + " | " + str(StockArtikelList[eachDat]) + " | " + str(StockLieferantList[eachDat]) + " | " + str(StockNameList[eachDat]) + " | " + str(StockOrtList[eachDat]) + " | " + str(StockPreisEKList[eachDat]) + " | " + str(StockPreisVKHList[eachDat]) + " | "+ str(StockPreisVKList[eachDat]) + " | " + str(StockAnzahlList[eachDat]) + "<K>"
+
+			except: Debug("Nichts gefunden")
 
 		if mode == "AddKunde":
 			NameSuche = data.split("(zKz)")[1].split("(zkz)")[0]
