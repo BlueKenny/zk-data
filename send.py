@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import socket
+from appJar import gui
 from debug import *
 
 SERVER_IP_LIST=["raspberrypi", "localhost"]
@@ -12,13 +13,13 @@ while SERVER_IP == (0, 10000):
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			sock.connect((IPX, 10000)) 
 			SERVER_IP = (IPX, 10000)
-			
 			print("Verbindung mit : " + str(IPX))
 			break
 		except Exception as e: 
 			print("Keine verbindung : " + str(IPX))
 		finally:
 			sock.close()
+
 
 def StockGetArtInfo(IDToChange, Var):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -97,5 +98,5 @@ def SendeSucheStock(bcode, barcode, artikel, ort):
 	sock.close()
 	return data.decode()
 	
-	
+
 
