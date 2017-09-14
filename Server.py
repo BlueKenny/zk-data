@@ -13,12 +13,6 @@ Debug("KundenMAX : " + str(KundenMAX))
 
 
 # Ordner
-BlueMkDir("Arbeitskarten")
-for x in range(0, 10):	BlueMkDir("Arbeitskarten/" + str(x))
-BlueMkDir("Kunden")
-for x in range(0, 10):	BlueMkDir("Kunden/" + str(x))
-BlueMkDir("Rechnungen")
-for x in range(0, 10):	BlueMkDir("Rechnungen/" + str(x))
 BlueMkDir("Stock")
 BlueMkDir("StockBewegung")
 
