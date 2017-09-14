@@ -3,9 +3,22 @@ import sys
 import socket
 from debug import *
 
+SERVER_IP_LIST=["raspberrypi", "localhost"]
 
-try: SERVER_IP = ("raspberrypi", 10000)
-except: SERVER_IP = ("127.0.0.1", 10000)
+SERVER_IP = (0, 10000)
+while SERVER_IP == (0, 10000):
+	for IPX in SERVER_IP_LIST:
+		try:
+			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			sock.connect((IPX, 10000)) 
+			SERVER_IP = (IPX, 10000)
+			
+			print("Verbindung mit : " + str(IPX))
+			break
+		except Exception as e: 
+			print("Keine verbindung : " + str(IPX))
+		finally:
+			sock.close()
 
 def StockGetArtInfo(IDToChange, Var):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
