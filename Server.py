@@ -4,6 +4,7 @@ import socket
 from debug import *
 from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 import os
+from RoundUp import *
 import datetime
 now = datetime.datetime.now()
 
@@ -11,7 +12,8 @@ if not os.path.exists("DATA"): BlueSave("KundenMAX", 0, "DATA")
 KundenMAX = int(BlueLoad("KundenMAX", "DATA"))
 Debug("KundenMAX : " + str(KundenMAX))
 
-
+t=5.123456789
+print(RoundUp05(t))
 # Ordner
 BlueMkDir("Stock")
 BlueMkDir("StockBewegung")
