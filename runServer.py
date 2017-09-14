@@ -9,4 +9,4 @@ while True:
 	os.system("git pull origin master") 
 	time.sleep(1)
 	os.system("python3 ./Server.py")
-	time.sleep(5)
+	time.sleep(3)
