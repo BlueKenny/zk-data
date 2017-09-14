@@ -112,7 +112,7 @@ def StockChange(btn):
 	
 
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\nF1 = Stock MINUS\nF2 = Stock PLUS")
-appSuche.addLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
+appSuche.addLabel("infoAnzahl", "0" + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
