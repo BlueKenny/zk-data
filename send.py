@@ -4,7 +4,8 @@ import socket
 from debug import *
 
 
-SERVER_IP = ("raspberrypi", 10000)
+try: SERVER_IP = ("raspberrypi", 10000)
+except: SERVER_IP = ("127.0.0.1", 10000)
 
 def StockGetArtInfo(IDToChange, Var):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
