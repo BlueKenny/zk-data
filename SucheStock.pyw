@@ -12,6 +12,9 @@ appSuche = gui("Stock Suche", "800x600")
 
 IDToChange = 0
 
+def PrintOrt(btn):
+	open("PrintOrt.txt", "w").write(appSuche.getListItems("Suche")[0].split(" | ")[4].rstrip())
+	os.startfile("PrintOrt.txt", "print")
 def tbFuncSv(btn):
 	global IDToChange
 	Debug("tbFuncSv")
@@ -77,7 +80,7 @@ def Delete(btn):
 def Suche(btn):
 	Debug("Suche")
 	appSuche.setLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
-	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").lower())
+	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper())
 	appSuche.clearListBox("Suche")
 	for Linien in AntwortList.split("<K>"):
 		if not Linien == "":
@@ -103,6 +106,7 @@ def StockChange(btn):
 			send.SendeChangeAnzahl(IDToChange, int(Anzahl))
 			Debug(IDToChange)
 			appSuche.infoBox("Stock Geändert", "Sie haben " + str(int(Anzahl)) + " zu " + str(IDToChange) + " Hinzugefuegt")
+			os.system("")
 			Suche("")
 		except: appSuche.infoBox("Error", "Error")
 	
@@ -112,5 +116,6 @@ appSuche.addLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
+appSuche.bindKey("<F12>", PrintOrt)
 appSuche.bindKey("<Delete>", Delete)
 appSuche.go()
