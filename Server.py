@@ -12,8 +12,6 @@ if not os.path.exists("DATA"): BlueSave("KundenMAX", 0, "DATA")
 KundenMAX = int(BlueLoad("KundenMAX", "DATA"))
 Debug("KundenMAX : " + str(KundenMAX))
 
-t = 10.123
-print(RoundUp0005(t))
 # Ordner
 BlueMkDir("Stock")
 BlueMkDir("StockBewegung")
