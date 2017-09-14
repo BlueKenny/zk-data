@@ -15,5 +15,5 @@ def RoundUp0005(Zahl): # 0.0000
 	if ZahlRest < 0.5: ZahlRest = 0.500000
 	else: ZahlRest = 1.000000
 	Zahl = int(Zahl) + ZahlRest
-	Zahl = float(Zahl) / 10.000000
+	Zahl = float(Zahl) / 10.0000
 	return Zahl
