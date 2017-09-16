@@ -15,6 +15,7 @@ IDToChange = 0
 def PrintOrt(btn):
 	open("PrintOrt.txt", "w").write(appSuche.getListItems("Suche")[0].split(" | ")[4].rstrip())
 	os.startfile("PrintOrt.txt", "print")
+
 def tbFuncSv(btn):
 	global IDToChange
 	Debug("tbFuncSv")
