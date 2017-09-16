@@ -4,7 +4,7 @@ import socket
 from appJar import gui
 from debug import * 
 
-SERVER_IP_LIST=["raspberrypi", "localhost"]
+SERVER_IP_LIST=["raspberrypi", "localhost", "127.0.0.1"]
 
 SERVER_IP = (0, 10000)
 while SERVER_IP == (0, 10000):
