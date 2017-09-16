@@ -2,7 +2,7 @@
 import sys
 import socket
 from appJar import gui
-from debug import *
+from debug import * 
 
 SERVER_IP_LIST=["raspberrypi", "localhost"]
 
