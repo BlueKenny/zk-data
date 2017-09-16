@@ -2,7 +2,7 @@
 import sys
 import socket
 import time
-from debug import *
+from debug import * 
 from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 import os
 while True:
