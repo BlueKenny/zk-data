@@ -8,13 +8,22 @@ from random import randint
 import send
 
 EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
+EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 appSuche = gui("Stock Suche", "800x600") 
 
 IDToChange = 0
+SearchMachine = ""
+
+def Machinen(btn):
+	global SearchMachine
+	print("Machinen")
+	SearchMachine = appSuche.openBox(title="Machinen", dirName="Machinen/", fileTypes=None, asFile=False).split("/Machinen/")[1]
+	appSuche.setButton("Machine", SearchMachine)
 
 def PrintOrt(btn):
-	open("PrintOrt.txt", "w").write(appSuche.getListItems("Suche")[0].split(" | ")[4].rstrip())
-	os.startfile("PrintOrt.txt", "print")
+	open("PrintOrt.txt", "w").write(send.StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
+	try: os.startfile("PrintOrt.txt", "print")
+	except: os.system("gedit ./PrintOrt.txt")
 
 def tbFuncSv(btn):
 	global IDToChange
@@ -40,11 +49,13 @@ def tbFunc(btn):
 		IDToChange = Number
 		appChange = gui("Stock Change", "800x600")
 		appChange.addLabel("Bcode", str(IDToChange))
-		for e in EntryList:
-			if not e == "Bcode":
-				appChange.addLabelEntry(e)
-				appChange.setEntry(e, str(send.StockGetArtInfo(str(IDToChange), e)), callFunction=False)
-		appChange.setEntry("Artikel", appSuche.getEntry("Artikel"))
+		GetThis = ""
+		for a in EntryList2:
+			GetThis = GetThis + "(zkz)" + str(a)
+		Data = send.StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
+		for x in range(0, len(EntryList2)):
+			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x + 1], callFunction=False)
+		
 		appChange.addLabel("info", "F5 = Speichern")
 		appChange.bindKey("<F5>", tbFuncSv)
 		appChange.go()
@@ -53,10 +64,12 @@ def tbFunc(btn):
 		IDToChange = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
 		appChange = gui("Stock Change", "800x600")
 		appChange.addLabel("Bcode", str(IDToChange))
-		for e in EntryList:
-			if not e == "Bcode":
-				appChange.addLabelEntry(e)
-				appChange.setEntry(e, str(send.StockGetArtInfo(str(IDToChange), e)), callFunction=False)
+		GetThis = ""
+		for a in EntryList2:
+			GetThis = GetThis + "(zkz)" + str(a)
+		Data = send.StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
+		for x in range(0, len(EntryList2)):
+			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x + 1], callFunction=False)
 		
 		appChange.addLabel("info", "F5 = Speichern")
 		appChange.bindKey("<F5>", tbFuncSv)
@@ -65,10 +78,16 @@ def tbFunc(btn):
 tools = ["NEU", "ÄNDERN"]
 appSuche.addToolbar(tools, tbFunc, findIcon=True)
 
+appSuche.addTickOptionBox("Anzeigen", EntryList2)
+appSuche.setOptionBox("Anzeigen", "Name", value=True, callFunction=True)
+appSuche.setOptionBox("Anzeigen", "PreisVK", value=True, callFunction=True)
+appSuche.setOptionBox("Anzeigen", "Anzahl", value=True, callFunction=True)
+
 appSuche.addLabelEntry("Bcode")
 appSuche.addLabelEntry("Barcode")
 appSuche.addLabelEntry("Artikel")
 appSuche.addLabelEntry("Ort")
+appSuche.addNamedButton("Machine wählen...", "Machine", Machinen)
 appSuche.addListBox("Suche")
 
 def Delete(btn):
@@ -81,13 +100,20 @@ def Delete(btn):
 def Suche(btn):
 	Debug("Suche")
 	appSuche.setLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
+	print(appSuche.getOptionBox("Anzeigen"))
+	
 	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper())
 	appSuche.clearListBox("Suche")
-	for Linien in AntwortList.split("<K>"):
-		if not Linien == "":
-			appSuche.addListItem("Suche", Linien)
-			bcode=Linien.split(" | ")[0]
-			artikel=Linien.split(" | ")[1]
+	for IDs in AntwortList.split("<K>"):
+		if not IDs == "":
+			Linie = str(IDs).rstrip()
+			GetThis = ""
+			for a in EntryList2:
+				if appSuche.getOptionBox("Anzeigen")[a] and not IDs.rstrip() == "":
+					GetThis = GetThis + "(zkz)" + str(a)
+			Linie = send.StockGetArtInfo(GetThis, IDs)
+
+			appSuche.addListItem("Suche", Linie)
 
 def StockChange(btn):
 	Debug("StockChange")

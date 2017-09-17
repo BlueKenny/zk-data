@@ -15,6 +15,7 @@ Debug("KundenMAX : " + str(KundenMAX))
 # Ordner
 BlueMkDir("Stock")
 BlueMkDir("StockBewegung")
+BlueMkDir("Machinen")
 
 StockBarcodeList = []
 StockArtikelList = []
@@ -25,10 +26,9 @@ StockPreisEKList = []
 StockPreisVKHList = []
 StockPreisVKList = []
 StockAnzahlList = []
-KundenNameList = []
-KundenAdrList = []
-KundenTelList = []
-KundenNotizList = []
+StockMachinenList = []
+
+ListeDerLieferanten = []
 
 Debug("Make Cache")
 for x in range(100000, 999999):
@@ -41,6 +41,7 @@ for x in range(100000, 999999):
 	StockPreisVKHList.insert(x, "x")
 	StockPreisVKList.insert(x, "x")
 	StockAnzahlList.insert(x, "x")
+	StockMachinenList.insert(x, "x")
 
 # LOAD
 print("LOAD Database Stock")
@@ -58,7 +59,19 @@ for eachDir in os.listdir("Stock/"):
 		StockPreisVKHList[eachFile]=BlueLoad("PreisVKH", datei)
 		StockPreisVKList[eachFile]=BlueLoad("PreisVK", datei)
 		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
+		StockMachinenList[eachFile]=BlueLoad("Machinen", datei)
+
 		StockArtikelAnzahl  = StockArtikelAnzahl  + 1
+		if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
+		if not StockMachinenList[eachFile] == None:
+			eaThis = "Machinen"
+			for ea in range(0, len(str(StockMachinenList[eachFile]).split("/"))):
+				eaThis = eaThis + "/" + str(StockMachinenList[eachFile]).split("/")[ea]
+				if ea + 1 == len(str(StockMachinenList[eachFile]).split("/")):
+					open(eaThis, "w").write(eaThis)
+				else:
+					BlueMkDir(eaThis)
+
 print(StockArtikelAnzahl)
 
 SERVER_IP = ("", 10000)
@@ -125,24 +138,26 @@ while True:
 				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 
 		if mode == "StockGetArtInfo":
+			print(data.split("(zKz)")[1])
 			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
-			Var = str(data.split("(zKz)")[1].split("(zkz)")[1])
+			Vars = str(data.split(str(ID))[1]).split("(zkz)")
 			Debug("ID :  " + str(ID))
-			Debug("Var :  " + str(Var))
+			Debug("Vars :  " + str(Vars))
 
-			try:
-				if Var == "Artikel":  Antwort = str(StockArtikelList[ID])
-				if Var == "Name":  Antwort = str(StockNameList[ID])
-				if Var == "Ort":  Antwort = str(StockOrtList[ID]).upper()
-				if Var == "PreisEK":  Antwort = str(StockPreisEKList[ID])
-				if Var == "PreisVKH":  Antwort = str(StockPreisVKHList[ID])
-				if Var == "PreisVK":  Antwort = str(StockPreisVKList[ID])
-				if Var == "Anzahl":  Antwort = str(StockAnzahlList[ID])
-				if Var == "Barcode":  Antwort = str(StockBarcodeList[ID])
-				if Var == "Lieferant":  Antwort = str(StockLieferantList[ID])
-			except:
-				Antwort = "None"
-			if Antwort == "": Antwort = "None"
+			Antwort = str(ID)
+			for Var in Vars:
+				try:
+					if Var == "Artikel":  Antwort = Antwort + " | " + str(StockArtikelList[ID])
+					if Var == "Name":  Antwort = Antwort + " | " + str(StockNameList[ID])
+					if Var == "Ort":  Antwort = Antwort + " | " + str(StockOrtList[ID]).upper()
+					if Var == "PreisEK":  Antwort = Antwort + " | " + str(StockPreisEKList[ID])
+					if Var == "PreisVKH":  Antwort = Antwort + " | " + str(StockPreisVKHList[ID])
+					if Var == "PreisVK":  Antwort = Antwort + " | " + str(StockPreisVKList[ID])
+					if Var == "Anzahl":  Antwort = Antwort + " | " + str(StockAnzahlList[ID])
+					if Var == "Barcode":  Antwort = Antwort + " | " + str(StockBarcodeList[ID])
+					if Var == "Lieferant":  Antwort = Antwort + " | " + str(StockLieferantList[ID])
+				except:
+					Antwort = Antwort + "None"
 
 		if mode == "GetStockZahl":
 			Antwort = str(StockArtikelAnzahl)
@@ -169,33 +184,23 @@ while True:
 			Debug("OrtSuche : " + OrtSuche)
 			
 			if not BcodeSuche.rstrip() == "":
-				Debug("BcodeSuche")
-				try:
-					indices = [BcodeSuche]
-					Debug("BcodeSuche YES")
-				except: indices[0]
+				indices = [BcodeSuche]# Bcode
 			else:
-				Debug("BarcodeSuche")
-				if not BarcodeSuche.rstrip() == "":
+				if not BarcodeSuche.rstrip() == "":# Barcode
 					try: indices = [StockBarcodeList.index(BarcodeSuche)]
 					except: indices = [0]
 				else:
-					Debug("ArtikelSuche")
-					if not ArtikelSuche == "":
-						indices = [i for i, x in enumerate(StockArtikelList) if ArtikelSuche in x]
-						indices = indices[:20]
+					# Artikel und Ort
+					if not ArtikelSuche.rstrip() == "":
+						indices = [i for i, x in enumerate(StockArtikelList) if ArtikelSuche in x][:15]
 					else:
-						Debug("OrtSuche")
-						if not OrtSuche == "":
-							indices = [i for i, x in enumerate(StockOrtList) if OrtSuche in x]
+						if not OrtSuche.rstrip() == "":
+							indices = [i for i, x in enumerate(StockOrtList) if OrtSuche in x][:15]
 						else: indices = [0]
 			try:
-				Debug("indices : " + str(indices))
 				Antwort = " "
 				for eachDat in indices:
-					Debug("eachDat : " + str(eachDat))
-					eachDat = int(eachDat)
-					Antwort = Antwort + str(eachDat) + " | " + str(StockArtikelList[eachDat]) + " | " + str(StockLieferantList[eachDat]) + " | " + str(StockNameList[eachDat]) + " | " + str(StockOrtList[eachDat]) + " | " + str(StockPreisEKList[eachDat]) + " | " + str(StockPreisVKHList[eachDat]) + " | "+ str(StockPreisVKList[eachDat]) + " | " + str(StockAnzahlList[eachDat]) + "<K>"
+					Antwort = Antwort + str(eachDat) + "<K>"
 
 			except: Debug("Nichts gefunden")
 		

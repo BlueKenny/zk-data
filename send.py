@@ -21,10 +21,10 @@ while SERVER_IP == (0, 10000):
 			sock.close()
 
 
-def StockGetArtInfo(IDToChange, Var):
+def StockGetArtInfo(Var, IDToChange):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(SERVER_IP)
-	data = "StockGetArtInfo(zKz)" + str(IDToChange) + "(zkz)" + str(Var)
+	data = "StockGetArtInfo(zKz)" + str(IDToChange) + str(Var)
 
 	Debug("Send " + str(data))
 	data = data.encode()
