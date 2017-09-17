@@ -29,6 +29,7 @@ StockAnzahlList = []
 StockMachinenList = []
 
 ListeDerLieferanten = []
+ListeDerMachinen = []
 
 Debug("Make Cache")
 for x in range(100000, 999999):
@@ -50,7 +51,7 @@ for eachDir in os.listdir("Stock/"):
 	for eachFile in os.listdir("Stock/" + eachDir):
 		datei = "Stock/" + eachDir + "/" + eachFile
 		eachFile = int(eachFile)
-		StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
+		if not BlueLoad("Barcode", datei) == None: StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
 		StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
 		StockLieferantList[eachFile]=BlueLoad("Lieferant", datei)
 		StockNameList[eachFile]=BlueLoad("Name", datei)
@@ -185,23 +186,42 @@ while True:
 			MachineSuche = data.split("(zKz)")[1].split("(zkz)")[4]
 			Debug("MachineSuche : " + MachineSuche)
 			
-			if not BcodeSuche.rstrip() == "":
-				indices = [BcodeSuche]# Bcode
-			else:
-				if not BarcodeSuche.rstrip() == "":# Barcode
-					try: indices = [StockBarcodeList.index(BarcodeSuche)]
-					except: indices = [0]
-				else:
-					# Artikel und Ort
-					if not ArtikelSuche.rstrip() == "":
-						indices = [i for i, x in enumerate(StockArtikelList) if ArtikelSuche in x][:15]
-					else:
-						if not OrtSuche.rstrip() == "":
-							indices = [i for i, x in enumerate(StockOrtList) if OrtSuche in x][:15]
-						else: 
-							if not MachineSuche.rstrip() == "":
-								indices = [i for i, x in enumerate(StockMachinenList) if MachineSuche in x][:15]
-							else: indices = [0]
+			indices = [x for x in range(100000, 999999)] # ALLE
+
+			if not BcodeSuche.rstrip() == "": indices = [BcodeSuche] # Bcode
+
+			if not BarcodeSuche.rstrip() == "": indices = [counter for counter, data in enumerate(StockBarcodeList) if BarcodeSuche in data and counter in indices] # Barcode
+			
+			if not ArtikelSuche.rstrip() == "": indices = [counter for counter, data in enumerate(StockArtikelList) if ArtikelSuche in data and counter in indices] # Artikel
+
+			if not OrtSuche.rstrip() == "": indices = [counter for counter, data in enumerate(StockOrtList) if OrtSuche in data and counter in indices] # Ort
+
+			if not MachineSuche.rstrip() == "": indices = [counter for counter, data in enumerate(StockMachinenList) if MachineSuche in data and counter in indices] # Machine
+
+
+			indices = indices[:15]
+			if indices == []: indices = [0]
+			#if not BcodeSuche.rstrip() == "":
+			#	indices = [BcodeSuche]# Bcode
+			#else:
+			#	if not BarcodeSuche.rstrip() == "":# Barcode
+			#		try: indices = [StockBarcodeList.index(BarcodeSuche)]
+			#		except: indices = [0]
+			#	else:
+			#		# Artikel und Ort
+			#		if not ArtikelSuche.rstrip() == "":
+			#			indices = []
+			#			for counter, data in enumerate(StockArtikelList):
+			#				if ArtikelSuche in data:
+			#					indices.append(counter)
+			#			#indices = [i for i, x in enumerate(StockArtikelList) if ArtikelSuche in x][:15]
+			#		else:
+			#			if not OrtSuche.rstrip() == "":
+			#				indices = [i for i, x in enumerate(StockOrtList) if OrtSuche in x][:15]
+			#			else: 
+			#				if not MachineSuche.rstrip() == "":
+			#					indices = [i for i, x in enumerate(StockMachinenList) if MachineSuche in x][:15]
+			#				else: indices = [0]
 			try:
 				Antwort = " "
 				for eachDat in indices:

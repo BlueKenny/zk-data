@@ -17,6 +17,7 @@ SearchMachine = ""
 def Machinen(btn):
 	global SearchMachine
 	print("Machinen")
+	
 	SearchMachine = appSuche.openBox(title="Machinen", dirName="Machinen/", fileTypes=None, asFile=False).split("/Machinen/")[1]
 	appSuche.setButton("Machine", SearchMachine)
 
@@ -91,6 +92,7 @@ appSuche.addNamedButton("Machine wählen...", "Machine", Machinen)
 appSuche.addListBox("Suche")
 
 def Delete(btn):
+	global SearchMachine
 	Debug("Delete")
 	appSuche.setEntry("Bcode", "")
 	appSuche.setEntry("Barcode", "")
