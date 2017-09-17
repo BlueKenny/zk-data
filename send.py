@@ -79,7 +79,7 @@ def SendeChangeAnzahl(bcode, anzahl):
 	return data.decode()
 	
 
-def SendeSucheStock(bcode, barcode, artikel, ort):
+def SendeSucheStock(bcode, barcode, artikel, ort, machine):
 	#bcode = int(bcode); barcode = str(barcode); artikel = str(artikel);
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(SERVER_IP)
@@ -87,8 +87,9 @@ def SendeSucheStock(bcode, barcode, artikel, ort):
 	Debug("Barcode " + str(barcode))
 	Debug("Artikel " + str(artikel))
 	Debug("Ort " + str(ort))
+	Debug("Machine " + str(machine))
 	
-	data = "SearchStock(zKz)" + str(bcode) + "(zkz)" + str(barcode) + "(zkz)" + str(artikel) + "(zkz)" + str(ort)
+	data = "SearchStock(zKz)" + str(bcode) + "(zkz)" + str(barcode) + "(zkz)" + str(artikel) + "(zkz)" + str(ort) + "(zkz)" + str(machine)
 
 	Debug("Send " + str(data))
 	data = data.encode()

@@ -59,11 +59,11 @@ for eachDir in os.listdir("Stock/"):
 		StockPreisVKHList[eachFile]=BlueLoad("PreisVKH", datei)
 		StockPreisVKList[eachFile]=BlueLoad("PreisVK", datei)
 		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
-		StockMachinenList[eachFile]=BlueLoad("Machinen", datei)
+		if not BlueLoad("Machinen", datei) == None: StockMachinenList[eachFile]=BlueLoad("Machinen", datei)
 
 		StockArtikelAnzahl  = StockArtikelAnzahl  + 1
 		if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
-		if not StockMachinenList[eachFile] == None:
+		if not StockMachinenList[eachFile] == "x":
 			eaThis = "Machinen"
 			for ea in range(0, len(str(StockMachinenList[eachFile]).split("/"))):
 				eaThis = eaThis + "/" + str(StockMachinenList[eachFile]).split("/")[ea]
@@ -182,6 +182,8 @@ while True:
 			Debug("ArtikelSuche : " + ArtikelSuche)
 			OrtSuche = data.split("(zKz)")[1].split("(zkz)")[3]
 			Debug("OrtSuche : " + OrtSuche)
+			MachineSuche = data.split("(zKz)")[1].split("(zkz)")[4]
+			Debug("MachineSuche : " + MachineSuche)
 			
 			if not BcodeSuche.rstrip() == "":
 				indices = [BcodeSuche]# Bcode
@@ -196,7 +198,10 @@ while True:
 					else:
 						if not OrtSuche.rstrip() == "":
 							indices = [i for i, x in enumerate(StockOrtList) if OrtSuche in x][:15]
-						else: indices = [0]
+						else: 
+							if not MachineSuche.rstrip() == "":
+								indices = [i for i, x in enumerate(StockMachinenList) if MachineSuche in x][:15]
+							else: indices = [0]
 			try:
 				Antwort = " "
 				for eachDat in indices:

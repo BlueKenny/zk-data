@@ -96,13 +96,14 @@ def Delete(btn):
 	appSuche.setEntry("Barcode", "")
 	appSuche.setEntry("Artikel", "")
 	appSuche.setEntry("Ort", "")
+	SearchMachine = ""
+	appSuche.setButton("Machine", "Machine wählen...")
 
 def Suche(btn):
 	Debug("Suche")
 	appSuche.setLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
-	print(appSuche.getOptionBox("Anzeigen"))
 	
-	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper())
+	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper(), SearchMachine)
 	appSuche.clearListBox("Suche")
 	for IDs in AntwortList.split("<K>"):
 		if not IDs == "":
