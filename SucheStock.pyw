@@ -167,7 +167,7 @@ def StockChange(btn):
 		try:
 			send.SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
 			Debug(IDToChange)
-			appSuche.infoBox("Stock Geändert", "Sie haben " + str(int(Anzahl)) + "x " + str(IDToChange) + " Entfernt")
+			appSuche.infoBox("Stock Geändert", "Sie haben " + str(int(Anzahl)) + "x " + str(Name) + " Entfernt")
 			Suche("")
 		except: appSuche.infoBox("Error", "Error")
 	if btn == "<F2>": # PLUS
@@ -175,7 +175,7 @@ def StockChange(btn):
 		try:
 			send.SendeChangeAnzahl(IDToChange, int(Anzahl))
 			Debug(IDToChange)
-			appSuche.infoBox("Stock Geändert", "Sie haben " + str(int(Anzahl)) + " zu " + str(IDToChange) + " Hinzugefuegt")
+			appSuche.infoBox("Stock Geändert", "Sie haben " + str(int(Anzahl)) + " zu " + str(Name) + " Hinzugefuegt")
 			os.system("")
 			Suche("")
 		except: appSuche.infoBox("Error", "Error")
