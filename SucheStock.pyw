@@ -121,6 +121,8 @@ def MachinenLaden():
 				if ea + 1 == len(str(pfad).split("/")):
 					open(eaThis, "w").write(eaThis)
 				else: BlueMkDir(eaThis)
+	
+	appSuche.setMeter("status", 100, text="")
 
 def Delete(btn):
 	global SearchMachine
@@ -153,6 +155,8 @@ def Suche(btn):
 			Linie = send.StockGetArtInfo(GetThis, IDs)
 
 			appSuche.addListItem("Suche", Linie)
+	
+	appSuche.setMeter("status", 100, text="")
 
 def StockChange(btn):
 	Debug("StockChange")
