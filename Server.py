@@ -45,7 +45,7 @@ for x in range(100000, 999999):
 	StockMachinenList.insert(x, "x")
 
 # LOAD
-print("LOAD Database Stock")
+print("LOAD Database Stock") 
 StockArtikelAnzahl = 0
 for eachDir in os.listdir("Stock/"):
 	for eachFile in os.listdir("Stock/" + eachDir):
