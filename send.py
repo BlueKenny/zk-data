@@ -20,6 +20,34 @@ while SERVER_IP == (0, 10000):
 		finally:
 			sock.close()
 
+def StockGetMachinen():
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.connect(SERVER_IP)
+	data = "StockGetMachinenAnzahl(zKz)"
+
+	Debug("Send " + str(data))
+	data = data.encode()
+	sock.sendto(data, SERVER_IP)
+	data = sock.recv(2048)
+	Debug("Get " + str(data.decode()))
+	sock.close()
+	MachinenAnzahl = data.decode() / 20
+
+	ListeDerMachinen = ""
+	for ee in range(0, MachinenAnzahl):
+		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		sock.connect(SERVER_IP)
+		data = "StockGetArtInfo(zKz)" + str(IDToChange) + str(Var)
+
+		Debug("Send " + str(data))
+		data = data.encode()
+		sock.sendto(data, SERVER_IP)
+		data = sock.recv(2048)
+		Debug("Get " + str(data.decode()))
+		sock.close()
+		ListeDerMachinen = ListeDerMachinen + data.decode()
+	return ListeDerMachinen
+	
 
 def StockGetArtInfo(Var, IDToChange):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

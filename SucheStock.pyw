@@ -17,7 +17,10 @@ SearchMachine = ""
 def Machinen(btn):
 	global SearchMachine
 	print("Machinen")
-	
+	BlueMkDir("Machinen")
+	MachinenListe = send.StockGetMachinen()
+	print("MachinenListe : " + str(MachinenListe))
+
 	SearchMachine = appSuche.openBox(title="Machinen", dirName="Machinen/", fileTypes=None, asFile=False).split("/Machinen/")[1]
 	appSuche.setButton("Machine", SearchMachine)
 
@@ -103,7 +106,6 @@ def Delete(btn):
 
 def Suche(btn):
 	Debug("Suche")
-	appSuche.setLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
 	
 	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper(), SearchMachine)
 	appSuche.clearListBox("Suche")
@@ -142,7 +144,7 @@ def StockChange(btn):
 	
 
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\nF1 = Stock MINUS\nF2 = Stock PLUS")
-appSuche.addLabel("infoAnzahl", "0" + " Artikel im Stock")
+appSuche.addLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
