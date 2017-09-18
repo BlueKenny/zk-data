@@ -161,7 +161,7 @@ def Suche(btn):
 def StockChange(btn):
 	Debug("StockChange")
 	IDToChange = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
-	Name = send.StockGetArtInfo("(zkz)Name", str(IDToChange))
+	Name = "[ " + send.StockGetArtInfo("(zkz)Name", str(IDToChange)) + " ]"
 	if btn == "<F1>": # MINUS
 		Anzahl = appSuche.numberBox("Anzahl", Name + "\n\nBitte Anzahl eingeben die aus dem Stock entfernt wird : ")
 		try:
