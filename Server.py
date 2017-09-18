@@ -55,30 +55,21 @@ for eachDir in os.listdir("Stock/"):
 		StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
 		StockLieferantList[eachFile]=BlueLoad("Lieferant", datei).lower()
 		StockNameList[eachFile]=BlueLoad("Name", datei)
-		StockOrtList[eachFile]=str(BlueLoad("Ort", datei)).upper()
+		if not BlueLoad("Ort", datei) == None: StockOrtList[eachFile]=str(BlueLoad("Ort", datei)).upper()
 		StockPreisEKList[eachFile]=BlueLoad("PreisEK", datei)
 		StockPreisVKHList[eachFile]=BlueLoad("PreisVKH", datei)
 		StockPreisVKList[eachFile]=BlueLoad("PreisVK", datei)
 		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
-		if not BlueLoad("Machinen", datei) == None: StockMachinenList[eachFile]=BlueLoad("Machinen", datei)
+		if not BlueLoad("Machinen", datei) == None and not BlueLoad("Machinen", datei) == "": StockMachinenList[eachFile]=BlueLoad("Machinen", datei)
 
 		StockArtikelAnzahl  = StockArtikelAnzahl  + 1
 		if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
 		if not StockMachinenList[eachFile] in ListeDerMachinen and not StockMachinenList[eachFile] == "x": ListeDerMachinen.append(StockMachinenList[eachFile])
-		#if not StockMachinenList[eachFile] == "x":
-		#	eaThis = "Machinen"
-		#	for ea in range(0, len(str(StockMachinenList[eachFile]).split("/"))):
-		#		eaThis = eaThis + "/" + str(StockMachinenList[eachFile]).split("/")[ea]
-		#		if ea + 1 == len(str(StockMachinenList[eachFile]).split("/")):
-		#			open(eaThis, "w").write(eaThis)
-		#		else:
-		#			BlueMkDir(eaThis)
 
 print("StockArtikelAnzahl : " + str(StockArtikelAnzahl))
 print("ListeDerLieferanten : " + str(ListeDerLieferanten))
 print("ListeDerMachinen : " + str(ListeDerMachinen))
-ListeDerMachinenLen = str(len(ListeDerMachinen))
-print("ListeDerMachinenLen : " + str(ListeDerMachinenLen))
+
 
 SERVER_IP = ("", 10000)
 s = socket.socket()
@@ -106,10 +97,8 @@ while True:
 		mode = data.split("(zKz)")[0]; Debug("Mode : " + mode)
 
 		Antwort = "x"
-
-		if mode == "StockGetMachinenAnzahl":
-			print(ListeDerMachinenLen)
-			Antwort = ListeDerMachinenLen
+		
+		
 
 		if mode == "StockSetArtInfo":
 			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
@@ -147,6 +136,9 @@ while True:
 			if VarName == "Anzahl":  
 				StockAnzahlList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Machinen":  
+				StockMachinenList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 
 		if mode == "StockGetArtInfo":
 			print(data.split("(zKz)")[1])
@@ -167,8 +159,17 @@ while True:
 					if Var == "Anzahl":  Antwort = Antwort + " | " + str(StockAnzahlList[ID])
 					if Var == "Barcode":  Antwort = Antwort + " | " + str(StockBarcodeList[ID])
 					if Var == "Lieferant":  Antwort = Antwort + " | " + str(StockLieferantList[ID])
+					if Var == "Machinen":  Antwort = Antwort + " | " + str(StockMachinenList[ID])
 				except:
 					Antwort = Antwort + "None"
+		
+		if mode == "GetMachine":
+			MachineIndex = int(data.split("(zKz)")[1].split("(zkz)")[0])
+			Debug("MachineIndex : " + str(MachineIndex))
+			Antwort = str((ListeDerMachinen[MachineIndex]))
+
+		if mode == "GetMachinenAnzahl":
+			Antwort = str(len(ListeDerMachinen))
 
 		if mode == "GetStockZahl":
 			Antwort = str(StockArtikelAnzahl)
@@ -198,15 +199,16 @@ while True:
 			
 			indices = [x for x in range(100000, 999999)] # ALLE
 
-			if not BcodeSuche.rstrip() == "": indices = [BcodeSuche] # Bcode
-
-			if not BarcodeSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockBarcodeList) if BarcodeSuche in data and counter in indices] # Barcode
-			
-			if not ArtikelSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockArtikelList) if ArtikelSuche in data and counter in indices] # Artikel
-
-			if not OrtSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockOrtList) if OrtSuche in data and counter in indices] # Ort
-
-			if not MachineSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockMachinenList) if MachineSuche in data and counter in indices] # Machine
+			 # Bcode
+			if not BcodeSuche.rstrip() == "": indices = [BcodeSuche]; print("Rest nach Bcode " + str(indices))
+			 # Barcode
+			if not BarcodeSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockBarcodeList) if BarcodeSuche in data and counter in indices]; print("Rest nach Barcode " + str(indices))
+			 # Artikel
+			if not ArtikelSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockArtikelList) if ArtikelSuche in data and counter in indices]; print("Rest nach Artikel " + str(indices))
+			 # Ort
+			if not OrtSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockOrtList) if OrtSuche in data and counter in indices]; print("Rest nach Ort " + str(indices))
+			 # Machine
+			if not MachineSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockMachinenList) if MachineSuche in data and counter in indices]; print("Rest nach Machine " + str(indices))
 
 
 			indices = indices[:10]
@@ -236,7 +238,7 @@ while True:
 			try:
 				Antwort = " "
 				for eachDat in indices:
-					Antwort = Antwort + str(eachDat) + "<K>"
+					Antwort = Antwort.rstrip() + str(eachDat) + "<K>"
 
 			except: Debug("Nichts gefunden")
 		

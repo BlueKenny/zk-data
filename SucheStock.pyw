@@ -6,23 +6,28 @@ import os
 import subprocess
 from random import randint
 import send
+import shutil
 
-EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
-EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
+EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl", "Machinen"]
+EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl", "Machinen"]
 appSuche = gui("Stock Suche", "800x600") 
 
 IDToChange = 0
 SearchMachine = ""
 
+appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
+appSuche.setMeter("status", 100, text="")
+
 def Machinen(btn):
 	global SearchMachine
 	print("Machinen")
-	BlueMkDir("Machinen")
-	MachinenListe = send.StockGetMachinen()
-	print("MachinenListe : " + str(MachinenListe))
+
+	MachinenLaden()
 
 	SearchMachine = appSuche.openBox(title="Machinen", dirName="Machinen/", fileTypes=None, asFile=False).split("/Machinen/")[1]
 	appSuche.setButton("Machine", SearchMachine)
+
+	Suche("")
 
 def PrintOrt(btn):
 	open("PrintOrt.txt", "w").write(send.StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
@@ -32,11 +37,11 @@ def PrintOrt(btn):
 def tbFuncSv(btn):
 	global IDToChange
 	Debug("tbFuncSv")
-	for a in EntryList:
-		if not a == "Bcode":
-			print(appChange.getEntry(a))
-			send.StockSetArtInfo(IDToChange, a, appChange.getEntry(a))
+	for a in EntryList2:
+		print(appChange.getEntry(a))
+		send.StockSetArtInfo(IDToChange, a, appChange.getEntry(a))
 	appChange.stop()
+	Delete("")
 	appSuche.setEntry("Bcode", IDToChange)
 	Suche("")
 
@@ -58,7 +63,7 @@ def tbFunc(btn):
 			GetThis = GetThis + "(zkz)" + str(a)
 		Data = send.StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
 		for x in range(0, len(EntryList2)):
-			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x + 1], callFunction=False)
+			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
 		
 		appChange.addLabel("info", "F5 = Speichern")
 		appChange.bindKey("<F5>", tbFuncSv)
@@ -72,8 +77,10 @@ def tbFunc(btn):
 		for a in EntryList2:
 			GetThis = GetThis + "(zkz)" + str(a)
 		Data = send.StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
+		print(Data)
+		print(Data)
 		for x in range(0, len(EntryList2)):
-			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x + 1], callFunction=False)
+			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
 		
 		appChange.addLabel("info", "F5 = Speichern")
 		appChange.bindKey("<F5>", tbFuncSv)
@@ -94,6 +101,27 @@ appSuche.addLabelEntry("Ort")
 appSuche.addNamedButton("Machine wählen...", "Machine", Machinen)
 appSuche.addListBox("Suche")
 
+def MachinenLaden():
+	print("MachinenLaden")
+	appSuche.setMeter("status", 0, text="Lade Machinen")
+	try: shutil.rmtree("Machinen")
+	except: print("")
+
+	BlueMkDir("Machinen")
+	Anzahl = int(send.GetMachinenAnzahl()); Debug("Anzahl : " + str(Anzahl))
+
+	Schritt = 100/Anzahl
+	for x in range(Anzahl):
+		appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text="Lade Machinen")
+		pfade = send.GetMachine(x)
+		for pfad in pfade.split(" "):
+			eaThis = "Machinen"
+			for ea in range(0, len(str(pfad).split("/"))):
+				eaThis = eaThis + "/" + str(pfad).split("/")[ea]
+				if ea + 1 == len(str(pfad).split("/")):
+					open(eaThis, "w").write(eaThis)
+				else: BlueMkDir(eaThis)
+
 def Delete(btn):
 	global SearchMachine
 	Debug("Delete")
@@ -106,11 +134,17 @@ def Delete(btn):
 
 def Suche(btn):
 	Debug("Suche")
+	appSuche.setMeter("status", 0, text="Suche wird gestartet")
 	
 	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper(), SearchMachine)
+	appSuche.setMeter("status", 10, text="Warte auf daten")
 	appSuche.clearListBox("Suche")
+
+	Schritt = (100-10)/(len(AntwortList.split("<K>"))-1); print("Schritt : " + str(Schritt))
 	for IDs in AntwortList.split("<K>"):
 		if not IDs == "":
+			appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text="Sammle Daten")
+			print("status : " + str(appSuche.getMeter("status")[0] + Schritt))
 			Linie = str(IDs).rstrip()
 			GetThis = ""
 			for a in EntryList2:
@@ -142,7 +176,7 @@ def StockChange(btn):
 			Suche("")
 		except: appSuche.infoBox("Error", "Error")
 	
-
+#MachinenLaden()
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\nF1 = Stock MINUS\nF2 = Stock PLUS")
 appSuche.addLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)
