@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 from appJar import gui  
 from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 from debug import Debug
