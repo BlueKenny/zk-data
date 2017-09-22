@@ -70,6 +70,7 @@ print("StockArtikelAnzahl : " + str(StockArtikelAnzahl))
 print("ListeDerLieferanten : " + str(ListeDerLieferanten))
 print("ListeDerMaschinen : " + str(ListeDerMaschinen))
 
+print(str(len(ListeDerMaschinen)))
 
 SERVER_IP = ("", 10000)
 s = socket.socket()
