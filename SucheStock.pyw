@@ -8,24 +8,24 @@ from random import randint
 import send
 import shutil
 
-EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl", "Machinen"]
-EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl", "Machinen"]
+EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl", "Maschinen"]
+EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl", "Maschinen"]
 appSuche = gui("Stock Suche", "800x600") 
 
 IDToChange = 0
-SearchMachine = ""
+SearchMaschine = ""
 
 appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
 
-def Machinen(btn):
-	global SearchMachine
-	print("Machinen")
+def Maschinen(btn):
+	global SearchMaschine
+	print("Maschinen")
 
-	MachinenLaden()
+	MaschinenLaden()
 
-	SearchMachine = appSuche.openBox(title="Machinen", dirName="Machinen/", fileTypes=None, asFile=False).split("/Machinen/")[1]
-	appSuche.setButton("Machine", SearchMachine)
+	SearchMaschine = appSuche.openBox(title="Maschinen", dirName="Maschinen/", fileTypes=None, asFile=False).split("/Maschinen/")[1]
+	appSuche.setButton("Maschine", SearchMaschine)
 
 	Suche("")
 
@@ -98,24 +98,24 @@ appSuche.addLabelEntry("Bcode")
 appSuche.addLabelEntry("Barcode")
 appSuche.addLabelEntry("Artikel")
 appSuche.addLabelEntry("Ort")
-appSuche.addNamedButton("Machine wählen...", "Machine", Machinen)
+appSuche.addNamedButton("Maschine wählen...", "Maschine", Maschinen)
 appSuche.addListBox("Suche")
 
-def MachinenLaden():
-	print("MachinenLaden")
-	appSuche.setMeter("status", 0, text="Lade Machinen")
-	try: shutil.rmtree("Machinen")
+def MaschinenLaden():
+	print("MaschinenLaden")
+	appSuche.setMeter("status", 0, text="Lade Maschinen")
+	try: shutil.rmtree("Maschinen")
 	except: print("")
 
-	BlueMkDir("Machinen")
-	Anzahl = int(send.GetMachinenAnzahl()); Debug("Anzahl : " + str(Anzahl))
+	BlueMkDir("Maschinen")
+	Anzahl = int(send.GetMaschinenAnzahl()); Debug("Anzahl : " + str(Anzahl))
 
 	Schritt = 100/Anzahl
 	for x in range(Anzahl):
-		appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text="Lade Machinen")
-		pfade = send.GetMachine(x)
+		appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text="Lade Maschinen")
+		pfade = send.GetMaschine(x)
 		for pfad in pfade.split(" "):
-			eaThis = "Machinen"
+			eaThis = "Maschinen"
 			for ea in range(0, len(str(pfad).split("/"))):
 				eaThis = eaThis + "/" + str(pfad).split("/")[ea]
 				if ea + 1 == len(str(pfad).split("/")):
@@ -125,20 +125,20 @@ def MachinenLaden():
 	appSuche.setMeter("status", 100, text="")
 
 def Delete(btn):
-	global SearchMachine
+	global SearchMaschine
 	Debug("Delete")
 	appSuche.setEntry("Bcode", "")
 	appSuche.setEntry("Barcode", "")
 	appSuche.setEntry("Artikel", "")
 	appSuche.setEntry("Ort", "")
-	SearchMachine = ""
-	appSuche.setButton("Machine", "Machine wählen...")
+	SearchMaschine = ""
+	appSuche.setButton("Maschine", "Maschine wählen...")
 
 def Suche(btn):
 	Debug("Suche")
 	appSuche.setMeter("status", 0, text="Suche wird gestartet")
 	
-	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper(), SearchMachine)
+	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper(), SearchMaschine)
 	appSuche.setMeter("status", 10, text="Warte auf daten")
 	appSuche.clearListBox("Suche")
 
@@ -180,7 +180,7 @@ def StockChange(btn):
 			Suche("")
 		except: appSuche.infoBox("Error", "Error")
 	
-#MachinenLaden()
+#MaschinenLaden()
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\nF1 = Stock MINUS\nF2 = Stock PLUS")
 appSuche.addLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)

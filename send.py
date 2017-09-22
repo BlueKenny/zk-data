@@ -21,10 +21,10 @@ while SERVER_IP == (0, 10000):
 			sock.close()
 
 
-def GetMachine(index):
+def GetMaschine(index):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(SERVER_IP)
-	data = "GetMachine(zKz)" + str(index)
+	data = "GetMaschine(zKz)" + str(index)
 
 	Debug("Send " + str(data))
 	data = data.encode()
@@ -34,10 +34,10 @@ def GetMachine(index):
 	sock.close()
 	return data.decode()
 
-def GetMachinenAnzahl():
+def GetMaschinenAnzahl():
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(SERVER_IP)
-	data = "GetMachinenAnzahl"
+	data = "GetMaschinenAnzahl"
 
 	Debug("Send " + str(data))
 	data = data.encode()
@@ -106,7 +106,7 @@ def SendeChangeAnzahl(bcode, anzahl):
 	return data.decode()
 	
 
-def SendeSucheStock(bcode, barcode, artikel, ort, machine):
+def SendeSucheStock(bcode, barcode, artikel, ort, Maschine):
 	#bcode = int(bcode); barcode = str(barcode); artikel = str(artikel);
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(SERVER_IP)
@@ -114,9 +114,9 @@ def SendeSucheStock(bcode, barcode, artikel, ort, machine):
 	Debug("Barcode " + str(barcode))
 	Debug("Artikel " + str(artikel))
 	Debug("Ort " + str(ort))
-	Debug("Machine " + str(machine))
+	Debug("Maschine " + str(Maschine))
 	
-	data = "SearchStock(zKz)" + str(bcode) + "(zkz)" + str(barcode) + "(zkz)" + str(artikel) + "(zkz)" + str(ort) + "(zkz)" + str(machine)
+	data = "SearchStock(zKz)" + str(bcode) + "(zkz)" + str(barcode) + "(zkz)" + str(artikel) + "(zkz)" + str(ort) + "(zkz)" + str(Maschine)
 
 	Debug("Send " + str(data))
 	data = data.encode()
