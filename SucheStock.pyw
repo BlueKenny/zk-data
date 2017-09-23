@@ -42,7 +42,7 @@ def tbFuncSv(btn):
 		send.StockSetArtInfo(IDToChange, a, appChange.getEntry(a))
 	appChange.stop()
 	Delete("")
-	appSuche.setEntry("Bcode", IDToChange)
+	appSuche.setEntry("Suche", IDToChange)
 	Suche("")
 
 def tbFunc(btn):
