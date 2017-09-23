@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
 import socket
 from appJar import gui
@@ -106,17 +106,19 @@ def SendeChangeAnzahl(bcode, anzahl):
 	return data.decode()
 	
 
-def SendeSucheStock(bcode, barcode, artikel, ort, Maschine):
+def SendeSucheStock(suche, ort, Maschine):#(bcode, barcode, artikel, ort, Maschine):
 	#bcode = int(bcode); barcode = str(barcode); artikel = str(artikel);
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(SERVER_IP)
-	Debug("Bcode " + str(bcode))
-	Debug("Barcode " + str(barcode))
-	Debug("Artikel " + str(artikel))
+	#Debug("Bcode " + str(bcode))
+	#Debug("Barcode " + str(barcode))
+	#Debug("Artikel " + str(artikel))
+	Debug("Suche " + str(suche))
 	Debug("Ort " + str(ort))
 	Debug("Maschine " + str(Maschine))
-	
-	data = "SearchStock(zKz)" + str(bcode) + "(zkz)" + str(barcode) + "(zkz)" + str(artikel) + "(zkz)" + str(ort) + "(zkz)" + str(Maschine)
+
+	data = "SearchStock(zKz)" + str(suche) + "(zkz)" + str(ort) + "(zkz)" + str(Maschine)
+	#data = "SearchStock(zKz)" + str(bcode) + "(zkz)" + str(barcode) + "(zkz)" + str(artikel) + "(zkz)" + str(ort) + "(zkz)" + str(Maschine)
 
 	Debug("Send " + str(data))
 	data = data.encode()

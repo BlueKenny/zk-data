@@ -94,9 +94,10 @@ appSuche.setOptionBox("Anzeigen", "Name", value=True, callFunction=True)
 appSuche.setOptionBox("Anzeigen", "PreisVK", value=True, callFunction=True)
 appSuche.setOptionBox("Anzeigen", "Anzahl", value=True, callFunction=True)
 
-appSuche.addLabelEntry("Bcode")
-appSuche.addLabelEntry("Barcode")
-appSuche.addLabelEntry("Artikel")
+appSuche.addLabelEntry("Suche")
+#appSuche.addLabelEntry("Bcode")
+#appSuche.addLabelEntry("Barcode")
+#appSuche.addLabelEntry("Artikel")
 appSuche.addLabelEntry("Ort")
 appSuche.addNamedButton("Maschine wählen...", "Maschine", Maschinen)
 appSuche.addListBox("Suche")
@@ -104,32 +105,41 @@ appSuche.addListBox("Suche")
 def MaschinenLaden():
 	print("MaschinenLaden")
 	appSuche.setMeter("status", 0, text="Lade Maschinen")
-	try: shutil.rmtree("Maschinen")
-	except: print("")
 
-	BlueMkDir("Maschinen")
-	Anzahl = int(send.GetMaschinenAnzahl()); Debug("Anzahl : " + str(Anzahl))
+	try: MaschinenAnzahlIntern = int(BlueLoad("MaschinenAnzahl", "DATA"))
+	except: MaschinenAnzahlIntern = 0
+	Debug("MaschinenAnzahlIntern : " + str(MaschinenAnzahlIntern))
 
-	Schritt = 100/Anzahl
-	for x in range(Anzahl):
-		appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text="Lade Maschinen")
-		pfade = send.GetMaschine(x)
-		for pfad in pfade.split(" "):
-			eaThis = "Maschinen"
-			for ea in range(0, len(str(pfad).split("/"))):
-				eaThis = eaThis + "/" + str(pfad).split("/")[ea]
-				if ea + 1 == len(str(pfad).split("/")):
-					open(eaThis, "w").write(eaThis)
-				else: BlueMkDir(eaThis)
+	MaschinenAnzahlServer = int(send.GetMaschinenAnzahl()); Debug("MaschinenAnzahlServer : " + str(MaschinenAnzahlServer))
+
+	if not MaschinenAnzahlIntern == MaschinenAnzahlServer:
+
+		try: shutil.rmtree("Maschinen")
+		except: print("")
+		BlueMkDir("Maschinen")		
+
+		Schritt = 100/MaschinenAnzahlServer
+		for x in range(MaschinenAnzahlServer):
+			appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text="Lade Maschinen")
+			pfade = send.GetMaschine(x)
+			for pfad in pfade.split(" "):
+				eaThis = "Maschinen"
+				for ea in range(0, len(str(pfad).split("/"))):
+					eaThis = eaThis + "/" + str(pfad).split("/")[ea]
+					if ea + 1 == len(str(pfad).split("/")):
+						open(eaThis, "w").write(eaThis)
+					else: BlueMkDir(eaThis)
+		BlueSave("MaschinenAnzahl", MaschinenAnzahlServer,"DATA")
 	
 	appSuche.setMeter("status", 100, text="")
 
 def Delete(btn):
 	global SearchMaschine
 	Debug("Delete")
-	appSuche.setEntry("Bcode", "")
-	appSuche.setEntry("Barcode", "")
-	appSuche.setEntry("Artikel", "")
+	#appSuche.setEntry("Bcode", "")
+	#appSuche.setEntry("Barcode", "")
+	#appSuche.setEntry("Artikel", "")
+	appSuche.setEntry("Suche", "")
 	appSuche.setEntry("Ort", "")
 	SearchMaschine = ""
 	appSuche.setButton("Maschine", "Maschine wählen...")
@@ -138,7 +148,8 @@ def Suche(btn):
 	Debug("Suche")
 	appSuche.setMeter("status", 0, text="Suche wird gestartet")
 	
-	AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper(), SearchMaschine)
+	AntwortList=send.SendeSucheStock(appSuche.getEntry("Suche"), appSuche.getEntry("Ort").upper(), SearchMaschine)
+	#AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper(), SearchMaschine)
 	appSuche.setMeter("status", 10, text="Warte auf daten")
 	appSuche.clearListBox("Suche")
 
@@ -180,7 +191,7 @@ def StockChange(btn):
 			Suche("")
 		except: appSuche.infoBox("Error", "Error")
 	
-#MaschinenLaden()
+MaschinenLaden()
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\nF1 = Stock MINUS\nF2 = Stock PLUS")
 appSuche.addLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)
