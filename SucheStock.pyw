@@ -190,7 +190,8 @@ def StockChange(btn):
 			os.system("")
 			Suche("")
 		except: appSuche.infoBox("Error", "Error")
-	
+
+appSuche.setFocus("Suche")
 MaschinenLaden()
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\nF1 = Stock MINUS\nF2 = Stock PLUS")
 appSuche.addLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
