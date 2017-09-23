@@ -232,7 +232,7 @@ while True:
 			 # Ort
 			if not OrtSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockOrtList) if OrtSuche in data and counter in indices]; print("Rest nach Ort " + str(indices))
 			 # Maschine
-			#if not MaschineSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockMaschinenList) if MaschineSuche in data and counter in indices]; print("Rest nach Maschine " + str(indices))
+			if not MaschineSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockMaschinenList) if MaschineSuche in data and counter in indices]; print("Rest nach Maschine " + str(indices))
 
 
 			indices = indices[:10]
