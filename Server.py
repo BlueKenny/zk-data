@@ -134,6 +134,7 @@ while True:
 			if VarName == "Maschinen":  
 				StockMaschinenList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				if not StockMaschinenList[ID] in ListeDerMaschinen and not StockMaschinenList[eachFile] == "x": ListeDerMaschinen.append(StockMaschinenList[ID])
 
 		if mode == "StockGetArtInfo":
 			Debug("Mode : " + mode)
