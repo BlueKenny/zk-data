@@ -134,7 +134,7 @@ while True:
 			if VarName == "Maschinen":  
 				StockMaschinenList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-				if not StockMaschinenList[ID] in ListeDerMaschinen and not StockMaschinenList[eachFile] == "x": ListeDerMaschinen.append(StockMaschinenList[ID])
+				if not StockMaschinenList[ID] in ListeDerMaschinen and not StockMaschinenList[ID] == "x": ListeDerMaschinen.append(StockMaschinenList[ID])
 
 		if mode == "StockGetArtInfo":
 			Debug("Mode : " + mode)
@@ -198,7 +198,7 @@ while True:
 			#Debug("OrtSuche : " + OrtSuche)
 			#MaschineSuche = data.split("(zKz)")[1].split("(zkz)")[4]
 			#Debug("MaschineSuche : " + MaschineSuche)
-			SucheSuche = data.split("(zKz)")[1].split("(zkz)")[0]
+			SucheSuche = str(data.split("(zKz)")[1].split("(zkz)")[0])
 			Debug("SucheSuche : " + SucheSuche)
 			OrtSuche = data.split("(zKz)")[1].split("(zkz)")[1]
 			Debug("OrtSuche : " + OrtSuche)
@@ -215,20 +215,13 @@ while True:
 			if len(SucheSuche) == 12 or  len(SucheSuche) == 13 and SucheSuche.isdigit():# Barcode
 				Debug("Barcode")
 				for counter, data in enumerate(StockBarcodeList):
-					if SucheSuche == data:
+					if SucheSuche == str(data):
 						indices.append(counter)
 			# Artikel
 			for counter, data in enumerate(StockArtikelList):
-				if SucheSuche in data:
+				if SucheSuche in str(data):
 					indices.append(counter)
 			
-
-			 # Bcode
-			#if not BcodeSuche.rstrip() == "": indices = [BcodeSuche]; print("Rest nach Bcode " + str(indices))
-			 # Barcode
-			#if not BarcodeSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockBarcodeList) if BarcodeSuche in data and counter in indices]; print("Rest nach Barcode " + str(indices))
-			 # Artikel
-			#if not ArtikelSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockArtikelList) if ArtikelSuche in data and counter in indices]; print("Rest nach Artikel " + str(indices))
 			 # Ort
 			if not OrtSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockOrtList) if OrtSuche in data and counter in indices]; print("Rest nach Ort " + str(indices))
 			 # Maschine

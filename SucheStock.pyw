@@ -90,9 +90,10 @@ tools = ["NEU", "ÄNDERN"]
 appSuche.addToolbar(tools, tbFunc, findIcon=True)
 
 appSuche.addTickOptionBox("Anzeigen", EntryList2)
-appSuche.setOptionBox("Anzeigen", "Name", value=True, callFunction=True)
-appSuche.setOptionBox("Anzeigen", "PreisVK", value=True, callFunction=True)
-appSuche.setOptionBox("Anzeigen", "Anzahl", value=True, callFunction=True)
+try:
+	for eachAnzeigenOption in BlueLoad("Anzeigen", "DATA").split("/"):
+		appSuche.setOptionBox("Anzeigen", eachAnzeigenOption, value=True, callFunction=True)
+except: print("Anzeigen nicht gefunden")
 
 appSuche.addLabelEntry("Suche")
 #appSuche.addLabelEntry("Bcode")
@@ -169,6 +170,20 @@ def Suche(btn):
 	
 	appSuche.setMeter("status", 100, text="")
 
+def SaveIt():
+	Debug("SaveIt")
+	for each in EntryList2:
+		if appSuche.getOptionBox("Anzeigen")[each]:
+			try: AnzeigenListe = AnzeigenListe + "/" + each
+			except: AnzeigenListe = each
+	try:
+		print(AnzeigenListe)
+		BlueSave("Anzeigen", AnzeigenListe, "DATA")
+	except:
+		print("AnzeigenListe ist leer")
+		BlueSave("Anzeigen", "Lieferant/Name/Ort/PreisVK/Anzahl", "DATA")
+	return True
+
 def StockChange(btn):
 	Debug("StockChange")
 	IDToChange = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
@@ -192,7 +207,7 @@ def StockChange(btn):
 		except: appSuche.infoBox("Error", "Error")
 
 appSuche.setFocus("Suche")
-MaschinenLaden()
+#MaschinenLaden()
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\nF1 = Stock MINUS\nF2 = Stock PLUS")
 appSuche.addLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)
@@ -200,4 +215,5 @@ appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
 appSuche.bindKey("<F12>", PrintOrt)
 appSuche.bindKey("<Delete>", Delete)
+appSuche.setStopFunction(SaveIt)
 appSuche.go()
