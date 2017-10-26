@@ -6,6 +6,8 @@ from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 import os
 from RoundUp import *
 import datetime
+now = datetime.datetime.now()
+from random import randint
 
 # Ordner
 BlueMkDir("Stock")
@@ -41,25 +43,35 @@ for x in range(100000, 999999):
 # LOAD
 print("LOAD Database Stock") 
 StockArtikelAnzahl = 0
-for eachDir in os.listdir("Stock/"):
-	for eachFile in os.listdir("Stock/" + eachDir):
-		datei = "Stock/" + eachDir + "/" + eachFile
-		eachFile = int(eachFile)
+AnzDAT = input("Anzahl?\n")
+MaxDAT = 100000 + int(AnzDAT)
+for eachFile in range(100000, MaxDAT):
+	if str(eachFile)[-3] + str(eachFile)[-2] + str(eachFile)[-1] == "000": print(eachFile)
+	ri = str(randint(0,99999999999))
+	ri = ri.replace("0", "A")
+	ri = ri.replace("1", "B")
+	ri = ri.replace("2", "C")
+	ri = ri.replace("3", "D")
+	ri = ri.replace("4", "E")
+	ri = ri.replace("5", "F")
+	ri = ri.replace("6", "G")
+	ri = ri.replace("7", "H")
+	ri = ri.replace("8", "I")
+	ri = ri.replace("9", "G")
+	StockBarcodeList[eachFile]=ri
+	StockArtikelList[eachFile]=ri
+	StockLieferantList[eachFile]=ri
+	StockNameList[eachFile]=ri
+	StockOrtList[eachFile]=ri
+	StockPreisEKList[eachFile]=ri
+	StockPreisVKHList[eachFile]=ri
+	StockPreisVKList[eachFile]=ri
+	StockAnzahlList[eachFile]=ri
+	StockMaschinenList[eachFile]=ri
 
-		if not BlueLoad("Barcode", datei) == None: StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
-		StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
-		StockLieferantList[eachFile]=BlueLoad("Lieferant", datei).lower()
-		StockNameList[eachFile]=BlueLoad("Name", datei)
-		if not BlueLoad("Ort", datei) == None: StockOrtList[eachFile]=str(BlueLoad("Ort", datei)).upper()
-		StockPreisEKList[eachFile]=BlueLoad("PreisEK", datei)
-		StockPreisVKHList[eachFile]=BlueLoad("PreisVKH", datei)
-		StockPreisVKList[eachFile]=BlueLoad("PreisVK", datei)
-		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
-		if not BlueLoad("Maschinen", datei) == None and not BlueLoad("Maschinen", datei) == "": StockMaschinenList[eachFile]=BlueLoad("Maschinen", datei)
-
-		StockArtikelAnzahl  = StockArtikelAnzahl  + 1
-		if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
-		if not StockMaschinenList[eachFile] in ListeDerMaschinen and not StockMaschinenList[eachFile] == "x": ListeDerMaschinen.append(StockMaschinenList[eachFile])
+	StockArtikelAnzahl  = StockArtikelAnzahl  + 1
+	if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
+	if not StockMaschinenList[eachFile] in ListeDerMaschinen and not StockMaschinenList[eachFile] == "x": ListeDerMaschinen.append(StockMaschinenList[eachFile])
 
 print("StockArtikelAnzahl : " + str(StockArtikelAnzahl))
 print("ListeDerLieferanten : " + str(ListeDerLieferanten))
@@ -76,7 +88,6 @@ except: print("Server Port schon gebunden")
 s.listen(1)
 
 def Date():
-	now = datetime.datetime.now()
 	return now.strftime("%Y-%m-%d")
 
 while True:
@@ -189,19 +200,23 @@ while True:
 
 		if mode == "SearchStock":
 			Debug("Mode : " + mode)
+			#BcodeSuche = data.split("(zKz)")[1].split("(zkz)")[0]
+			#Debug("BcodeSuche : " + BcodeSuche)
+			#BarcodeSuche = data.split("(zKz)")[1].split("(zkz)")[1]
+			#Debug("BarcodeSuche : " + BarcodeSuche)
+			#ArtikelSuche = data.split("(zKz)")[1].split("(zkz)")[2]
+			#Debug("ArtikelSuche : " + ArtikelSuche)
+			#OrtSuche = data.split("(zKz)")[1].split("(zkz)")[3]
+			#Debug("OrtSuche : " + OrtSuche)
+			#MaschineSuche = data.split("(zKz)")[1].split("(zkz)")[4]
+			#Debug("MaschineSuche : " + MaschineSuche)
 			SucheSuche = str(data.split("(zKz)")[1].split("(zkz)")[0])
 			Debug("SucheSuche : " + SucheSuche)
 			OrtSuche = data.split("(zKz)")[1].split("(zkz)")[1]
 			Debug("OrtSuche : " + OrtSuche)
-			LieferantSuche = data.split("(zKz)")[1].split("(zkz)")[2]
-			Debug("LieferantSuche : " + LieferantSuche)
-			MaschineSuche = data.split("(zKz)")[1].split("(zkz)")[3]
+			MaschineSuche = data.split("(zKz)")[1].split("(zkz)")[2]
 			Debug("MaschineSuche : " + MaschineSuche)
 			
-			#indices = [x for x in range(100000, 999999)] # ALLE
-			#indices = pool.map(FuncSucheBarcode, indices)
-
-
 			indices = []
 			#indices = [x for x in range(100000, 999999)] # ALLE
 
@@ -212,24 +227,27 @@ while True:
 			if len(SucheSuche) == 12 or  len(SucheSuche) == 13 and SucheSuche.isdigit():# Barcode
 				Debug("Barcode")
 				for counter, data in enumerate(StockBarcodeList):
-					if SucheSuche == str(data):
+					if SucheSuche == data:
 						indices.append(counter)
 			# Artikel
 			for counter, data in enumerate(StockArtikelList):
 				if SucheSuche in str(data):
 					indices.append(counter)
 			
+
+			 # Bcode
+			#if not BcodeSuche.rstrip() == "": indices = [BcodeSuche]; print("Rest nach Bcode " + str(indices))
+			 # Barcode
+			#if not BarcodeSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockBarcodeList) if BarcodeSuche in data and counter in indices]; print("Rest nach Barcode " + str(indices))
+			 # Artikel
+			#if not ArtikelSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockArtikelList) if ArtikelSuche in data and counter in indices]; print("Rest nach Artikel " + str(indices))
 			 # Ort
 			if not OrtSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockOrtList) if OrtSuche in data and counter in indices]; print("Rest nach Ort " + str(indices))
-
-			 # Lieferant
-			if not LieferantSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockLieferantList) if LieferantSuche in data and counter in indices]; print("Rest nach Lieferant " + str(indices))
-
 			 # Maschine
 			if not MaschineSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockMaschinenList) if MaschineSuche in data and counter in indices]; print("Rest nach Maschine " + str(indices))
 
 
-			indices = indices[:50]
+			indices = indices[:10]
 			if indices == []: indices = [0]
 		
 			try:
