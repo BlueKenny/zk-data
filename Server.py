@@ -25,8 +25,23 @@ StockMaschinenList = []
 ListeDerLieferanten = []
 ListeDerMaschinen = []
 
+try:
+	INDEXLIMIT = int(BlueLoad("IndexLimit", "DATA"))
+except:
+	INDEXLIMIT = 10
+	BlueSave("IndexLimit", "10", "DATA")
+
 Debug("Make Cache")
-for x in range(100000, 999999):
+if not BlueLoad("CacheLimit", "DATA") == None:
+	MINCache = int(BlueLoad("CacheLimit", "DATA").split("-")[0])
+	MAXCache = int(BlueLoad("CacheLimit", "DATA").split("-")[1])
+else:
+	MINCache = 700000
+	MAXCache = 999999
+	BlueSave("CacheLimit", "700000-999999", "DATA")
+Debug("MINCache " + str(MINCache))
+Debug("MAXCache " + str(MAXCache))
+for x in range(MINCache, MAXCache):
 	StockBarcodeList.insert(x, "x")
 	StockArtikelList.insert(x, "x")
 	StockLieferantList.insert(x, "x")
@@ -57,9 +72,10 @@ for eachDir in os.listdir("Stock/"):
 		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
 		if not BlueLoad("Maschinen", datei) == None and not BlueLoad("Maschinen", datei) == "": StockMaschinenList[eachFile]=BlueLoad("Maschinen", datei)
 
-		StockArtikelAnzahl  = StockArtikelAnzahl  + 1
+		StockArtikelAnzahl = StockArtikelAnzahl  + 1
 		if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
-		if not StockMaschinenList[eachFile] in ListeDerMaschinen and not StockMaschinenList[eachFile] == "x": ListeDerMaschinen.append(StockMaschinenList[eachFile])
+		if not StockMaschinenList[eachFile] in ListeDerMaschinen and not StockMaschinenList[eachFile] == "x":
+			ListeDerMaschinen.append(StockMaschinenList[eachFile])
 
 print("StockArtikelAnzahl : " + str(StockArtikelAnzahl))
 print("ListeDerLieferanten : " + str(ListeDerLieferanten))
@@ -114,7 +130,9 @@ while True:
 			if VarName == "Lieferant": 
 				StockLieferantList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				if not StockLieferantList[ID] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile]) # Neuer Artikel
 			if VarName == "Name":  
+				if StockNameList[ID] == "x": StockArtikelAnzahl = StockArtikelAnzahl  + 1 # Neuer Artikel
 				StockNameList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Ort":  
@@ -135,7 +153,9 @@ while True:
 			if VarName == "Maschinen":  
 				StockMaschinenList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-3] + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-				if not StockMaschinenList[ID] in ListeDerMaschinen and not StockMaschinenList[ID] == "x": ListeDerMaschinen.append(StockMaschinenList[ID])
+				if not StockMaschinenList[ID] in ListeDerMaschinen and not StockMaschinenList[ID] == "x": # Neuer Artikel
+					ListeDerMaschinen.append(StockMaschinenList[ID])
+					LenListeDerMaschinen = str(len(ListeDerMaschinen))
 
 		if mode == "StockGetArtInfo":
 			Debug("Mode : " + mode)
@@ -229,7 +249,7 @@ while True:
 			if not MaschineSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockMaschinenList) if MaschineSuche in data and counter in indices]; print("Rest nach Maschine " + str(indices))
 
 
-			indices = indices[:50]
+			indices = indices[:INDEXLIMIT]
 			if indices == []: indices = [0]
 		
 			try:

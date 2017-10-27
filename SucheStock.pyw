@@ -7,6 +7,7 @@ import subprocess
 from random import randint
 import send
 import shutil
+import libs.pyperclip.pyperclip.__init__ as pyperclip # Linux install xclip
 
 EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl", "Maschinen"]
 EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl", "Maschinen"]
@@ -17,6 +18,19 @@ SearchMaschine = ""
 
 appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
+
+
+LastClipBoard = pyperclip.paste()
+def getClipBoard():
+	global LastClipBoard
+	NewClipBoard = pyperclip.paste()
+	if not LastClipBoard == NewClipBoard:
+		print(NewClipBoard)
+		appSuche.setEntry("Suche", NewClipBoard)
+		Suche("")
+
+		LastClipBoard = NewClipBoard
+
 
 def Maschinen(btn):
 	global SearchMaschine
@@ -148,8 +162,7 @@ def Suche(btn):
 	Debug("Suche")
 	appSuche.setMeter("status", 0, text="Suche wird gestartet")
 	
-	AntwortList=send.SendeSucheStock(appSuche.getEntry("Suche"), appSuche.getEntry("Ort").upper(), appSuche.getEntry("Lieferant").lower(), SearchMaschine)
-	#AntwortList=send.SendeSucheStock(appSuche.getEntry("Bcode"), appSuche.getEntry("Barcode"), appSuche.getEntry("Artikel").lower(), appSuche.getEntry("Ort").upper(), SearchMaschine)
+	AntwortList=send.SendeSucheStock(appSuche.getEntry("Suche").replace(" ", ""), appSuche.getEntry("Ort").upper(), appSuche.getEntry("Lieferant").lower(), SearchMaschine)
 	appSuche.setMeter("status", 10, text="Warte auf daten")
 	appSuche.clearListBox("Suche")
 
@@ -167,6 +180,7 @@ def Suche(btn):
 
 			appSuche.addListItem("Suche", Linie)
 	
+	appSuche.setLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
 	appSuche.setMeter("status", 100, text="")
 
 def SaveIt():
@@ -215,4 +229,5 @@ appSuche.bindKey("<F2>", StockChange)
 appSuche.bindKey("<F12>", PrintOrt)
 appSuche.bindKey("<Delete>", Delete)
 appSuche.setStopFunction(SaveIt)
+if BlueLoad("Clipboard", "DATA") == "1": appSuche.registerEvent(getClipBoard)
 appSuche.go()

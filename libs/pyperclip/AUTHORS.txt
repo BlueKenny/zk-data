@@ -1,0 +1,20 @@
+Here is an inevitably incomplete list of MUCH-APPRECIATED CONTRIBUTORS --
+people who have submitted patches, reported bugs, added translations, helped
+answer newbie questions, and generally made Pyperclip that much better:
+
+Al Sweigart
+Alexander Cobleigh ‏@cblgh
+Anton Yakutovich https://github.com/drakulavich
+Cees Timmerman https://github.com/CTimmerman
+Chris Clark
+Edd Barrett https://github.com/vext01
+hinlader https://github.com/hinlader
+Jonathan Slenders https://github.com/jonathanslenders
+Marcelo Glezer https://github.com/gato
+Maximilian Hils https://github.com/mhils
+Nikolaos-Digenis Karagiannis https://github.com/Digenis
+Nils Ohlmeier https://github.com/nils-ohlmeier
+Stefan Scherfke https://github.com/sscherfke
+Steve Elam
+Tamir Bahar https://github.com/tmr232
+ZEDGR https://github.com/ZEDGR
