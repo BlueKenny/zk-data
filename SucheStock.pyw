@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from appJar import gui  
+from libs.appjar0061 import gui  
 from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 from debug import Debug
 import os

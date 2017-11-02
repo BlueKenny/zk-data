@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import socket
-from appJar import gui
+#from appJar import gui
 from debug import *
 
 SERVER_IP_LIST=["raspberrypi", "localhost", "127.0.0.1"]

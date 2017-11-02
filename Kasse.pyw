@@ -1,31 +1,56 @@
 #!/usr/bin/env python3.6
-from appJar import gui
+from libs.appjar0830 import gui
 from send import *
 
-appKasse = gui("Kasse", "500x500")
+appKasse = gui("Kasse", "600x600")
 EntryZahl = 10
 
-def Verify(btn):
-	OK = True
-	for EntryName in range(EntryZahl):
-		entryName = "e" + str(EntryName)
-		text = str(appKasse.getEntry(entryName))
-		appKasse.setEntryWaitingValidation(entryName)
-		if len(text) == 12 or len(text) == 13:
-			ID = SendeSucheStock(text, "", "").rstrip("<K>")
-			Anzahl = str(StockGetArtInfo("(zkz)Anzahl", ID)).split(" | ")[1]
-			if Anzahl == "x":
-				appKasse.setEntryInvalid(entryName)
-				OK = False
-			else:
-				appKasse.setEntryValid(entryName)
-				if Anzahl == "0": appKasse.infoBox("Achtung", "[" + str(StockGetArtInfo("(zkz)Name", ID)).split(" | ")[1] + "] ist schon nicht mehr im Stock")
+	
 
+def Verify(entryName):
+	print("Verify " + str(entryName))
+
+	text = str(appKasse.getEntry(entryName))
+	EntryIndex = int(entryName.replace("e", ""))
+	appKasse.setEntryWaitingValidation(entryName)
+	appKasse.setLabel("l" + str(EntryIndex), "")
+
+	if len(text) == 13 or len(text) == 6:
+		if len(text) == 6: ID = text
+		else: ID = SendeSucheStock(text, "", "", "").rstrip("<K>")
+		Anzahl = str(StockGetArtInfo("(zkz)Anzahl", ID)).split(" | ")[1]
+		Name = str(StockGetArtInfo("(zkz)Name", ID)).split(" | ")[1]
+		
+
+		if Anzahl == "x" or Anzahl == "0":
+			appKasse.setEntryInvalid(entryName)
+		else:
+			appKasse.setEntryValid(entryName)
+			
+		appKasse.setLabel("l" + str(EntryIndex), ID + " | " + Name + " | Anzahl : " + Anzahl)
 
 for EntryName in range(EntryZahl):
 	appKasse.addValidationEntry("e" + str(EntryName))
-	appKasse.setEntryMaxLength("e" + str(EntryName), 13)
-	#appKasse.setEntryChangeFunction("e" + str(EntryName), Verify)
-appKasse.addButton("OK", Verify)
+	appKasse.setEntryChangeFunction("e" + str(EntryName), Verify)
 
+	appKasse.addLabel("l" + str(EntryName), "")
+
+def Go(btn):
+	print("Go ")
+	for EntryName in range(EntryZahl):
+		Label = appKasse.getLabel("l" + str(EntryName))
+		if not Label == "":
+			ID = Label.split(" | ")[0]
+			Name = Label.split(" | ")[1]
+			Anzahl = Label.split(" | ")[2].replace("Anzahl : ", "")
+			if not Anzahl == "x" or Anzahl == "0":
+					try:
+						SendeChangeAnzahl(ID, "-1")
+						appKasse.setEntry("e" + str(EntryName), "")
+						appKasse.setLabel("l" + str(EntryName), "")
+						#appKasse.infoBox("Stock Geändert", "Sie haben 1x " + str(Name) + " Entfernt")
+					except: appKasse.infoBox("Error", "Error: ID " + str(ID))
+			
+
+appKasse.addButton("OK", Go)
 appKasse.go()

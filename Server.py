@@ -6,7 +6,9 @@ from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 import os
 from RoundUp import * 
 import datetime
+import time
 
+SlowDownFaktor = 0
 # Ordner
 BlueMkDir("Stock")
 BlueMkDir("StockBewegung")
@@ -62,6 +64,7 @@ for eachDir in os.listdir("Stock/"):
 		eachFile = int(eachFile)
 
 		if not BlueLoad("Barcode", datei) == None: StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
+
 		StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
 		StockLieferantList[eachFile]=BlueLoad("Lieferant", datei).lower()
 		StockNameList[eachFile]=BlueLoad("Name", datei)
@@ -107,6 +110,7 @@ while True:
 		data = data.decode()
 		Debug("Data : " + data)
 
+		if not SlowDownFaktor == 0: time.sleep(SlowDownFaktor)
 		mode = data.split("(zKz)")[0]
 
 		Antwort = "x"
