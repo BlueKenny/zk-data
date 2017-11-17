@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import sys
 import socket
-#from appJar import gui
+from BlueFunc import *
 from debug import *
 
-SERVER_IP_LIST=["raspberrypi", "localhost", "127.0.0.1"]
+
+SERVER_IP_LIST=["warenannahmepc1", "127.0.0.1"]
 
 SERVER_IP = (0, 10000)
 while SERVER_IP == (0, 10000):
