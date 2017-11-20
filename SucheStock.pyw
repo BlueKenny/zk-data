@@ -127,8 +127,8 @@ def MaschinenLaden():
 
 	if not MaschinenAnzahlIntern == MaschinenAnzahlServer:
 
-		try: shutil.rmtree("Maschinen")
-		except: print("")
+		#try: shutil.rmtree("Maschinen")
+		#except: print("")
 		BlueMkDir("Maschinen")		
 
 		Schritt = 100/MaschinenAnzahlServer
