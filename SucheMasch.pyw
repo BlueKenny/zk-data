@@ -67,6 +67,7 @@ def Check():
 	Artikel = BlueLoad("A" + Teil, DATAFile)
 	Lieferant = BlueLoad("L" + Teil, DATAFile)
 
+	if ListeDerTeile[CurrentTeilPos] == None: ListeDerTeile[CurrentTeilPos] = ""
 	if len(ListeDerTeile[CurrentTeilPos].split(":")) == 3:
 		ID = ListeDerTeile[CurrentTeilPos].split(":")[1].replace("[", "").replace("]", "")
 	else:
