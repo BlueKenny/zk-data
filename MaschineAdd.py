@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 from libs.appjar0830 import gui  
 from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 
@@ -29,6 +29,9 @@ def save(btn):
 	BlueSave("A" + appMasch.getEntry("Index"), appMasch.getEntry("Artikel"), Datei)
 	BlueSave("L" + appMasch.getEntry("Index"), appMasch.getEntry("Lieferant"), Datei)
 
+	appMasch.setEntry("Index", int(appMasch.getEntry("Index")) + 1)
+	appMasch.setEntry("Artikel", "")
+
 def Maschinen(btn):
 	global DIREXPLO; global DIRMASCH
 	DIREXPLO = appMasch.openBox(title="Maschine wählen", dirName=DIRMASCH, fileTypes=[("images", "*.gif")], asFile=False, parent=None)
@@ -40,7 +43,7 @@ def Maschinen(btn):
 
 appMasch.addNamedButton("Maschine wählen...", "Maschine", Maschinen)
 
-appMasch.addLabelEntry("Index")
+appMasch.addLabelEntry("Index"); appMasch.setEntry("Index", "1")
 appMasch.addLabelEntry("Artikel")
 appMasch.addLabelEntry("Lieferant")
 appMasch.addButton("Speichern", save)

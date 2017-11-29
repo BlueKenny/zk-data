@@ -12,6 +12,7 @@ SlowDownFaktor = 0
 # Ordner
 BlueMkDir("Stock")
 BlueMkDir("StockBewegung")
+BlueMkDir("Kunden")
 
 StockBarcodeList = []
 StockArtikelList = []
@@ -22,10 +23,12 @@ StockPreisEKList = []
 StockPreisVKHList = []
 StockPreisVKList = []
 StockAnzahlList = []
-StockMaschinenList = []
-
 ListeDerLieferanten = []
-ListeDerMaschinen = []
+KundeVornameList = []
+KundeNachnameList = []
+KundeTelList = []
+KundeAdresseList = []
+KundeOrtList = []
 
 try:
 	INDEXLIMIT = int(BlueLoad("IndexLimit", "DATA"))
@@ -53,45 +56,59 @@ for x in range(MINCache, MAXCache):
 	StockPreisVKHList.insert(x, "x")
 	StockPreisVKList.insert(x, "x")
 	StockAnzahlList.insert(x, "x")
-	StockMaschinenList.insert(x, "x")
+	KundeVornameList.insert(x, "x")
+	KundeNachnameList.insert(x, "x")
+	KundeTelList.insert(x, "x")
+	KundeAdresseList.insert(x, "x")
+	KundeOrtList.insert(x, "x")
 
 # LOAD
 print("LOAD Database Stock") 
 StockArtikelAnzahl = 0
+KundenAnzahl = 0
+NeueKundenID = 10
 for eachDir in os.listdir("Stock/"):
 	for eachFile in os.listdir("Stock/" + eachDir):
 
 		datei = "Stock/" + eachDir + "/" + eachFile
 		eachFile = int(eachFile)
 
-		if not BlueLoad("Barcode", datei) == None: StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
+		if BlueLoad("Barcode", datei) == None: BlueSave("Barcode", "x", datei)
+		StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
 
 		StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
+		if BlueLoad("Lieferant", datei) == None: BlueSave("Lieferant", "x", datei)
 		StockLieferantList[eachFile]=BlueLoad("Lieferant", datei).lower()
 		StockNameList[eachFile]=BlueLoad("Name", datei)
-		if not BlueLoad("Ort", datei) == None: StockOrtList[eachFile]=str(BlueLoad("Ort", datei)).upper()
+		if BlueLoad("Ort", datei) == None: BlueSave("Ort", "x", datei)
+		StockOrtList[eachFile]=str(BlueLoad("Ort", datei)).upper()
 		StockPreisEKList[eachFile]=BlueLoad("PreisEK", datei)
 		StockPreisVKHList[eachFile]=BlueLoad("PreisVKH", datei)
 		StockPreisVKList[eachFile]=BlueLoad("PreisVK", datei)
 		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
-		if not BlueLoad("Maschinen", datei) == None and not BlueLoad("Maschinen", datei) == "": StockMaschinenList[eachFile]=BlueLoad("Maschinen", datei)
 
 		StockArtikelAnzahl = StockArtikelAnzahl  + 1
 		if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
-		if not StockMaschinenList[eachFile] in ListeDerMaschinen and not StockMaschinenList[eachFile] == "x":
-			ListeDerMaschinen.append(StockMaschinenList[eachFile])
 
-	if len(eachDir) == 3:
-		BlueMkDir("Stock/" + eachDir[-2] + eachDir[-1])
-		for eachFile in os.listdir("Stock/" + eachDir):
-			os.rename("Stock/"+ eachDir[-3] + eachDir[-2] + eachDir[-1] + "/" + eachFile, "Stock/" + eachDir[-2] + eachDir[-1] + "/" + eachFile)
-		os.rmdir("Stock/"+ eachDir[-3] + eachDir[-2] + eachDir[-1])
+for eachDir in os.listdir("Kunden/"):
+	for eachFile in os.listdir("Kunden/" + eachDir):
+
+		datei = "Kunden/" + eachDir + "/" + eachFile
+		eachFile = int(eachFile)
+		if eachFile > NeueKundenID: NeueKundenID = eachFile + 1
+		KundeVornameList[eachFile]=BlueLoad("Vorname", datei)
+		KundeNachnameList[eachFile]=BlueLoad("Nachname", datei)
+		KundeTelList[eachFile]=BlueLoad("Tel", datei)
+		KundeAdresseList[eachFile]=BlueLoad("Adresse", datei)
+		KundeOrtList[eachFile]=BlueLoad("Ort", datei)
+	
+		KundenAnzahl = KundenAnzahl  + 1
 
 print("StockArtikelAnzahl : " + str(StockArtikelAnzahl))
 print("ListeDerLieferanten : " + str(ListeDerLieferanten))
-print("ListeDerMaschinen : " + str(ListeDerMaschinen))
-LenListeDerMaschinen = str(len(ListeDerMaschinen))
-print("LenListeDerMaschinen : " + str(LenListeDerMaschinen))
+print("KundenAnzahl : " + str(KundenAnzahl))
+print("NeueKundenID : " + str(NeueKundenID))
+
 
 SERVER_IP = ("", 10000)
 s = socket.socket()
@@ -161,12 +178,33 @@ while True:
 			if VarName == "Anzahl":  
 				StockAnzahlList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-			if VarName == "Maschinen":  
-				StockMaschinenList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-				if not StockMaschinenList[ID] in ListeDerMaschinen and not StockMaschinenList[ID] == "x": # Neuer Artikel
-					ListeDerMaschinen.append(StockMaschinenList[ID])
-					LenListeDerMaschinen = str(len(ListeDerMaschinen))
+
+		if mode == "KundeSetInfo":
+			Debug("Mode : " + mode)
+			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
+			VarName = str(data.split("(zKz)")[1].split("(zkz)")[1])
+			Var = str(data.split("(zKz)")[1].split("(zkz)")[2])
+			Debug("ID :  " + str(ID))
+			Debug("VarName :  " + str(VarName))
+			Debug("Var :  " + str(Var))
+			BlueMkDir("Kunden/" + str(ID)[-2] + str(ID)[-1])
+
+			if VarName == "Vorname": 
+				KundeVornameList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Nachname": 
+				if KundeNachnameList[ID] == "x": KundenAnzahl = KundenAnzahl  + 1 # Neuer Kunde
+				KundeNachnameList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Tel": 
+				KundeTelList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Adresse":
+				KundeAdresseList[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Ort":  
+				KundeOrtList[ID]=str(Var).upper()
+				BlueSave(str(VarName), str(Var).upper(), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 
 		if mode == "StockGetArtInfo":
 			Debug("Mode : " + mode)
@@ -188,23 +226,43 @@ while True:
 					if Var == "Anzahl":  Antwort = Antwort + " | " + str(StockAnzahlList[ID])
 					if Var == "Barcode":  Antwort = Antwort + " | " + str(StockBarcodeList[ID])
 					if Var == "Lieferant":  Antwort = Antwort + " | " + str(StockLieferantList[ID])
-					if Var == "Maschinen":  Antwort = Antwort + " | " + str(StockMaschinenList[ID])
+				except:
+					Antwort = Antwort + "None"
+
+		if mode == "KundeGetInfo":
+			Debug("Mode : " + mode)
+			print(data.split("(zKz)")[1])
+			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
+			Vars = str(data.split(str(ID))[1]).split("(zkz)")
+			Debug("ID :  " + str(ID))
+			Debug("Vars :  " + str(Vars))
+
+			Antwort = str(ID)
+			for Var in Vars:
+				try:
+					if Var == "Vorname":  Antwort = Antwort + " | " + str(KundeVornameList[ID]).title()
+					if Var == "Nachname":  Antwort = Antwort + " | " + str(KundeNachnameList[ID]).title()
+					if Var == "Tel":  Antwort = Antwort + " | " + str(KundeTelList[ID])
+					if Var == "Adresse":  Antwort = Antwort + " | " + str(KundeAdresseList[ID]).title()
+					if Var == "Ort":  Antwort = Antwort + " | " + str(KundeOrtList[ID]).title()
 				except:
 					Antwort = Antwort + "None"
 		
-		if mode == "GetMaschine":
-			Debug("Mode : " + mode)
-			MaschineIndex = int(data.split("(zKz)")[1].split("(zkz)")[0])
-			Debug("MaschineIndex : " + str(MaschineIndex))
-			Antwort = str((ListeDerMaschinen[MaschineIndex]))
-
-		if mode == "GetMaschinenAnzahl":
-			Debug("Mode : " + mode)
-			Antwort = str(LenListeDerMaschinen)
-
 		if mode == "GetStockZahl":
 			Debug("Mode : " + mode)
 			Antwort = str(StockArtikelAnzahl)
+
+		if mode == "GetKundenZahl":
+			Debug("Mode : " + mode)
+			Antwort = str(KundenAnzahl)
+
+		if mode == "NeueKundenID":
+			Debug("Mode : " + mode)
+			while True:
+				Debug("NeueKundenID: " + str(NeueKundenID))
+				if not os.path.exists("Kunden/" + str(NeueKundenID)[-2] + str(NeueKundenID)[-1] + "/" + str(NeueKundenID)): break
+				NeueKundenID = NeueKundenID + 1
+			Antwort = str(NeueKundenID)
 
 		if mode == "ChangeStock":
 			Debug("Mode : " + mode)
@@ -230,15 +288,8 @@ while True:
 			Debug("OrtSuche : " + OrtSuche)
 			LieferantSuche = data.split("(zKz)")[1].split("(zkz)")[2]
 			Debug("LieferantSuche : " + LieferantSuche)
-			MaschineSuche = data.split("(zKz)")[1].split("(zkz)")[3]
-			Debug("MaschineSuche : " + MaschineSuche)
 			
-			#indices = [x for x in range(100000, 999999)] # ALLE
-			#indices = pool.map(FuncSucheBarcode, indices)
-
-
 			indices = []
-			#indices = [x for x in range(100000, 999999)] # ALLE
 
 			# Suche Bcode
 			if len(SucheSuche) == 6 and SucheSuche.isdigit():# Bcode
@@ -260,9 +311,43 @@ while True:
 			 # Lieferant
 			if not LieferantSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockLieferantList) if LieferantSuche in data and counter in indices]; print("Rest nach Lieferant " + str(indices))
 
-			 # Maschine
-			if not MaschineSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockMaschinenList) if MaschineSuche in data and counter in indices]; print("Rest nach Maschine " + str(indices))
 
+			indices = indices[:INDEXLIMIT]
+			if indices == []: indices = [0]
+		
+			try:
+				Antwort = " "
+				for eachDat in indices:
+					Antwort = Antwort.rstrip() + str(eachDat) + "<K>"
+
+			except: Debug("Nichts gefunden")
+
+		if mode == "SearchKunde":
+			Debug("Mode : " + mode)
+			SucheSuche = str(data.split("(zKz)")[1].split("(zkz)")[0])
+			Debug("SucheSuche : " + SucheSuche)
+			TelSuche = data.split("(zKz)")[1].split("(zkz)")[1]
+			Debug("TelSuche : " + TelSuche)
+			OrtSuche = data.split("(zKz)")[1].split("(zkz)")[2]
+			Debug("OrtSuche : " + OrtSuche)
+			
+			indices = []
+
+			
+			# Suche Kundennummer
+			if SucheSuche.isdigit():
+				Debug("Kundennummer")
+				indices.append(int(SucheSuche))
+
+			if not SucheSuche == "":
+				for NameTeil in SucheSuche.split(" "):
+					NameTeil = NameTeil.lower()
+					for counter, data in enumerate(KundeVornameList):
+						if NameTeil in str(data).lower() and not counter in indices:
+							indices.append(counter)
+					for counter, data in enumerate(KundeNachnameList):
+						if NameTeil in str(data).lower() and not counter in indices:
+							indices.append(counter)
 
 			indices = indices[:INDEXLIMIT]
 			if indices == []: indices = [0]
