@@ -10,9 +10,11 @@ import time
 
 SlowDownFaktor = 0
 # Ordner
-BlueMkDir("Stock")
-BlueMkDir("StockBewegung")
-BlueMkDir("Kunden")
+DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
+BlueMkDir(DIR)
+BlueMkDir(DIR + "Stock")
+BlueMkDir(DIR + "StockBewegung")
+BlueMkDir(DIR + "Kunden")
 
 StockBarcodeList = []
 StockArtikelList = []
@@ -31,19 +33,19 @@ KundeAdresseList = []
 KundeOrtList = []
 
 try:
-	INDEXLIMIT = int(BlueLoad("IndexLimit", "DATA"))
+	INDEXLIMIT = int(BlueLoad("IndexLimit", DIR + "DATA"))
 except:
 	INDEXLIMIT = 20
-	BlueSave("IndexLimit", "20", "DATA")
+	BlueSave("IndexLimit", "20", DIR + "DATA")
 
 Debug("Make Cache")
-if not BlueLoad("CacheLimit", "DATA") == None:
-	MINCache = int(BlueLoad("CacheLimit", "DATA").split("-")[0])
-	MAXCache = int(BlueLoad("CacheLimit", "DATA").split("-")[1])
+if not BlueLoad("CacheLimit", DIR + "DATA") == None:
+	MINCache = int(BlueLoad("CacheLimit", DIR + "DATA").split("-")[0])
+	MAXCache = int(BlueLoad("CacheLimit", DIR + "DATA").split("-")[1])
 else:
 	MINCache = 0
 	MAXCache = 999999
-	BlueSave("CacheLimit", "0-999999", "DATA")
+	BlueSave("CacheLimit", "0-999999", DIR + "DATA")
 Debug("MINCache " + str(MINCache))
 Debug("MAXCache " + str(MAXCache))
 for x in range(MINCache, MAXCache):
@@ -67,10 +69,10 @@ print("LOAD Database Stock")
 StockArtikelAnzahl = 0
 KundenAnzahl = 0
 NeueKundenID = 10
-for eachDir in os.listdir("Stock/"):
-	for eachFile in os.listdir("Stock/" + eachDir):
+for eachDir in os.listdir(DIR + "Stock/"):
+	for eachFile in os.listdir(DIR + "Stock/" + eachDir):
 
-		datei = "Stock/" + eachDir + "/" + eachFile
+		datei = DIR + "Stock/" + eachDir + "/" + eachFile
 		eachFile = int(eachFile)
 
 		if BlueLoad("Barcode", datei) == None: BlueSave("Barcode", "x", datei)
@@ -90,10 +92,10 @@ for eachDir in os.listdir("Stock/"):
 		StockArtikelAnzahl = StockArtikelAnzahl  + 1
 		if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
 
-for eachDir in os.listdir("Kunden/"):
-	for eachFile in os.listdir("Kunden/" + eachDir):
+for eachDir in os.listdir(DIR + "Kunden/"):
+	for eachFile in os.listdir(DIR + "Kunden/" + eachDir):
 
-		datei = "Kunden/" + eachDir + "/" + eachFile
+		datei = DIR + "Kunden/" + eachDir + "/" + eachFile
 		eachFile = int(eachFile)
 		if eachFile > NeueKundenID: NeueKundenID = eachFile + 1
 		KundeVornameList[eachFile]=BlueLoad("Vorname", datei)
@@ -147,37 +149,37 @@ while True:
 			Debug("ID :  " + str(ID))
 			Debug("VarName :  " + str(VarName))
 			Debug("Var :  " + str(Var))
-			BlueMkDir("Stock/" + str(ID)[-2] + str(ID)[-1])
+			BlueMkDir(DIR + "Stock/" + str(ID)[-2] + str(ID)[-1])
 
 			if VarName == "Barcode": 
 				StockBarcodeList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Artikel": 
 				StockArtikelList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Lieferant": 
 				StockLieferantList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-				if not StockLieferantList[ID] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile]) # Neuer Artikel
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				if not StockLieferantList[ID] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[ID]) # Neuer Artikel
 			if VarName == "Name":  
 				if StockNameList[ID] == "x": StockArtikelAnzahl = StockArtikelAnzahl  + 1 # Neuer Artikel
 				StockNameList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Ort":  
 				StockOrtList[ID]=str(Var).upper()
-				BlueSave(str(VarName), str(Var).upper(), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var).upper(), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "PreisEK":  
 				StockPreisEKList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "PreisVKH":  
 				StockPreisVKHList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "PreisVK":  
 				StockPreisVKList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Anzahl":  
 				StockAnzahlList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 
 		if mode == "KundeSetInfo":
 			Debug("Mode : " + mode)
@@ -191,20 +193,20 @@ while True:
 
 			if VarName == "Vorname": 
 				KundeVornameList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Nachname": 
 				if KundeNachnameList[ID] == "x": KundenAnzahl = KundenAnzahl  + 1 # Neuer Kunde
 				KundeNachnameList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Tel": 
 				KundeTelList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Adresse":
 				KundeAdresseList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var), DIR + "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Ort":  
 				KundeOrtList[ID]=str(Var).upper()
-				BlueSave(str(VarName), str(Var).upper(), "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				BlueSave(str(VarName), str(Var).upper(), DIR + "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 
 		if mode == "StockGetArtInfo":
 			Debug("Mode : " + mode)
@@ -260,7 +262,7 @@ while True:
 			Debug("Mode : " + mode)
 			while True:
 				Debug("NeueKundenID: " + str(NeueKundenID))
-				if not os.path.exists("Kunden/" + str(NeueKundenID)[-2] + str(NeueKundenID)[-1] + "/" + str(NeueKundenID)): break
+				if not os.path.exists(DIR + "Kunden/" + str(NeueKundenID)[-2] + str(NeueKundenID)[-1] + "/" + str(NeueKundenID)): break
 				NeueKundenID = NeueKundenID + 1
 			Antwort = str(NeueKundenID)
 
@@ -275,9 +277,9 @@ while True:
 			StockAnzahlList[BcodeSuche] = int(AltStock) + int(NewStock)
 			BlueSave("Anzahl", StockAnzahlList[BcodeSuche], "Stock/" + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
 
-			BlueMkDir("StockBewegung/" + str(Date()).split("-")[0])
-			BlueMkDir("StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1])
-			DateiStockBewegung = "StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1] + "/" + str(Date()).split("-")[2]
+			BlueMkDir(DIR + "StockBewegung/" + str(Date()).split("-")[0])
+			BlueMkDir(DIR + "StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1])
+			DateiStockBewegung = DIR + "StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1] + "/" + str(Date()).split("-")[2]
 			open(DateiStockBewegung, "a").write("\n" + str(BcodeSuche) + " from " + str(AltStock) + " to " + str(StockAnzahlList[BcodeSuche]))
 
 		if mode == "SearchStock":
