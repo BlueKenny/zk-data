@@ -71,14 +71,14 @@ def Check():
 	if len(ListeDerTeile[CurrentTeilPos].split(":")) == 3:
 		ID = ListeDerTeile[CurrentTeilPos].split(":")[1].replace("[", "").replace("]", "")
 	else:
-		ID = send.SendeSucheStock(Artikel, "", Lieferant, "")
+		ID = send.SendeSucheStock(Artikel, "", Lieferant)
 		ID = ID.split("<K>")[0]
 	print("ID " + ID)
 
 	Linie = Teil
 	
 	if not ID == "0":
-		GetArtInfo = str(send.StockGetArtInfo("(zkz)Name(zkz)Ort(zkz)PreisVK(zkz)Anzahl", ID))
+		GetArtInfo = str(send.StockGetArtInfo("(zkz)Name(zkz)Ort(zkz)PreisVK", ID))
 		Name = GetArtInfo.split(" | ")[1]
 		Ort = GetArtInfo.split(" | ")[2]
 		PreisVK = GetArtInfo.split(" | ")[3]

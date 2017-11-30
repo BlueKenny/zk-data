@@ -10,8 +10,9 @@ import time
 
 SlowDownFaktor = 0
 # Ordner
-DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
-BlueMkDir(DIR)
+DIR = ""
+#DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
+#BlueMkDir(DIR)
 BlueMkDir(DIR + "Stock")
 BlueMkDir(DIR + "StockBewegung")
 BlueMkDir(DIR + "Kunden")
