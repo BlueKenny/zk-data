@@ -10,7 +10,8 @@ def BlueLenDatei(File):	#	Gibt die anzahl linie zuruck in einem dokument
 
 def BlueMkDir(directory):#	Macht ein verzeichnis wenn es noch nicht existiert
 	if not os.path.exists(directory):
-		os.mkdir(directory)
+		os.mkdirdirs(directory)
+		#os.mkdir(directory)
 
 
 
