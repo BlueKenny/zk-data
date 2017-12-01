@@ -17,13 +17,7 @@ while True:
 		for url in open("ListURL", "r").readlines():
 			Name = url.split("/")[-1].rstrip()
 			Datei = url.split("/zk-data/master/")[-1].rstrip()
-			if "/" in Datei:
-				DIRS = Datei.replace(Datei.split("/")[-1], "")
-				print(DIRS)
-				BlueMkDir(DIRS)
-				#for DIRS in Datei.split("/"):
-				#	if not DIRS == Datei.split("/")[-1]:				
-				#		BlueMkDir()
+			if "/" in Datei: BlueMkDir(Datei.replace(Datei.split("/")[-1], ""))
 			Debug("Update von " + Name + " (" + Datei + ")")
 			urllib.request.urlretrieve(url, Datei)
 			if ".py" in Datei and os.path.exists("home"): os.system("chmod +x " + Datei)
