@@ -9,7 +9,8 @@ EntryZahl = 10
 
 if not Date() == BlueLoad("LastUpdate", "DATA"):	
 	print("Update")
-	os.system("./Updater.pyw")
+	try: os.system("./Updater.pyw")
+	except: os.system("Updater.pyw")
 
 def Verify(entryName):
 	print("Verify " + str(entryName))
