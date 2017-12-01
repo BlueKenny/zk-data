@@ -19,6 +19,7 @@ while True:
 			Datei = url.split("/zk-data/master/")[-1].rstrip()
 			Debug("Update von " + Name + " (" + Datei + ")")
 			urllib.request.urlretrieve(url, Datei)
+			if ".py" in Datei and os.path.exists("home"): os.system("chmod +x \"" + Datei + "\"")
 		Debug("Update Ende")
 	time.sleep(1)
 	os.system("python3 ./Server.py")
