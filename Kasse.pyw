@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 from libs.appjar0830 import gui
 from send import *
 from BlueFunc import *
