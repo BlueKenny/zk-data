@@ -1,11 +1,13 @@
 #!/usr/bin/env python3.6
 from libs.appjar0830 import gui
 from send import *
+from BlueFunc import *
 
 appKasse = gui("Kasse", "600x600")
 EntryZahl = 10
 
-	
+if not Date() == BlueLoad("LastUpdate", "DATA")	
+	print("Update")
 
 def Verify(entryName):
 	print("Verify " + str(entryName))
