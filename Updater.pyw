@@ -17,7 +17,7 @@ def Update():
 		Datei = url.split("/zk-data/master/")[-1].rstrip()
 		if "/" in Datei: BlueMkDir(Datei.replace(Datei.split("/")[-1], ""))
 		Debug("Update von " + Name + " (" + Datei + ")")
-		appPage.setLabel("Datei", Name)
+		appPage.setLabel("Title", "Datei " + Name + " wird aktualisiert")
 		urllib.request.urlretrieve(url, Datei)
 		if ".py" in Name and os.path.exists("/home"): os.system("chmod +x " + Datei)
 	
@@ -29,9 +29,8 @@ def Update():
 	else:
 		appPage.after(500, Update)
 
-appPage = gui("Update", "300x300")
-appPage.addLabel("Title", "Update von ")
-appPage.addLabel("Datei", "...")
+appPage = gui("Update ZK-DATA", "300x300")
+appPage.addLabel("Title", "...")
 appPage.after(500, Update)
 Debug("Update Startet")
 appPage.go()
