@@ -14,7 +14,7 @@ while True:
 	#os.system("git pull origin master") 
 	if MakeUpdate:
 		Debug("Update Startet")
-		urllib.request.urlretrieve("https://raw.githubusercontent.com/BlueKenny/zk-data/master/runServer.py", "file.py")
+		urllib.request.urlretrieve("https://raw.githubusercontent.com/BlueKenny/zk-data/master/runServer.py", "runServer.py")
 	time.sleep(1)
 	os.system("python3 ./Server.py")
 	time.sleep(3)
