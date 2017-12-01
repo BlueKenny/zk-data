@@ -29,7 +29,7 @@ def Update():
 	else:
 		appPage.after(500, Update)
 
-appPage = gui("Update ZK-DATA", "300x300")
+appPage = gui("Update ZK-DATA", "400x100")
 appPage.addLabel("Title", "...")
 appPage.after(500, Update)
 Debug("Update Startet")
