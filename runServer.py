@@ -15,8 +15,10 @@ while True:
 	if MakeUpdate:
 		Debug("Update Startet")
 		for url in open("ListURL", "r").readlines():
-			Debug("Update von " + url.split("/")[-1].rstrip())
-			urllib.request.urlretrieve(url, url.split("/zk-data/master/")[-1].rstrip())
+			Name = url.split("/")[-1].rstrip()
+			Datei = url.split("/zk-data/master/")[-1].rstrip()
+			Debug("Update von " + Name + " (" + Datei + ")")
+			urllib.request.urlretrieve(url, Datei)
 		Debug("Update Ende")
 	time.sleep(1)
 	os.system("python3 ./Server.py")
