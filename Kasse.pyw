@@ -6,7 +6,7 @@ from BlueFunc import *
 appKasse = gui("Kasse", "600x600")
 EntryZahl = 10
 
-if not Date() == BlueLoad("LastUpdate", "DATA")	
+if not Date() == BlueLoad("LastUpdate", "DATA"):	
 	print("Update")
 
 def Verify(entryName):
