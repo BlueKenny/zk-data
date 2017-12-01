@@ -4,13 +4,12 @@ from send import *
 from BlueFunc import *
 import os
 
-appKasse = gui("Kasse", "600x600")
-EntryZahl = 10
-
-if not Date() == BlueLoad("LastUpdate", "DATA"):	
-	print("Update")
+if not Date() == BlueLoad("LastUpdate", "DATA"):
 	try: os.system("./Updater.pyw")
 	except: os.system("Updater.pyw")
+
+appKasse = gui("Kasse", "600x600")
+EntryZahl = 10
 
 def Verify(entryName):
 	print("Verify " + str(entryName))

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from libs.appjar0830 import gui  
-from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
+from BlueFunc import *
 from debug import Debug
 import os
 import subprocess
@@ -13,6 +13,11 @@ DATAFile = "Maschinen/"
 IndexListe = []
 ListeDerTeile = [] # DATA
 CurrentTeilPos = 0
+
+
+if not Date() == BlueLoad("LastUpdate", "DATA"):
+	try: os.system("./Updater.pyw")
+	except: os.system("Updater.pyw")
 
 def SelectExplo(btn):
 	global DIREXPLO; global DIRMASCH
