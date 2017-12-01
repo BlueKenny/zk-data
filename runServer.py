@@ -20,6 +20,7 @@ while True:
 			if "/" in Datei:
 				DIRS = Datei.replace(Datei.split("/")[-1], "")
 				print(DIRS)
+				BlueMkDir(DIRS)
 				#for DIRS in Datei.split("/"):
 				#	if not DIRS == Datei.split("/")[-1]:				
 				#		BlueMkDir()
