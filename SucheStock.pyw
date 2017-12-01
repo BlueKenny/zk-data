@@ -18,6 +18,7 @@ appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
 
 
+
 def PrintOrt(btn):
 	open("PrintOrt.txt", "w").write(send.StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
 	try: os.startfile("PrintOrt.txt", "print")

@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 import os
+import datetime
+
+def Date():
+	now = datetime.datetime.now()
+	return now.strftime("%Y-%m-%d")
 
 def BlueLenDatei(File):	#	Gibt die anzahl linie zuruck in einem dokument
 	if os.path.exists(File): 
