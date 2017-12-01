@@ -4,7 +4,8 @@ import datetime
 
 def Date():
 	now = datetime.datetime.now()
-	return now.strftime("%Y-%m-%d")
+	zeit = now.strftime("%Y-%m-%d")
+	return zeit
 
 def BlueLenDatei(File):	#	Gibt die anzahl linie zuruck in einem dokument
 	if os.path.exists(File): 
