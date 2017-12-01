@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import os
+import time
 import datetime
 
 def Date():
 	now = datetime.datetime.now()
-	zeit = now.strftime("%Y-%m-%d")
+	zeit = str(now.strftime("%Y-%m-%d"))
 	return zeit
 
 def BlueLenDatei(File):	#	Gibt die anzahl linie zuruck in einem dokument

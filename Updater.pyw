@@ -2,18 +2,13 @@
 from libs.appjar0830 import gui
 from BlueFunc import *
 from debug import Debug
-import datetime
-import time
 
 import urllib.request
 
 MAXURLs = len(open("ListURL", "r").readlines())
 CounterURL = 0
 
-def Date():
-	now = datetime.datetime.now()
-	return now.strftime("%Y-%m-%d")
-
+print(Date())
 def Update():
 	global CounterURL
 	url = open("ListURL", "r").readlines()[CounterURL]
@@ -29,7 +24,7 @@ def Update():
 	CounterURL = CounterURL + 1
 	if CounterURL == MAXURLs:
 		Debug("Update Ende")
-		BlueSave("LastUpdate", Date, "DATA")
+		BlueSave("LastUpdate", Date(), "DATA")
 		appPage.stop()
 	else:
 		appPage.after(500, Update)
