@@ -17,6 +17,9 @@ while True:
 		for url in open("ListURL", "r").readlines():
 			Name = url.split("/")[-1].rstrip()
 			Datei = url.split("/zk-data/master/")[-1].rstrip()
+			if "/" in Datei:
+				for DIRS in Datei.split("/"):
+					print(DIRS)#BlueMkDir()
 			Debug("Update von " + Name + " (" + Datei + ")")
 			urllib.request.urlretrieve(url, Datei)
 			if ".py" in Datei and os.path.exists("home"): os.system("chmod +x \"" + Datei + "\"")
