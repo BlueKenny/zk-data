@@ -2,12 +2,14 @@
 from libs.appjar0830 import gui
 from send import *
 from BlueFunc import *
+import os
 
 appKasse = gui("Kasse", "600x600")
 EntryZahl = 10
 
 if not Date() == BlueLoad("LastUpdate", "DATA"):	
 	print("Update")
+	os.system("./Updater.pyw")
 
 def Verify(entryName):
 	print("Verify " + str(entryName))
