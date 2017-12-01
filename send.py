@@ -4,7 +4,7 @@ import socket
 from BlueFunc import *
 from debug import *
 
-
+if BlueLoad("SERVER", "DATA") == None: BlueSave("SERVER", "127.0.0.1", "DATA")
 SERVER_IP_LIST=BlueLoad("SERVER", "DATA").split("|")#["warenannahmepc1", "127.0.0.1"]
 
 SERVER_IP = (0, 10000)
