@@ -5,8 +5,8 @@ from BlueFunc import *
 import os
 
 if not Date() == BlueLoad("LastUpdate", "DATA"):
-	try: os.system("./Updater.pyw")
-	except: os.system("Updater.pyw")
+	if os.path.exists("/home"): os.system("./Updater.pyw")
+	else: os.system("Updater.pyw")
 
 appKasse = gui("Kasse", "600x600")
 EntryZahl = 10
