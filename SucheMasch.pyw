@@ -16,8 +16,8 @@ CurrentTeilPos = 0
 
 
 if not Date() == BlueLoad("LastUpdate", "DATA"):
-	try: os.system("./Updater.pyw")
-	except: os.system("Updater.pyw")
+	if os.path.exists("/home"): os.system("./Updater.pyw")
+	else: os.system("Updater.pyw")
 
 def SelectExplo(btn):
 	global DIREXPLO; global DIRMASCH
