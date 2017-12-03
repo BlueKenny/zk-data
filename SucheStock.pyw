@@ -9,8 +9,8 @@ import send
 import shutil
 
 if not Date() == BlueLoad("LastUpdate", "DATA"):
-	try: os.system("./Updater.pyw")
-	except: os.system("Updater.pyw")
+	if os.path.exists("/home"): os.system("./Updater.pyw")
+	else: os.system("Updater.pyw")
 
 EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
