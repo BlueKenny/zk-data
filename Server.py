@@ -128,7 +128,8 @@ def Date():
 while True:
 	Debug("Warte auf befehl...")
 	c, addr = s.accept()
-	Debug("Verbunden mit " + str(addr))
+	ipname = socket.gethostbyaddr(addr[0])
+	Debug("Verbunden mit " + str(ipname[0]))
 	while True:
 		data = c.recv(2048)
 		if not data:
