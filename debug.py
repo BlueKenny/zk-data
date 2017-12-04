@@ -1,7 +1,9 @@
 #!/usr/bin/env python
+import os
 
-DIR = ""
-#DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
+if os.path.exists("/home/phablet"):
+	DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
+else: DIR = ""
 
 def Debug(text):
 	file = open(DIR + "DEBUGING", "a")
