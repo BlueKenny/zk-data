@@ -23,5 +23,6 @@ while True:
 			if ".py" in Name and os.path.exists("/home"): os.system("chmod +x " + Datei)
 		Debug("Update Ende")
 	time.sleep(1)
-	os.system("python3 ./Server.py")
+	if os.path.exists("/home/"): os.system("python3 ./Server.py")
+	else: os.system("Server.py")
 	time.sleep(3)
