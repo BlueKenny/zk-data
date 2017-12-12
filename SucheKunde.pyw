@@ -7,6 +7,12 @@ import subprocess
 from random import randint
 import send
 import shutil
+import sys
+
+Mode = ""
+
+if len(sys.argv) == 2:
+	if sys.argv[1] == "-getid": Mode = "GetID"
 
 if not Date() == BlueLoad("LastUpdate", "DATA"):
 	if os.path.exists("/home"): os.system("./Updater.pyw")
@@ -84,6 +90,12 @@ appSuche.addLabelEntry("Tel")
 appSuche.addLabelEntry("Adresse/Ort")
 appSuche.addListBox("Suche")
 
+def KundeSetzen(btn):
+	Debug("KundeSetzen")
+	IDKunden = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
+	BlueSave("KundenID", IDKunden, "TMP")
+	appSuche.stop()
+
 def Delete(btn):
 	Debug("Delete")
 	appSuche.setEntry("Name", "")
@@ -132,6 +144,14 @@ def SaveIt():
 appSuche.setFocus("Name")
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear")
 appSuche.addLabel("infoAnzahl", str(send.GetKundenZahl()) + " Kunden im System")
+if Mode == "GetID":
+	appSuche.addLabel("info2", "ESC = Kunde auswaehlen")
+	ID = BlueLoad("KundenID", "TMP")
+	if not ID == None:
+		appSuche.setEntry("Name", KundeGetInfo("(zkz)Vorname(zkz)Nachname", ID))
+		appSuche.setEntry("Tel", KundeGetInfo("(zkz)Tel", ID))
+		appSuche.setEntry("Adresse/Ort", KundeGetInfo("(zkz)Ort", ID))
+	appSuche.bindKey("<Escape>", KundeSetzen)
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<Delete>", Delete)
 appSuche.setStopFunction(SaveIt)

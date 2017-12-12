@@ -11,6 +11,23 @@ if not Date() == BlueLoad("LastUpdate", "DATA"):
 appKasse = gui("Kasse", "600x600")
 EntryZahl = 10
 
+ListeDerArbeiter=GetListeDerArbeiter().split("|")
+appKasse.addLabelOptionBox("Arbeiter", ListeDerArbeiter)
+
+
+def Kunden(btn):
+	print("Kunden")
+	if os.path.exists("/home"): os.system("./SucheKunde.pyw -getid")
+	else: os.system("SucheKunde.pyw -getid")
+	KundenID = BlueLoad("KundenID", "TMP")
+	KundenData = KundeGetInfo("(zkz)Vorname(zkz)Nachname", KundenID)
+	KundenVorname = KundenData.split(" | ")[1]
+	KundenNachname = KundenData.split(" | ")[2]
+	appKasse.setButton("SetKunde", KundenID + " | " + KundenVorname + " | " + KundenNachname)
+	
+
+appKasse.addNamedButton("Kunde...", "SetKunde", Kunden)
+
 def Verify(entryName):
 	print("Verify " + str(entryName))
 
@@ -21,7 +38,7 @@ def Verify(entryName):
 
 	if len(text) == 13 or len(text) == 6:
 		if len(text) == 6: ID = text
-		else: ID = SendeSucheStock(text, "", "", "").rstrip("<K>")
+		else: ID = SendeSucheStock(text, "", "").rstrip("<K>")
 		Anzahl = str(StockGetArtInfo("(zkz)Anzahl", ID)).split(" | ")[1]
 		Name = str(StockGetArtInfo("(zkz)Name", ID)).split(" | ")[1]
 		

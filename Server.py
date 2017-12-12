@@ -16,6 +16,7 @@ DIR = ""
 BlueMkDir(DIR + "Stock")
 BlueMkDir(DIR + "StockBewegung")
 BlueMkDir(DIR + "Kunden")
+BlueMkDir(DIR + "Arbeiter")
 
 StockBarcodeList = []
 StockArtikelList = []
@@ -32,6 +33,7 @@ KundeNachnameList = []
 KundeTelList = []
 KundeAdresseList = []
 KundeOrtList = []
+ArbeiterListe = []
 
 try:
 	INDEXLIMIT = int(BlueLoad("IndexLimit", DIR + "DATA"))
@@ -107,6 +109,10 @@ for eachDir in os.listdir(DIR + "Kunden/"):
 	
 		KundenAnzahl = KundenAnzahl  + 1
 
+for Arbeiter in os.listdir(DIR + "Arbeiter"):
+	ArbeiterListe.append(Arbeiter)
+if len(ArbeiterListe) == 0: ArbeiterListe.append("Arbeiter1")
+
 print("StockArtikelAnzahl : " + str(StockArtikelAnzahl))
 print("ListeDerLieferanten : " + str(ListeDerLieferanten))
 print("KundenAnzahl : " + str(KundenAnzahl))
@@ -142,6 +148,13 @@ while True:
 		mode = data.split("(zKz)")[0]
 
 		Antwort = "x"
+		
+		if mode == "ListeDerArbeiter":
+			Debug("Mode : " + mode)
+			AntwortArbeiterListe = ""
+			for each in ArbeiterListe: AntwortArbeiterListe = AntwortArbeiterListe + "|" + each
+			Antwort = AntwortArbeiterListe
+
 
 		if mode == "StockSetArtInfo":
 			Debug("Mode : " + mode)
