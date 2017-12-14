@@ -10,6 +10,11 @@ if not Date() == BlueLoad("LastUpdate", "DATA"):
 
 appKasse = gui("Kasse", "600x600")	
 
+def PrintOrt(btn):
+	open("PrintOrt.txt", "w").write(send.StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
+	try: os.startfile("PrintOrt.txt", "print")
+	except: os.system("gedit ./PrintOrt.txt")
+		
 def Verify(entryName):
 	print("Verify " + entryName)
 
@@ -67,6 +72,8 @@ def Go(btn):
 			
 
 appKasse.addButton("OK", Go)
+appKasse.addButton("Ort Drucken", PrintOrt)
 appKasse.bindKey("<Delete>", Delete)
+appSuche.bindKey("<F12>", PrintOrt)
 
 appKasse.go()
