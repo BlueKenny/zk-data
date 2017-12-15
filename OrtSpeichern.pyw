@@ -11,7 +11,7 @@ if not Date() == BlueLoad("LastUpdate", "DATA"):
 appKasse = gui("Kasse", "600x600")	
 
 def PrintOrt(btn):
-	open("PrintOrt.txt", "w").write(StockGetArtInfo("(zkz)Ort", appKasse.getLabel("lBCode")))
+	open("PrintOrt.txt", "w").write(StockGetArtInfo("(zkz)Ort", appKasse.getLabel("lBCode")).split(" | ")[1])
 	try: os.startfile("PrintOrt.txt", "print")
 	except: os.system("gedit ./PrintOrt.txt")
 		
