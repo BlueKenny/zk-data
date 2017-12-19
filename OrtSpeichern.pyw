@@ -8,7 +8,7 @@ if not Date() == BlueLoad("LastUpdate", "DATA"):
 	if os.path.exists("/home"): os.system("./Updater.pyw")
 	else: os.system("Updater.pyw")
 
-appKasse = gui("Kasse", "600x600")	
+appKasse = gui("Ort", "600x600")	
 
 def PrintOrt(btn):
 	open("PrintOrt.txt", "w").write(StockGetArtInfo("(zkz)Ort", appKasse.getLabel("lBCode")).split(" | ")[1])
