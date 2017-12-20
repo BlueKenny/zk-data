@@ -8,7 +8,7 @@ if os.path.exists("/home/phablet"):
 	DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
 else: DIR = ""
 
-if BlueLoad("SERVER", DIR + "DATA") == None: BlueSave("SERVER", "kenny-H61M-D2H-USB3", DIR + "DATA")
+if BlueLoad("SERVER", DIR + "DATA") == None: BlueSave("SERVER", "127.0.0.1", DIR + "DATA")
 SERVER_IP_LIST=BlueLoad("SERVER", DIR + "DATA").split("|")#["warenannahmepc1", "127.0.0.1"]
 
 SERVER_IP = (0, 10000)
