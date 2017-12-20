@@ -166,6 +166,8 @@ while True:
 			Debug("Var :  " + str(Var))
 			BlueMkDir(DIR + "Stock/" + str(ID)[-2] + str(ID)[-1])
 
+			BlueSave("LastChange", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+
 			if VarName == "Barcode": 
 				StockBarcodeList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
@@ -177,7 +179,9 @@ while True:
 				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 				if not StockLieferantList[ID] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[ID]) # Neuer Artikel
 			if VarName == "Name":  
-				if StockNameList[ID] == "x": StockArtikelAnzahl = StockArtikelAnzahl  + 1 # Neuer Artikel
+				if StockNameList[ID] == "x":
+					StockArtikelAnzahl = StockArtikelAnzahl  + 1 # Neuer Artikel
+					BlueSave("Creation", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 				StockNameList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Ort":  
