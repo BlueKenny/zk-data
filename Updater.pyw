@@ -11,7 +11,7 @@ CounterURL = 0
 print(Date())
 def Update():
 	global CounterURL
-	url = open("ListURL", "r").readlines()[CounterURL]
+	url = open("ListURLClient", "r").readlines()[CounterURL]
 	Name = url.split("/")[-1].rstrip()
 	if not "Server" in Name:
 		Datei = url.split("/zk-data/master/")[-1].rstrip()
