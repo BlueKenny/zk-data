@@ -5,7 +5,7 @@ from debug import Debug
 
 import urllib.request
 
-MAXURLs = len(open("ListURL", "r").readlines())
+MAXURLs = len(open("ListURLClient", "r").readlines())
 CounterURL = 0
 
 print(Date())
