@@ -18,6 +18,8 @@ BlueMkDir(DIR + "StockBewegung")
 BlueMkDir(DIR + "Kunden")
 BlueMkDir(DIR + "Arbeiter")
 
+StockCreationList = []
+StockLastChangeList = []
 StockBarcodeList = []
 StockArtikelList = []
 StockLieferantList = []
@@ -52,6 +54,8 @@ else:
 Debug("MINCache " + str(MINCache))
 Debug("MAXCache " + str(MAXCache))
 for x in range(MINCache, MAXCache):
+	StockCreationList.insert(x, "x")
+	StockLastChangeList.insert(x, "x")
 	StockBarcodeList.insert(x, "x")
 	StockArtikelList.insert(x, "x")
 	StockLieferantList.insert(x, "x")
@@ -78,6 +82,15 @@ for eachDir in os.listdir(DIR + "Stock/"):
 		datei = DIR + "Stock/" + eachDir + "/" + eachFile
 		eachFile = int(eachFile)
 
+		
+	StockCreationList.insert(x, "x")
+	StockLastChangeList.insert(x, "x")
+		if BlueLoad("Creation", datei) == None: BlueSave("Creation", "x", datei)
+		StockCreationList[eachFile]=BlueLoad("Creation", datei)
+		
+		if BlueLoad("LastChange", datei) == None: BlueSave("LastChange", "x", datei)
+		StockLastChangeList[eachFile]=BlueLoad("LastChange", datei)
+		
 		if BlueLoad("Barcode", datei) == None: BlueSave("Barcode", "x", datei)
 		StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
 
@@ -167,6 +180,7 @@ while True:
 			BlueMkDir(DIR + "Stock/" + str(ID)[-2] + str(ID)[-1])
 
 			BlueSave("LastChange", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			StockLastChangeList[ID] = str(Date())
 
 			if VarName == "Barcode": 
 				StockBarcodeList[ID]=str(Var)
@@ -182,6 +196,7 @@ while True:
 				if StockNameList[ID] == "x":
 					StockArtikelAnzahl = StockArtikelAnzahl  + 1 # Neuer Artikel
 					BlueSave("Creation", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+					StockCreationList[ID] = str(Date())
 				StockNameList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Ort":  
@@ -246,6 +261,8 @@ while True:
 					if Var == "PreisVK":  Antwort = Antwort + " | " + str(StockPreisVKList[ID])
 					if Var == "Anzahl":  Antwort = Antwort + " | " + str(StockAnzahlList[ID])
 					if Var == "Barcode":  Antwort = Antwort + " | " + str(StockBarcodeList[ID])
+					if Var == "LastChange":  Antwort = Antwort + " | " + str(StockLastChangeList[ID])
+					if Var == "Creation":  Antwort = Antwort + " | " + str(StockCreationList[ID])
 					if Var == "Lieferant":  Antwort = Antwort + " | " + str(StockLieferantList[ID])
 				except:
 					Antwort = Antwort + "None"
