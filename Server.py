@@ -311,7 +311,7 @@ while True:
 			BlueSave("Anzahl", StockAnzahlList[BcodeSuche], "Stock/" + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
 
 			
-			BlueSave("LastChange", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			BlueSave("LastChange", str(Date()), DIR + "Stock/" + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
 			StockLastChangeList[BcodeSuche] = str(Date())
 			
 			BlueMkDir(DIR + "StockBewegung/" + str(Date()).split("-")[0])
