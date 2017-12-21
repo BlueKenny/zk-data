@@ -20,6 +20,7 @@ def Update():
 	appPage.setLabel("Title", "Datei " + Name + " wird aktualisiert")
 	try: 
 		urllib.request.urlretrieve(url, Datei + ".new")
+		os.remove(Datei)
 		os.rename(Datei + ".new", Datei)
 	except: Debug("Error bei Update : " + url)
 	
