@@ -85,28 +85,29 @@ for eachDir in os.listdir(DIR + "Stock/"):
 		
 	StockCreationList.insert(x, "x")
 	StockLastChangeList.insert(x, "x")
-		if BlueLoad("Creation", datei) == None: BlueSave("Creation", "x", datei)
-		StockCreationList[eachFile]=BlueLoad("Creation", datei)
+	
+	if BlueLoad("Creation", datei) == None: BlueSave("Creation", "x", datei)
+	StockCreationList[eachFile]=BlueLoad("Creation", datei)
 		
-		if BlueLoad("LastChange", datei) == None: BlueSave("LastChange", "x", datei)
-		StockLastChangeList[eachFile]=BlueLoad("LastChange", datei)
+	if BlueLoad("LastChange", datei) == None: BlueSave("LastChange", "x", datei)
+	StockLastChangeList[eachFile]=BlueLoad("LastChange", datei)
 		
-		if BlueLoad("Barcode", datei) == None: BlueSave("Barcode", "x", datei)
-		StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
+	if BlueLoad("Barcode", datei) == None: BlueSave("Barcode", "x", datei)
+	StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
 
-		StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
-		if BlueLoad("Lieferant", datei) == None: BlueSave("Lieferant", "x", datei)
-		StockLieferantList[eachFile]=BlueLoad("Lieferant", datei).lower()
-		StockNameList[eachFile]=BlueLoad("Name", datei)
-		if BlueLoad("Ort", datei) == None: BlueSave("Ort", "x", datei)
-		StockOrtList[eachFile]=str(BlueLoad("Ort", datei)).upper()
-		StockPreisEKList[eachFile]=BlueLoad("PreisEK", datei)
-		StockPreisVKHList[eachFile]=BlueLoad("PreisVKH", datei)
-		StockPreisVKList[eachFile]=BlueLoad("PreisVK", datei)
-		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
+	StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
+	if BlueLoad("Lieferant", datei) == None: BlueSave("Lieferant", "x", datei)
+	StockLieferantList[eachFile]=BlueLoad("Lieferant", datei).lower()
+	StockNameList[eachFile]=BlueLoad("Name", datei)
+	if BlueLoad("Ort", datei) == None: BlueSave("Ort", "x", datei)
+	StockOrtList[eachFile]=str(BlueLoad("Ort", datei)).upper()
+	StockPreisEKList[eachFile]=BlueLoad("PreisEK", datei)
+	StockPreisVKHList[eachFile]=BlueLoad("PreisVKH", datei)
+	StockPreisVKList[eachFile]=BlueLoad("PreisVK", datei)
+	StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
 
-		StockArtikelAnzahl = StockArtikelAnzahl  + 1
-		if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
+	StockArtikelAnzahl = StockArtikelAnzahl  + 1
+	if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
 
 for eachDir in os.listdir(DIR + "Kunden/"):
 	for eachFile in os.listdir(DIR + "Kunden/" + eachDir):
