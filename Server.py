@@ -310,6 +310,10 @@ while True:
 			StockAnzahlList[BcodeSuche] = int(AltStock) + int(NewStock)
 			BlueSave("Anzahl", StockAnzahlList[BcodeSuche], "Stock/" + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
 
+			
+			BlueSave("LastChange", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			StockLastChangeList[BcodeSuche] = str(Date())
+			
 			BlueMkDir(DIR + "StockBewegung/" + str(Date()).split("-")[0])
 			BlueMkDir(DIR + "StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1])
 			DateiStockBewegung = DIR + "StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1] + "/" + str(Date()).split("-")[2]
