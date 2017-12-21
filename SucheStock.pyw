@@ -59,8 +59,8 @@ def tbFunc(btn):
 		for x in range(0, len(EntryList2)):
 			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
 		
-		appChange.addLabel("Creation", "Erstellung : ")
-		appChange.addLabel("Change", "Letzte änderung : ")
+		appChange.addLabel("Creation", "Erstellung : " + send.StockGetArtInfo("(zkz)Creation", IDToChange))
+		appChange.addLabel("Change", "Letzte änderung : " + send.StockGetArtInfo("(zkz)LastChange", IDToChange))
 		appChange.addLabel("info", "F5 = Speichern")
 		appChange.bindKey("<F5>", tbFuncSv)
 		appChange.go()
