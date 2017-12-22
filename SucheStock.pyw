@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 from libs.appjar0061 import gui  
-from BlueFunc import *
-from debug import Debug
+from libs.BlueFunc import *
+from libs.debug import Debug
 import os
 import subprocess
 from random import randint
-import send
+from libs.send import *
 import shutil
 
 if not Date() == BlueLoad("LastUpdate", "DATA"):
@@ -24,7 +24,7 @@ appSuche.setMeter("status", 100, text="")
 
 
 def PrintOrt(btn):
-	open("PrintOrt.txt", "w").write(send.StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
+	open("PrintOrt.txt", "w").write(StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
 	try: os.startfile("PrintOrt.txt", "print")
 	except: os.system("gedit ./PrintOrt.txt")
 
@@ -33,7 +33,7 @@ def tbFuncSv(btn):
 	Debug("tbFuncSv")
 	for a in EntryList2:
 		print(appChange.getEntry(a))
-		send.StockSetArtInfo(IDToChange, a, appChange.getEntry(a))
+		StockSetArtInfo(IDToChange, a, appChange.getEntry(a))
 	appChange.stop()
 	Delete("")
 	appSuche.setEntry("Suche", IDToChange)
@@ -55,12 +55,12 @@ def tbFunc(btn):
 		GetThis = ""
 		for a in EntryList2:
 			GetThis = GetThis + "(zkz)" + str(a)
-		Data = send.StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
+		Data = StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
 		for x in range(0, len(EntryList2)):
 			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
 		
-		appChange.addLabel("Creation", "Erstellung : " + send.StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
-		appChange.addLabel("Change", "Letzte änderung : " + send.StockGetArtInfo("(zkz)LastChange", IDToChange).split(" | ")[1])
+		appChange.addLabel("Creation", "Erstellung : " + StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
+		appChange.addLabel("Change", "Letzte änderung : " + StockGetArtInfo("(zkz)LastChange", IDToChange).split(" | ")[1])
 		appChange.addLabel("info", "F5 = Speichern")
 		appChange.bindKey("<F5>", tbFuncSv)
 		appChange.go()
@@ -72,13 +72,13 @@ def tbFunc(btn):
 		GetThis = ""
 		for a in EntryList2:
 			GetThis = GetThis + "(zkz)" + str(a)
-		Data = send.StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
+		Data = StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
 		print(Data)
 		for x in range(0, len(EntryList2)):
 			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
 		
-		appChange.addLabel("Creation", "Erstellung : " + send.StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
-		appChange.addLabel("Change", "Letzte änderung : " + send.StockGetArtInfo("(zkz)LastChange", IDToChange).split(" | ")[1])
+		appChange.addLabel("Creation", "Erstellung : " + StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
+		appChange.addLabel("Change", "Letzte änderung : " + StockGetArtInfo("(zkz)LastChange", IDToChange).split(" | ")[1])
 		appChange.addLabel("info", "F5 = Speichern")
 		appChange.bindKey("<F5>", tbFuncSv)
 		appChange.go()
@@ -107,7 +107,7 @@ def Suche(btn):
 	Debug("Suche")
 	appSuche.setMeter("status", 0, text="Suche wird gestartet")
 	
-	AntwortList=send.SendeSucheStock(appSuche.getEntry("Suche").replace(" ", ""), appSuche.getEntry("Ort").upper(), appSuche.getEntry("Lieferant").lower())
+	AntwortList=SendeSucheStock(appSuche.getEntry("Suche").replace(" ", ""), appSuche.getEntry("Ort").upper(), appSuche.getEntry("Lieferant").lower())
 	appSuche.setMeter("status", 10, text="Warte auf daten")
 	appSuche.clearListBox("Suche")
 
@@ -121,11 +121,11 @@ def Suche(btn):
 			for a in EntryList2:
 				if appSuche.getOptionBox("Anzeigen")[a] and not IDs.rstrip() == "":
 					GetThis = GetThis + "(zkz)" + str(a)
-			Linie = send.StockGetArtInfo(GetThis, IDs)
+			Linie = StockGetArtInfo(GetThis, IDs)
 
 			appSuche.addListItem("Suche", Linie)
 	
-	appSuche.setLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
+	appSuche.setLabel("infoAnzahl", str(GetStockZahl()) + " Artikel im Stock")
 	appSuche.setMeter("status", 100, text="")
 
 def SaveIt():
@@ -145,11 +145,11 @@ def SaveIt():
 def StockChange(btn):
 	Debug("StockChange")
 	IDToChange = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
-	Name = "[ " + send.StockGetArtInfo("(zkz)Name", str(IDToChange)) + " ]"
+	Name = "[ " + StockGetArtInfo("(zkz)Name", str(IDToChange)) + " ]"
 	if btn == "<F1>": # MINUS
 		Anzahl = appSuche.numberBox("Anzahl", Name + "\n\nBitte Anzahl eingeben die aus dem Stock entfernt wird : ")
 		try:
-			send.SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
+			SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
 			Debug(IDToChange)
 			appSuche.infoBox("Stock Geändert", "Sie haben " + str(int(Anzahl)) + "x " + str(Name) + " Entfernt")
 			Suche("")
@@ -157,7 +157,7 @@ def StockChange(btn):
 	if btn == "<F2>": # PLUS
 		Anzahl = appSuche.numberBox("Anzahl", Name + "\n\nBitte Anzahl eingeben die in Stock gesetzt wird :")
 		try:
-			send.SendeChangeAnzahl(IDToChange, int(Anzahl))
+			SendeChangeAnzahl(IDToChange, int(Anzahl))
 			Debug(IDToChange)
 			appSuche.infoBox("Stock Geändert", "Sie haben " + str(int(Anzahl)) + " zu " + str(Name) + " Hinzugefuegt")
 			os.system("")
@@ -166,7 +166,7 @@ def StockChange(btn):
 
 appSuche.setFocus("Suche")
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\nF1 = Stock MINUS\nF2 = Stock PLUS")
-appSuche.addLabel("infoAnzahl", str(send.GetStockZahl()) + " Artikel im Stock")
+appSuche.addLabel("infoAnzahl", str(GetStockZahl()) + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from libs.appjar0061 import gui  
-from BlueFunc import *
-from debug import Debug
+from libs.BlueFunc import *
+from libs.debug import Debug
 import os
 import subprocess
 from random import randint

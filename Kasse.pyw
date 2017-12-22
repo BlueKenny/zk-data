@@ -1,18 +1,39 @@
 #!/usr/bin/env python3
 from libs.appjar0830 import gui
-from send import *
-from BlueFunc import *
+from libs.send import *
+from libs.BlueFunc import *
 import os
+import sys
+
+#if len(sys.argv) = 2:
+	
 
 if not Date() == BlueLoad("LastUpdate", "DATA"):
 	if os.path.exists("/home"): os.system("./Updater.pyw")
 	else: os.system("Updater.pyw")
+
+def SaveIt():
+	print("SaveIt")
+	for x in range(0, 10):
+		if not appKasse.getOptionBox("Arbeiter") == None:
+			if not appKasse.getEntry("e" + str(x)) == "":
+				SendeSaveArbeiterLinie(appKasse.getOptionBox("Arbeiter"), "e" + str(x), appKasse.getEntry("e" + str(x)))
+			else: SendeSaveArbeiterLinie(appKasse.getOptionBox("Arbeiter"), "e" + str(x), "None")
+	return True
+
+def GetArbeiter(btn):
+	for x in range(0, 10):
+		text = SendeGetArbeiterLinie(appKasse.getOptionBox("Arbeiter"), "e" + str(x))
+		if not text == "None":
+			appKasse.setEntry("e" + str(x), text)
+		else: appKasse.setEntry("e" + str(x), "")
 
 appKasse = gui("Kasse", "600x600")
 EntryZahl = 10
 
 ListeDerArbeiter=GetListeDerArbeiter().split("|")
 appKasse.addLabelOptionBox("Arbeiter", ListeDerArbeiter)
+appKasse.setOptionBoxSubmitFunction("Arbeiter", GetArbeiter) 
 
 
 def Kunden(btn):
@@ -26,10 +47,11 @@ def Kunden(btn):
 	appKasse.setButton("SetKunde", KundenID + " | " + KundenVorname + " | " + KundenNachname)
 	
 
-appKasse.addNamedButton("Kunde...", "SetKunde", Kunden)
+#appKasse.addNamedButton("Kunde...", "SetKunde", Kunden)
 
 def Verify(entryName):
 	print("Verify " + str(entryName))
+
 
 	text = str(appKasse.getEntry(entryName))
 	EntryIndex = int(entryName.replace("e", ""))
@@ -72,6 +94,6 @@ def Go(btn):
 						#appKasse.infoBox("Stock Geändert", "Sie haben 1x " + str(Name) + " Entfernt")
 					except: appKasse.infoBox("Error", "Error: ID " + str(ID))
 			
-
+appKasse.setStopFunction(SaveIt)
 appKasse.addButton("OK", Go)
 appKasse.go()

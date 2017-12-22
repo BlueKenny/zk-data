@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from libs.appjar0830 import gui  
-from BlueFunc import BlueMkDir, BlueLoad, BlueSave
+from libs.BlueFunc import BlueMkDir, BlueLoad, BlueSave
 import os
 
 

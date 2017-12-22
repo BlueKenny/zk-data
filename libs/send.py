@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 import sys
 import socket
-from BlueFunc import *
-from debug import *
+from libs.BlueFunc import *
+from libs.debug import *
 
 if os.path.exists("/home/phablet"):
 	DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
 else: DIR = ""
 
 if BlueLoad("SERVER", DIR + "DATA") == None: BlueSave("SERVER", "127.0.0.1", DIR + "DATA")
-SERVER_IP_LIST=BlueLoad("SERVER", DIR + "DATA").split("|")#["warenannahmepc1", "127.0.0.1"]
+SERVER_IP_LIST=BlueLoad("SERVER", DIR + "DATA").split("|")
 
 SERVER_IP = (0, 10000)
 while SERVER_IP == (0, 10000):
@@ -26,6 +26,31 @@ while SERVER_IP == (0, 10000):
 			sock.close()
 	
 
+def SendeSaveArbeiterLinie(Arbeiter, Linie, Text):
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.connect(SERVER_IP)
+	data = "SaveArbeiterLinie(zKz)" + str(Arbeiter) + "(zkz)" + str(Linie) + "(zkz)" + str(Text)
+
+	Debug("Send " + str(data))
+	data = data.encode()
+	sock.sendto(data, SERVER_IP)
+	data = sock.recv(2048)
+	Debug("Get " + str(data.decode()))
+	sock.close()
+	return data.decode()
+
+def SendeGetArbeiterLinie(Arbeiter, Linie):
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.connect(SERVER_IP)
+	data = "GetArbeiterLinie(zKz)" + str(Arbeiter) + "(zkz)" + str(Linie)
+
+	Debug("Send " + str(data))
+	data = data.encode()
+	sock.sendto(data, SERVER_IP)
+	data = sock.recv(2048)
+	Debug("Get " + str(data.decode()))
+	sock.close()
+	return data.decode()
 
 def GetListeDerArbeiter():
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

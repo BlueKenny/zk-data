@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from libs.appjar0830 import gui
-from send import *
-from BlueFunc import *
+from libs.send import *
+from libs.BlueFunc import *
 import os
 
 if not Date() == BlueLoad("LastUpdate", "DATA"):

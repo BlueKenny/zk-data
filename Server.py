@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import sys
 import socket
-from debug import *
-from BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
+from libs.debug import *
+from libs.BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 import os
-from RoundUp import * 
+from libs.RoundUp import * 
 import datetime
 import time
 
@@ -159,6 +159,19 @@ while True:
 
 		Antwort = "x"
 		
+		if mode == "SaveArbeiterLinie":
+			Debug("Mode : " + mode)
+			Arbeiter = str(data.split("(zKz)")[1].split("(zkz)")[0])
+			Linie = str(data.split("(zKz)")[1].split("(zkz)")[1])
+			Text = str(data.split("(zKz)")[1].split("(zkz)")[2])
+			BlueSave(Linie, Text, "Arbeiter/" + Arbeiter)
+		if mode == "GetArbeiterLinie":
+			Debug("Mode : " + mode)
+			Arbeiter = str(data.split("(zKz)")[1].split("(zkz)")[0])
+			Linie = str(data.split("(zKz)")[1].split("(zkz)")[1])
+			Antwort = str(BlueLoad(Linie, "Arbeiter/" + Arbeiter))
+			
+
 		if mode == "ListeDerArbeiter":
 			Debug("Mode : " + mode)
 			AntwortArbeiterListe = ""
