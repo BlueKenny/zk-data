@@ -2,13 +2,12 @@
 import sys
 import socket
 from libs.debug import *
-from libs.BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
+from libs.BlueFunc import *
 import os
 from libs.RoundUp import * 
 import datetime
 import time
 
-SlowDownFaktor = 0
 # Ordner
 DIR = ""
 #DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
@@ -17,6 +16,7 @@ BlueMkDir(DIR + "Stock")
 BlueMkDir(DIR + "StockBewegung")
 BlueMkDir(DIR + "Kunden")
 BlueMkDir(DIR + "Arbeiter")
+BlueMkDir(DIR + "Import")
 
 StockCreationList = []
 StockLastChangeList = []
@@ -76,6 +76,84 @@ print("LOAD Database Stock")
 StockArtikelAnzahl = 0
 KundenAnzahl = 0
 NeueKundenID = 10
+
+for datei in os.listdir("Import/"):
+	if ".csv" in datei:
+		ImportDateiData = "Import/" + datei.replace(".csv", "")
+		if os.path.exists(ImportDateiData):
+			Debug("Importiere " + str(datei))
+			SearchName = BlueLoad("Name", ImportDateiData)
+			SearchAnzahl = BlueLoad("Anzahl", ImportDateiData)
+			SearchBarcode = BlueLoad("Barcode", ImportDateiData)
+			SearchArtikel = BlueLoad("Artikel", ImportDateiData)
+			SearchArtikel2 = BlueLoad("Artikel2", ImportDateiData)
+			SearchPreisEK = BlueLoad("PreisEK", ImportDateiData)
+			SearchPreisVKH = BlueLoad("PreisVKH", ImportDateiData)
+			SearchPreisVK = BlueLoad("PreisVK", ImportDateiData)
+			SearchLieferant = BlueLoad("Lieferant", ImportDateiData)
+			SearchCreation = BlueLoad("Creation", ImportDateiData)
+			SearchLastChange = BlueLoad("LastChange", ImportDateiData)
+
+			AnzahlDerSpalten = len(open("Import/" + datei, "r").readlines()[0].split(":"))
+			IntName = 0
+			IntAnzahl = 0
+			IntBarcode = 0
+			IntArtikel = 0
+			IntArtikel2 = 0
+			IntPreisEK = 0
+			IntPreisVKH = 0
+			IntPreisVK = 0
+			IntLieferant = 0
+			IntCreation = 0
+			IntLastChange = 0
+
+			AlleTitel = open("Import/" + datei, "r").readlines()[0].split(":")
+			for x in range(0, AnzahlDerSpalten):
+				if SearchName == AlleTitel[x]: IntName = x
+				if SearchAnzahl == AlleTitel[x]: IntAnzahl = x
+				if SearchBarcode == AlleTitel[x]: IntBarcode = x
+				if SearchArtikel == AlleTitel[x]: IntArtikel = x
+				if SearchArtikel2 == AlleTitel[x]: IntArtikel2 = x
+				if SearchPreisEK == AlleTitel[x]: IntPreisEK = x
+				if SearchPreisVKH == AlleTitel[x]: IntPreisVKH = x
+				if SearchPreisVK == AlleTitel[x]: IntPreisVK = x
+				if SearchLieferant == AlleTitel[x]: IntLieferant = x
+				if SearchCreation == AlleTitel[x]: IntCreation = x
+				if SearchLastChange == AlleTitel[x]: IntLastChange = x
+
+
+			for eachLine in open("Import/" + datei, "r").readlines():
+				try: 
+					int(eachLine.split(":")[0])
+					eachFile = int(eachLine.split(":")[0])
+					if str(eachFile)[-3] + str(eachFile)[-2] + str(eachFile)[-1] == "000": Debug("Lade BCode " + str(eachFile))
+					if StockNameList[eachFile] == "x":
+						StockNameList[eachFile] = str(eachLine.split(":")[IntName])
+						StockArtikelAnzahl = StockArtikelAnzahl  + 1
+					if StockBarcodeList[eachFile] == "x":
+						StockBarcodeList[eachFile] = str(eachLine.split(":")[IntBarcode])
+					if StockArtikelList[eachFile] == "x":
+						StockArtikelList[eachFile] = str(eachLine.split(":")[IntArtikel])
+						#except: StockArtikelList[eachFile] = "x"
+						if StockArtikelList[eachFile] == "": StockArtikelList[eachFile] = "import"
+					if StockLieferantList[eachFile] == "x":
+						StockLieferantList[eachFile] = str(eachLine.split(":")[IntLieferant])
+						if StockLieferantList[eachFile] == "": StockLieferantList[eachFile] = "import"
+					if StockPreisEKList[eachFile] == "x":
+						StockPreisEKList[eachFile] = str(eachLine.split(":")[IntPreisEK])
+					if StockPreisVKHList[eachFile] == "x":
+						StockPreisVKHList[eachFile] = str(eachLine.split(":")[IntPreisVKH])
+					if StockPreisVKList[eachFile] == "x":
+						StockPreisVKList[eachFile] = str(eachLine.split(":")[IntPreisVK])
+					if StockAnzahlList[eachFile] == "x":
+						StockAnzahlList[eachFile] = str(eachLine.split(":")[IntAnzahl])
+					if StockCreationList[eachFile] == "x":
+						StockCreationList[eachFile] = str(eachLine.split(":")[IntCreation])
+					if StockLastChangeList[eachFile] == "x":
+						StockLastChangeList[eachFile] = str(eachLine.split(":")[IntLastChange])
+				except: Debug("linie nicht gultig ..")
+        
+
 for eachDir in os.listdir(DIR + "Stock/"):
 	for eachFile in os.listdir(DIR + "Stock/" + eachDir):
 
@@ -154,7 +232,6 @@ while True:
 		data = data.decode()
 		Debug("Data : " + data)
 
-		if not SlowDownFaktor == 0: time.sleep(SlowDownFaktor)
 		mode = data.split("(zKz)")[0]
 
 		Antwort = "x"
