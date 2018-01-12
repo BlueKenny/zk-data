@@ -84,7 +84,7 @@ StockArtikelAnzahl = 0
 KundenAnzahl = 0
 NeueKundenID = 10
 
-for datei in os.listdir("Import/Stock/"):
+for datei in sorted(os.listdir("Import/Stock/")):
 	if ".csv" in datei:
 		ImportDateiDATA = "Import/Stock/" + datei.replace(".csv", "")
 		if os.path.exists(ImportDateiDATA):
@@ -225,7 +225,8 @@ for eachDir in os.listdir(DIR + "Stock/"):
 		StockLastChangeList[eachFile]=BlueLoad("LastChange", datei)
 
 		if BlueLoad("Barcode", datei) == None: BlueSave("Barcode", "x", datei)
-		StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
+		if StockBarcodeList[eachFile] == "x":
+			StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
 
 		StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
 		if BlueLoad("Lieferant", datei) == None: BlueSave("Lieferant", "x", datei)
@@ -258,7 +259,7 @@ for eachDir in os.listdir(DIR + "Kunden/"):
 		KundenAnzahl = KundenAnzahl  + 1
 
 PreiseID = 0
-for datei in os.listdir("Import/Preise/"):
+for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 	if ".csv" in datei:
 		ImportDateiDATA = "Import/Preise/" + datei.replace(".csv", "")
 		if os.path.exists(ImportDateiDATA):
