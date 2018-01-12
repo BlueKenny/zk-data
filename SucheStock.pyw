@@ -8,10 +8,6 @@ from random import randint
 from libs.send import *
 import shutil
 
-if not Date() == BlueLoad("LastUpdate", "DATA"):
-	if os.path.exists("/home"): os.system("./Updater.pyw")
-	else: os.system("Updater.pyw")
-
 EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 appSuche = gui("Stock Suche", "800x600") 
@@ -59,8 +55,6 @@ def tbFunc(btn):
 		for x in range(0, len(EntryList2)):
 			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
 		
-		appChange.addLabel("Creation", "Erstellung : " + StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
-		appChange.addLabel("Change", "Letzte änderung : " + StockGetArtInfo("(zkz)LastChange", IDToChange).split(" | ")[1])
 		appChange.addLabel("info", "F5 = Speichern")
 		appChange.bindKey("<F5>", tbFuncSv)
 		appChange.go()
@@ -68,27 +62,49 @@ def tbFunc(btn):
 	if btn == "ÄNDERN":
 		IDToChange = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
 		appChange = gui("Stock Change", "800x600")
-		appChange.addLabel("Bcode", str(IDToChange))
-		GetThis = ""
-		for a in EntryList2:
-			GetThis = GetThis + "(zkz)" + str(a)
-		Data = StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
-		print(Data)
-		for x in range(0, len(EntryList2)):
-			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
 		
-		appChange.addLabel("Creation", "Erstellung : " + StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
-		appChange.addLabel("Change", "Letzte änderung : " + StockGetArtInfo("(zkz)LastChange", IDToChange).split(" | ")[1])
-		appChange.addLabel("info", "F5 = Speichern")
-		appChange.bindKey("<F5>", tbFuncSv)
-		appChange.go()
+		
+		
+		if not "P" in IDToChange:
+			appChange.addLabel("Bcode", str(IDToChange))
+			GetThis = ""
+			for a in EntryList2:
+				GetThis = GetThis + "(zkz)" + str(a)
+			Data = StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
+			print(Data)
+			for x in range(0, len(EntryList2)):
+				appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
+			
+			appChange.addLabel("Creation", "Erstellung : " + StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
+			appChange.addLabel("Change", "Letzte änderung : " + StockGetArtInfo("(zkz)LastChange", IDToChange).split(" | ")[1])
+			appChange.addLabel("info", "F5 = Speichern")
+			appChange.bindKey("<F5>", tbFuncSv)
+			appChange.go()
+		else:
+			Data = StockGetArtInfo("(zkz)Artikel(zkz)Lieferant(zkz)Name(zkz)PreisEK(zkz)PreisVKH(zkz)PreisVK", str(IDToChange)).split(" | ")
+			IDToChange = appSuche.numberBox("Neu", "Neuer Artike\nBcode n° ?")
+			appChange.addLabel("Bcode", str(IDToChange))
+			print(Data)
+			for x in range(0, len(EntryList2)):
+				appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], "", callFunction=False)
+				
+			appChange.setEntry("Artikel", Data[1])
+			appChange.setEntry("Lieferant", Data[2])
+			appChange.setEntry("Name", Data[3])
+			appChange.setEntry("PreisEK", Data[4])
+			appChange.setEntry("PreisVKH", Data[5])
+			appChange.setEntry("PreisVK", Data[6])
+			appChange.setEntry("Anzahl", "0")
 
+			appChange.addLabel("info", "F5 = Speichern")
+			appChange.bindKey("<F5>", tbFuncSv)
+			appChange.go()
 tools = ["NEU", "ÄNDERN"]
 appSuche.addToolbar(tools, tbFunc, findIcon=True)
 
 appSuche.addTickOptionBox("Anzeigen", EntryList2)
 try:
-	for eachAnzeigenOption in BlueLoad("Anzeigen-Stock", "DATA").split("/"):
+	for eachAnzeigenOption in BlueLoad("Anzeigen-Stock", "DATA/DATA").split("/"):
 		appSuche.setOptionBox("Anzeigen", eachAnzeigenOption, value=True, callFunction=True)
 except: print("Anzeigen nicht gefunden")
 
@@ -136,10 +152,10 @@ def SaveIt():
 			except: AnzeigenListe = each
 	try:
 		print(AnzeigenListe)
-		BlueSave("Anzeigen-Stock", AnzeigenListe, "DATA")
+		BlueSave("Anzeigen-Stock", AnzeigenListe, "DATA/DATA")
 	except:
 		print("AnzeigenListe ist leer")
-		BlueSave("Anzeigen-Stock", "Lieferant/Name/Ort/PreisVK/Anzahl", "DATA")
+		BlueSave("Anzeigen-Stock", "Lieferant/Name/Ort/PreisVK/Anzahl", "DATA/DATA")
 	return True
 
 def StockChange(btn):

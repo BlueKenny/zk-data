@@ -5,23 +5,8 @@ import time
 from libs.debug import * 
 from libs.BlueFunc import BlueMkDir, BlueLenDatei, BlueLoad, BlueSave
 import os
-try: 
-	import urllib.request
-	MakeUpdate = True
-except: MakeUpdate = False
-Debug("MakeUpdate : " + str(MakeUpdate))
 while True:
 	#os.system("git pull origin master") 
-	if MakeUpdate:
-		Debug("Update Startet")
-		for url in open("ListURLServer", "r").readlines():
-			Name = url.split("/")[-1].rstrip()
-			Datei = url.split("/zk-data/master/")[-1].rstrip()
-			if "/" in Datei: BlueMkDir(Datei.replace(Datei.split("/")[-1], ""))
-			Debug("Update von " + Name + " (" + Datei + ")")
-			urllib.request.urlretrieve(url, Datei)
-			if ".py" in Name and os.path.exists("/home"): os.system("chmod +x " + Datei)
-		Debug("Update Ende")
 	time.sleep(1)
 	if os.path.exists("/home/"): os.system("python3 ./Server.py")
 	else: os.system("Server.py")

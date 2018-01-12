@@ -4,12 +4,8 @@ import socket
 from libs.BlueFunc import *
 from libs.debug import *
 
-if os.path.exists("/home/phablet"):
-	DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
-else: DIR = ""
-
-if BlueLoad("SERVER", DIR + "DATA") == None: BlueSave("SERVER", "127.0.0.1", DIR + "DATA")
-SERVER_IP_LIST=BlueLoad("SERVER", DIR + "DATA").split("|")
+if BlueLoad("SERVER", "DATA/DATA") == None: BlueSave("SERVER", "127.0.0.1", "DATA/DATA")
+SERVER_IP_LIST=BlueLoad("SERVER", "DATA/DATA").split("|")
 
 SERVER_IP = (0, 10000)
 while SERVER_IP == (0, 10000):

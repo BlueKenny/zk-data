@@ -10,13 +10,22 @@ import time
 
 # Ordner
 DIR = ""
-#DIR = "/home/phablet/.local/share/zk-data.bluekenny/"
-#BlueMkDir(DIR)
 BlueMkDir(DIR + "Stock")
 BlueMkDir(DIR + "StockBewegung")
 BlueMkDir(DIR + "Kunden")
 BlueMkDir(DIR + "Arbeiter")
 BlueMkDir(DIR + "Import")
+BlueMkDir(DIR + "Import/Preise")
+BlueMkDir(DIR + "Import/Stock")
+BlueMkDir(DIR + "Import/Kunden")
+BlueMkDir(DIR + "DATA")
+
+PreiseArtikelList = []
+PreiseLieferantList = []
+PreiseNameList = []
+PreisePreisEKList = []
+PreisePreisVKHList = []
+PreisePreisVKList = []
 
 StockCreationList = []
 StockLastChangeList = []
@@ -30,27 +39,26 @@ StockPreisVKHList = []
 StockPreisVKList = []
 StockAnzahlList = []
 ListeDerLieferanten = []
-KundeVornameList = []
-KundeNachnameList = []
+KundeNameList = []
 KundeTelList = []
 KundeAdresseList = []
 KundeOrtList = []
 ArbeiterListe = []
 
 try:
-	INDEXLIMIT = int(BlueLoad("IndexLimit", DIR + "DATA"))
+	INDEXLIMIT = int(BlueLoad("IndexLimit", DIR + "DATA/DATA"))
 except:
 	INDEXLIMIT = 20
-	BlueSave("IndexLimit", "20", DIR + "DATA")
+	BlueSave("IndexLimit", "20", DIR + "DATA/DATA")
 
 Debug("Make Cache")
-if not BlueLoad("CacheLimit", DIR + "DATA") == None:
-	MINCache = int(BlueLoad("CacheLimit", DIR + "DATA").split("-")[0])
-	MAXCache = int(BlueLoad("CacheLimit", DIR + "DATA").split("-")[1])
+if not BlueLoad("CacheLimit", DIR + "DATA/DATA") == None:
+	MINCache = int(BlueLoad("CacheLimit", DIR + "DATA/DATA").split("-")[0])
+	MAXCache = int(BlueLoad("CacheLimit", DIR + "DATA/DATA").split("-")[1])
 else:
 	MINCache = 0
 	MAXCache = 999999
-	BlueSave("CacheLimit", "0-999999", DIR + "DATA")
+	BlueSave("CacheLimit", "0-999999", DIR + "DATA/DATA")
 Debug("MINCache " + str(MINCache))
 Debug("MAXCache " + str(MAXCache))
 for x in range(MINCache, MAXCache):
@@ -65,36 +73,34 @@ for x in range(MINCache, MAXCache):
 	StockPreisVKHList.insert(x, "x")
 	StockPreisVKList.insert(x, "x")
 	StockAnzahlList.insert(x, "x")
-	KundeVornameList.insert(x, "x")
-	KundeNachnameList.insert(x, "x")
+	KundeNameList.insert(x, "x")
 	KundeTelList.insert(x, "x")
 	KundeAdresseList.insert(x, "x")
 	KundeOrtList.insert(x, "x")
 
 # LOAD
-print("LOAD Database Stock") 
+print("LOAD DATAbase Stock") 
 StockArtikelAnzahl = 0
 KundenAnzahl = 0
 NeueKundenID = 10
 
-for datei in os.listdir("Import/"):
+for datei in os.listdir("Import/Stock/"):
 	if ".csv" in datei:
-		ImportDateiData = "Import/" + datei.replace(".csv", "")
-		if os.path.exists(ImportDateiData):
+		ImportDateiDATA = "Import/Stock/" + datei.replace(".csv", "")
+		if os.path.exists(ImportDateiDATA):
 			Debug("Importiere " + str(datei))
-			SearchName = BlueLoad("Name", ImportDateiData)
-			SearchAnzahl = BlueLoad("Anzahl", ImportDateiData)
-			SearchBarcode = BlueLoad("Barcode", ImportDateiData)
-			SearchArtikel = BlueLoad("Artikel", ImportDateiData)
-			SearchArtikel2 = BlueLoad("Artikel2", ImportDateiData)
-			SearchPreisEK = BlueLoad("PreisEK", ImportDateiData)
-			SearchPreisVKH = BlueLoad("PreisVKH", ImportDateiData)
-			SearchPreisVK = BlueLoad("PreisVK", ImportDateiData)
-			SearchLieferant = BlueLoad("Lieferant", ImportDateiData)
-			SearchCreation = BlueLoad("Creation", ImportDateiData)
-			SearchLastChange = BlueLoad("LastChange", ImportDateiData)
+			SearchName = BlueLoad("Name", ImportDateiDATA)
+			SearchAnzahl = BlueLoad("Anzahl", ImportDateiDATA)
+			SearchBarcode = BlueLoad("Barcode", ImportDateiDATA)
+			SearchArtikel = BlueLoad("Artikel", ImportDateiDATA)
+			SearchArtikel2 = BlueLoad("Artikel2", ImportDateiDATA)
+			SearchPreisEK = BlueLoad("PreisEK", ImportDateiDATA)
+			SearchPreisVKH = BlueLoad("PreisVKH", ImportDateiDATA)
+			SearchPreisVK = BlueLoad("PreisVK", ImportDateiDATA)
+			SearchCreation = BlueLoad("Creation", ImportDateiDATA)
+			SearchLastChange = BlueLoad("LastChange", ImportDateiDATA)
 
-			AnzahlDerSpalten = len(open("Import/" + datei, "r").readlines()[0].split(":"))
+			AnzahlDerSpalten = len(open("Import/Stock/" + datei, "r").readlines()[0].split(":"))
 			IntName = 0
 			IntAnzahl = 0
 			IntBarcode = 0
@@ -103,11 +109,10 @@ for datei in os.listdir("Import/"):
 			IntPreisEK = 0
 			IntPreisVKH = 0
 			IntPreisVK = 0
-			IntLieferant = 0
 			IntCreation = 0
 			IntLastChange = 0
 
-			AlleTitel = open("Import/" + datei, "r").readlines()[0].split(":")
+			AlleTitel = open("Import/Stock/" + datei, "r").readlines()[0].split(":")
 			for x in range(0, AnzahlDerSpalten):
 				if SearchName == AlleTitel[x]: IntName = x
 				if SearchAnzahl == AlleTitel[x]: IntAnzahl = x
@@ -117,12 +122,21 @@ for datei in os.listdir("Import/"):
 				if SearchPreisEK == AlleTitel[x]: IntPreisEK = x
 				if SearchPreisVKH == AlleTitel[x]: IntPreisVKH = x
 				if SearchPreisVK == AlleTitel[x]: IntPreisVK = x
-				if SearchLieferant == AlleTitel[x]: IntLieferant = x
 				if SearchCreation == AlleTitel[x]: IntCreation = x
 				if SearchLastChange == AlleTitel[x]: IntLastChange = x
+			if IntName == 0: Debug("Kein Name")
+			if IntAnzahl == 0: Debug("Keine Anzahl")
+			if IntBarcode == 0: Debug("Kein Barcode")
+			if IntArtikel == 0: Debug("Kein Artikel")
+			if IntArtikel2 == 0: Debug("Kein Artikel 2")
+			if IntPreisEK == 0: Debug("Kein PreisEK")
+			if IntPreisVKH == 0: Debug("Kein PreisVKH")
+			if IntPreisVK == 0: Debug("Kein PreisVK")
+			if IntCreation == 0: Debug("Keine Creation")
+			if IntLastChange == 0: Debug("Kein LastChange")
 
 
-			for eachLine in open("Import/" + datei, "r").readlines():
+			for eachLine in open("Import/Stock/" + datei, "r").readlines():
 				try: 
 					int(eachLine.split(":")[0])
 					eachFile = int(eachLine.split(":")[0])
@@ -130,15 +144,13 @@ for datei in os.listdir("Import/"):
 					if StockNameList[eachFile] == "x":
 						StockNameList[eachFile] = str(eachLine.split(":")[IntName])
 						StockArtikelAnzahl = StockArtikelAnzahl  + 1
-					if StockBarcodeList[eachFile] == "x":
+					if StockBarcodeList[eachFile] == "x" or not len(str(StockBarcodeList[eachFile])) == 13:
 						StockBarcodeList[eachFile] = str(eachLine.split(":")[IntBarcode])
 					if StockArtikelList[eachFile] == "x":
 						StockArtikelList[eachFile] = str(eachLine.split(":")[IntArtikel])
-						#except: StockArtikelList[eachFile] = "x"
 						if StockArtikelList[eachFile] == "": StockArtikelList[eachFile] = "import"
-					if StockLieferantList[eachFile] == "x":
-						StockLieferantList[eachFile] = str(eachLine.split(":")[IntLieferant])
-						if StockLieferantList[eachFile] == "": StockLieferantList[eachFile] = "import"
+					if StockLieferantList[eachFile] == "x" or StockLieferantList[eachFile] == "":
+						StockLieferantList[eachFile] = datei.replace(".csv", "")
 					if StockPreisEKList[eachFile] == "x":
 						StockPreisEKList[eachFile] = str(eachLine.split(":")[IntPreisEK])
 					if StockPreisVKHList[eachFile] == "x":
@@ -153,6 +165,52 @@ for datei in os.listdir("Import/"):
 						StockLastChangeList[eachFile] = str(eachLine.split(":")[IntLastChange])
 				except: Debug("linie nicht gultig ..")
         
+
+for datei in os.listdir("Import/Kunden/"):
+	if ".csv" in datei:
+		ImportDateiDATA = "Import/Kunden/" + datei.replace(".csv", "")
+		if os.path.exists(ImportDateiDATA):
+			Debug("Importiere " + str(datei))
+			SearchName = BlueLoad("Name", ImportDateiDATA)
+			SearchTel = BlueLoad("Name", ImportDateiDATA)
+			SearchAdresse = BlueLoad("Name", ImportDateiDATA)
+			SearchOrt = BlueLoad("Name", ImportDateiDATA)
+
+			AnzahlDerSpalten = len(open("Import/Kunden/" + datei, "r").readlines()[0].split(":"))
+			IntName = 0
+			IntTel = 0
+			IntAdresse = 0
+			IntOrt = 0
+
+			AlleTitel = open("Import/Kunden/" + datei, "r").readlines()[0].split(":")
+			for x in range(0, AnzahlDerSpalten):
+				if SearchName == AlleTitel[x]: IntName = x
+				if SearchTel == AlleTitel[x]: IntTel = x
+				if SearchAdresse == AlleTitel[x]: IntAdresse = x
+				if SearchOrt == AlleTitel[x]: IntOrt = x
+			if IntName == 0: Debug("Kein Name")
+			if IntTel == 0: Debug("Keine Tel")
+			if IntAdresse == 0: Debug("Keine Adresse")
+			if IntOrt == 0: Debug("Kein Ort")
+
+
+			for eachLine in open("Import/Kunden/" + datei, "r").readlines():
+				try: 
+					int(eachLine.split(":")[0])
+					print(eachLine.split(":")[0])
+					eachFile = int(eachLine.split(":")[0])
+					if str(eachFile)[-3] + str(eachFile)[-2] + str(eachFile)[-1] == "000": Debug("Lade Kunde " + str(eachFile))
+					if StockNameList[eachFile] == "x":
+						StockNameList[eachFile] = str(eachLine.split(":")[IntName])
+						KundenAnzahl = KundenAnzahl  + 1
+					if KundenTelList[eachFile] == "x":
+						KundenTelList[eachFile] = str(eachLine.split(":")[IntTel])
+					if KundenAdresseList[eachFile] == "x":
+						KundenAdresseList[eachFile] = str(eachLine.split(":")[IntAdresse])
+					if KundenOrtList[eachFile] == "x":
+						KundenOrtList[eachFile] = str(eachLine.split(":")[IntOrt])
+					
+				except: Debug("linie nicht gultig ..\n" + str(eachLine))
 
 for eachDir in os.listdir(DIR + "Stock/"):
 	for eachFile in os.listdir(DIR + "Stock/" + eachDir):
@@ -175,9 +233,12 @@ for eachDir in os.listdir(DIR + "Stock/"):
 		StockNameList[eachFile]=BlueLoad("Name", datei)
 		if BlueLoad("Ort", datei) == None: BlueSave("Ort", "x", datei)
 		StockOrtList[eachFile]=str(BlueLoad("Ort", datei)).upper()
-		StockPreisEKList[eachFile]=BlueLoad("PreisEK", datei)
-		StockPreisVKHList[eachFile]=BlueLoad("PreisVKH", datei)
-		StockPreisVKList[eachFile]=BlueLoad("PreisVK", datei)
+		try: StockPreisEKList[eachFile]=RoundUp0000(str(BlueLoad("PreisEK", datei)).replace(",", "."))
+		except: StockPreisEKList[eachFile] = "x"
+		try: StockPreisVKHList[eachFile]=RoundUp0000(str(BlueLoad("PreisVKH", datei)).replace(",", "."))
+		except: StockPreisVKHList[eachFile] = "x"
+		try: StockPreisVKList[eachFile]=RoundUp0000(str(BlueLoad("PreisVK", datei)).replace(",", "."))
+		except: StockPreisVKList[eachFile] = "x"
 		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
 
 		StockArtikelAnzahl = StockArtikelAnzahl  + 1
@@ -189,13 +250,73 @@ for eachDir in os.listdir(DIR + "Kunden/"):
 		datei = DIR + "Kunden/" + eachDir + "/" + eachFile
 		eachFile = int(eachFile)
 		if eachFile > NeueKundenID: NeueKundenID = eachFile + 1
-		KundeVornameList[eachFile]=BlueLoad("Vorname", datei)
-		KundeNachnameList[eachFile]=BlueLoad("Nachname", datei)
+		KundeNameList[eachFile]=BlueLoad("Name", datei)
 		KundeTelList[eachFile]=BlueLoad("Tel", datei)
 		KundeAdresseList[eachFile]=BlueLoad("Adresse", datei)
 		KundeOrtList[eachFile]=BlueLoad("Ort", datei)
 	
 		KundenAnzahl = KundenAnzahl  + 1
+
+PreiseID = 0
+for datei in os.listdir("Import/Preise/"):
+	if ".csv" in datei:
+		ImportDateiDATA = "Import/Preise/" + datei.replace(".csv", "")
+		if os.path.exists(ImportDateiDATA):
+			Debug("Preis " + str(datei))
+			SearchName = BlueLoad("Name", ImportDateiDATA)
+			SearchArtikel = BlueLoad("Artikel", ImportDateiDATA)
+			SearchArtikel2 = BlueLoad("Artikel2", ImportDateiDATA)
+			SearchPreisEK = BlueLoad("PreisEK", ImportDateiDATA)
+			SearchPreisVKH = BlueLoad("PreisVKH", ImportDateiDATA)
+			SearchPreisVK = BlueLoad("PreisVK", ImportDateiDATA)
+
+			AnzahlDerSpalten = len(open("Import/Preise/" + datei, "r").readlines()[0].split(":"))
+			IntName = 0
+			IntArtikel = 0
+			IntArtikel2 = 0
+			IntPreisEK = 0
+			IntPreisVKH = 0
+			IntPreisVK = 0
+
+			AlleTitel = open("Import/Preise/" + datei, "r").readlines()[0].split(":")
+			Debug("AlleTitel " + str(AlleTitel))
+			for x in range(0, AnzahlDerSpalten):
+				if SearchName == AlleTitel[x]: IntName = x
+				if SearchArtikel == AlleTitel[x]: IntArtikel = x
+				if SearchArtikel2 == AlleTitel[x]: IntArtikel2 = x
+				if SearchPreisEK == AlleTitel[x]: IntPreisEK = x
+				if SearchPreisVKH == AlleTitel[x]: IntPreisVKH = x
+				if SearchPreisVK == AlleTitel[x]: IntPreisVK = x
+			if IntName == 0: Debug("Kein Name")
+			if IntArtikel == 0: Debug("Kein Artikel")
+			if IntArtikel2 == 0: Debug("Kein Artikel 2")
+			if IntPreisEK == 0: Debug("Kein PreisEK")
+			if IntPreisVKH == 0: Debug("Kein PreisVKH")
+			if IntPreisVK == 0: Debug("Kein PreisVK")
+			ErsteLinie = open("Import/Preise/" + datei, "r").readlines()[0]
+			for eachLine in open("Import/Preise/" + datei, "r").readlines():
+				try:
+					StockArtikelAnzahl = StockArtikelAnzahl  + 1
+					if len(str(PreiseID)) > 2:
+						if str(PreiseID)[-3] + str(PreiseID)[-2] + str(PreiseID)[-1] == "000": Debug("Lade PreiseID " + str(PreiseID))
+						
+					PreiseArtikelList.insert(PreiseID, eachLine.split(":")[IntArtikel]) #+ " " + eachLine.split(":")[IntArtikel2])
+					PreiseLieferantList.insert(PreiseID, datei.replace(".csv", ""))
+					PreiseNameList.insert(PreiseID, eachLine.split(":")[IntName])
+					## Achtung PreisVK oder PreisVKH muss drin sein !
+					PreisePreisVKHList.insert(PreiseID, str(eachLine.split(":")[IntPreisVKH]).replace(",", "."))
+					PreisePreisEKList.insert(PreiseID, str(eachLine.split(":")[IntPreisEK]).replace(",", "."))
+					PreisePreisVKList.insert(PreiseID, str(eachLine.split(":")[IntPreisVK]).replace(",", "."))
+					if IntPreisVK == 0:
+						PreisePreisVKList[PreiseID] = RoundUp0000(float(str(PreisePreisVKHList[PreiseID]).replace(",", "."))*1.21)
+					if IntPreisVKH == 0:
+						PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
+					if IntPreisEK == 0:
+						PreisePreisEKList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))*0.65)
+
+					PreiseID = PreiseID + 1
+				except: Debug("linie nicht gultig ..")
+					
 
 for Arbeiter in os.listdir(DIR + "Arbeiter"):
 	ArbeiterListe.append(Arbeiter)
@@ -225,27 +346,27 @@ while True:
 	ipname = socket.gethostbyaddr(addr[0])
 	Debug("Verbunden mit " + str(ipname[0]))
 	while True:
-		data = c.recv(2048)
-		if not data:
+		DATA = c.recv(2048)
+		if not DATA:
 			Debug("Client sendet nicht mehr")
 			break
-		data = data.decode()
-		Debug("Data : " + data)
+		DATA = DATA.decode()
+		Debug("DATA : " + DATA)
 
-		mode = data.split("(zKz)")[0]
+		mode = DATA.split("(zKz)")[0]
 
 		Antwort = "x"
 		
 		if mode == "SaveArbeiterLinie":
 			Debug("Mode : " + mode)
-			Arbeiter = str(data.split("(zKz)")[1].split("(zkz)")[0])
-			Linie = str(data.split("(zKz)")[1].split("(zkz)")[1])
-			Text = str(data.split("(zKz)")[1].split("(zkz)")[2])
+			Arbeiter = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
+			Linie = str(DATA.split("(zKz)")[1].split("(zkz)")[1])
+			Text = str(DATA.split("(zKz)")[1].split("(zkz)")[2])
 			BlueSave(Linie, Text, "Arbeiter/" + Arbeiter)
 		if mode == "GetArbeiterLinie":
 			Debug("Mode : " + mode)
-			Arbeiter = str(data.split("(zKz)")[1].split("(zkz)")[0])
-			Linie = str(data.split("(zKz)")[1].split("(zkz)")[1])
+			Arbeiter = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
+			Linie = str(DATA.split("(zKz)")[1].split("(zkz)")[1])
 			Antwort = str(BlueLoad(Linie, "Arbeiter/" + Arbeiter))
 			
 
@@ -258,9 +379,9 @@ while True:
 
 		if mode == "StockSetArtInfo":
 			Debug("Mode : " + mode)
-			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
-			VarName = str(data.split("(zKz)")[1].split("(zkz)")[1])
-			Var = str(data.split("(zKz)")[1].split("(zkz)")[2])
+			ID = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
+			VarName = str(DATA.split("(zKz)")[1].split("(zkz)")[1])
+			Var = str(DATA.split("(zKz)")[1].split("(zkz)")[2])
 			Debug("ID :  " + str(ID))
 			Debug("VarName :  " + str(VarName))
 			Debug("Var :  " + str(Var))
@@ -304,20 +425,17 @@ while True:
 
 		if mode == "KundeSetInfo":
 			Debug("Mode : " + mode)
-			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
-			VarName = str(data.split("(zKz)")[1].split("(zkz)")[1])
-			Var = str(data.split("(zKz)")[1].split("(zkz)")[2])
+			ID = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
+			VarName = str(DATA.split("(zKz)")[1].split("(zkz)")[1])
+			Var = str(DATA.split("(zKz)")[1].split("(zkz)")[2])
 			Debug("ID :  " + str(ID))
 			Debug("VarName :  " + str(VarName))
 			Debug("Var :  " + str(Var))
 			BlueMkDir("Kunden/" + str(ID)[-2] + str(ID)[-1])
 
-			if VarName == "Vorname": 
-				KundeVornameList[ID]=str(Var)
-				BlueSave(str(VarName), str(Var), DIR + "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-			if VarName == "Nachname": 
-				if KundeNachnameList[ID] == "x": KundenAnzahl = KundenAnzahl  + 1 # Neuer Kunde
-				KundeNachnameList[ID]=str(Var)
+			if VarName == "Name": 
+				if KundeNameList[ID] == "x": KundenAnzahl = KundenAnzahl  + 1 # Neuer Kunde
+				KundeNameList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), DIR + "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Tel": 
 				KundeTelList[ID]=str(Var)
@@ -331,42 +449,56 @@ while True:
 
 		if mode == "StockGetArtInfo":
 			Debug("Mode : " + mode)
-			print(data.split("(zKz)")[1])
-			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
-			Vars = str(data.split(str(ID))[1]).split("(zkz)")
+			print(DATA.split("(zKz)")[1])
+			ID = DATA.split("(zKz)")[1].split("(zkz)")[0]
+			Vars = str(DATA.split(str(ID))[1]).split("(zkz)")
 			Debug("ID :  " + str(ID))
 			Debug("Vars :  " + str(Vars))
 
 			Antwort = str(ID)
-			for Var in Vars:
-				try:
-					if Var == "Artikel":  Antwort = Antwort + " | " + str(StockArtikelList[ID])
-					if Var == "Name":  Antwort = Antwort + " | " + str(StockNameList[ID])
-					if Var == "Ort":  Antwort = Antwort + " | " + str(StockOrtList[ID]).upper()
-					if Var == "PreisEK":  Antwort = Antwort + " | " + str(StockPreisEKList[ID])
-					if Var == "PreisVKH":  Antwort = Antwort + " | " + str(StockPreisVKHList[ID])
-					if Var == "PreisVK":  Antwort = Antwort + " | " + str(StockPreisVKList[ID])
-					if Var == "Anzahl":  Antwort = Antwort + " | " + str(StockAnzahlList[ID])
-					if Var == "Barcode":  Antwort = Antwort + " | " + str(StockBarcodeList[ID])
-					if Var == "LastChange":  Antwort = Antwort + " | " + str(StockLastChangeList[ID])
-					if Var == "Creation":  Antwort = Antwort + " | " + str(StockCreationList[ID])
-					if Var == "Lieferant":  Antwort = Antwort + " | " + str(StockLieferantList[ID])
-				except:
-					Antwort = Antwort + "None"
+
+			if not "P" in ID:
+				ID = int(ID)
+				for Var in Vars:
+					try:
+						if Var == "Artikel":  Antwort = Antwort + " | " + str(StockArtikelList[ID])
+						if Var == "Name":  Antwort = Antwort + " | " + str(StockNameList[ID])
+						if Var == "Ort":  Antwort = Antwort + " | " + str(StockOrtList[ID]).upper()
+						if Var == "PreisEK":  Antwort = Antwort + " | " + str(StockPreisEKList[ID])
+						if Var == "PreisVKH":  Antwort = Antwort + " | " + str(StockPreisVKHList[ID])
+						if Var == "PreisVK":  Antwort = Antwort + " | " + str(StockPreisVKList[ID])
+						if Var == "Anzahl":  Antwort = Antwort + " | " + str(StockAnzahlList[ID])
+						if Var == "Barcode":  Antwort = Antwort + " | " + str(StockBarcodeList[ID])
+						if Var == "LastChange":  Antwort = Antwort + " | " + str(StockLastChangeList[ID])
+						if Var == "Creation":  Antwort = Antwort + " | " + str(StockCreationList[ID])
+						if Var == "Lieferant":  Antwort = Antwort + " | " + str(StockLieferantList[ID])
+					except:
+						Antwort = Antwort + "None"
+			else:
+				ID = int(ID.replace("P", ""))
+				for Var in Vars:
+					try:
+						if Var == "Artikel":  Antwort = Antwort + " | " + str(PreiseArtikelList[ID])
+						if Var == "Name":  Antwort = Antwort + " | " + str(PreiseNameList[ID])
+						if Var == "PreisEK":  Antwort = Antwort + " | " + str(PreisePreisEKList[ID])
+						if Var == "PreisVKH":  Antwort = Antwort + " | " + str(PreisePreisVKHList[ID])
+						if Var == "PreisVK":  Antwort = Antwort + " | " + str(PreisePreisVKList[ID])
+						if Var == "Lieferant":  Antwort = Antwort + " | " + str(PreiseLieferantList[ID])
+					except:
+						Antwort = Antwort + "None"
 
 		if mode == "KundeGetInfo":
 			Debug("Mode : " + mode)
-			print(data.split("(zKz)")[1])
-			ID = int(data.split("(zKz)")[1].split("(zkz)")[0])
-			Vars = str(data.split(str(ID))[1]).split("(zkz)")
+			print(DATA.split("(zKz)")[1])
+			ID = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
+			Vars = str(DATA.split(str(ID))[1]).split("(zkz)")
 			Debug("ID :  " + str(ID))
 			Debug("Vars :  " + str(Vars))
 
 			Antwort = str(ID)
 			for Var in Vars:
 				try:
-					if Var == "Vorname":  Antwort = Antwort + " | " + str(KundeVornameList[ID]).title()
-					if Var == "Nachname":  Antwort = Antwort + " | " + str(KundeNachnameList[ID]).title()
+					if Var == "Name":  Antwort = Antwort + " | " + str(KundeVornameList[ID]).title()
 					if Var == "Tel":  Antwort = Antwort + " | " + str(KundeTelList[ID])
 					if Var == "Adresse":  Antwort = Antwort + " | " + str(KundeAdresseList[ID]).title()
 					if Var == "Ort":  Antwort = Antwort + " | " + str(KundeOrtList[ID]).title()
@@ -391,9 +523,9 @@ while True:
 
 		if mode == "ChangeStock":
 			Debug("Mode : " + mode)
-			BcodeSuche = int(data.split("(zKz)")[1].split("(zkz)")[0])
+			BcodeSuche = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
 			Debug("BcodeSuche : " + str(BcodeSuche))
-			NewStock = data.split("(zKz)")[1].split("(zkz)")[1]
+			NewStock = DATA.split("(zKz)")[1].split("(zkz)")[1]
 			Debug("NewStock : " + NewStock)
 			AltStock = str(StockAnzahlList[BcodeSuche])
 			Debug("AltStock : " + AltStock )
@@ -411,11 +543,11 @@ while True:
 
 		if mode == "SearchStock":
 			Debug("Mode : " + mode)
-			SucheSuche = str(data.split("(zKz)")[1].split("(zkz)")[0])
+			SucheSuche = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
 			Debug("SucheSuche : " + SucheSuche)
-			OrtSuche = data.split("(zKz)")[1].split("(zkz)")[1]
+			OrtSuche = DATA.split("(zKz)")[1].split("(zkz)")[1]
 			Debug("OrtSuche : " + OrtSuche)
-			LieferantSuche = data.split("(zKz)")[1].split("(zkz)")[2]
+			LieferantSuche = DATA.split("(zKz)")[1].split("(zkz)")[2]
 			Debug("LieferantSuche : " + LieferantSuche)
 			
 			indices = []
@@ -426,20 +558,25 @@ while True:
 				indices.append(int(SucheSuche))
 			if len(SucheSuche) == 12 or  len(SucheSuche) == 13 and SucheSuche.isdigit():# Barcode
 				Debug("Barcode")
-				for counter, data in enumerate(StockBarcodeList):
-					if SucheSuche == str(data):
+				for counter, DATA in enumerate(StockBarcodeList):
+					if SucheSuche == str(DATA):
 						indices.append(counter)
 			# Artikel
-			for counter, data in enumerate(StockArtikelList):
-				if SucheSuche in str(data):
-					indices.append(counter)
+			for counter, DATA in enumerate(StockArtikelList):
+				if SucheSuche in str(DATA):
+					if len(str(counter)) == 6:indices.append(counter)
+			# Artikel PreisVorschlag
+			for counter, DATA in enumerate(PreiseArtikelList):
+				if SucheSuche in str(DATA):
+					indices.append("P" + str(counter))
 			
 			 # Ort
-			if not OrtSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockOrtList) if OrtSuche in data and counter in indices]; print("Rest nach Ort " + str(indices))
+			if not OrtSuche.rstrip() == "" and not indices == []:
+				indices = [counter for counter, DATA in enumerate(StockOrtList) if OrtSuche in DATA and counter in indices]; print("Rest nach Ort " + str(indices))
 
 			 # Lieferant
-			if not LieferantSuche.rstrip() == "" and not indices == []: indices = [counter for counter, data in enumerate(StockLieferantList) if LieferantSuche in data and counter in indices]; print("Rest nach Lieferant " + str(indices))
-
+			if not LieferantSuche.rstrip() == "" and not indices == []:
+				indices = [counter for counter, DATA in enumerate(StockLieferantList) if LieferantSuche.lower() in DATA.lower() and counter in indices]; print("Rest nach Lieferant " + str(indices))
 
 			indices = indices[:INDEXLIMIT]
 			if indices == []: indices = [0]
@@ -453,11 +590,11 @@ while True:
 
 		if mode == "SearchKunde":
 			Debug("Mode : " + mode)
-			SucheSuche = str(data.split("(zKz)")[1].split("(zkz)")[0])
+			SucheSuche = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
 			Debug("SucheSuche : " + SucheSuche)
-			TelSuche = data.split("(zKz)")[1].split("(zkz)")[1]
+			TelSuche = DATA.split("(zKz)")[1].split("(zkz)")[1]
 			Debug("TelSuche : " + TelSuche)
-			OrtSuche = data.split("(zKz)")[1].split("(zkz)")[2]
+			OrtSuche = DATA.split("(zKz)")[1].split("(zkz)")[2]
 			Debug("OrtSuche : " + OrtSuche)
 			
 			indices = []
@@ -469,15 +606,10 @@ while True:
 				indices.append(int(SucheSuche))
 
 			if not SucheSuche == "":
-				for NameTeil in SucheSuche.split(" "):
-					NameTeil = NameTeil.lower()
-					for counter, data in enumerate(KundeVornameList):
-						if NameTeil in str(data).lower() and not counter in indices:
-							indices.append(counter)
-					for counter, data in enumerate(KundeNachnameList):
-						if NameTeil in str(data).lower() and not counter in indices:
-							indices.append(counter)
-
+				for counter, DATA in enumerate(KundeNameList):
+					if SucheSuche.lower() in str(DATA).lower() and not counter in indices:
+						indices.append(counter)
+				
 			indices = indices[:INDEXLIMIT]
 			if indices == []: indices = [0]
 		

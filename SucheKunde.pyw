@@ -5,7 +5,7 @@ from libs.debug import Debug
 import os
 import subprocess
 from random import randint
-import send
+from libs.send import *
 import shutil
 import sys
 
@@ -14,12 +14,8 @@ Mode = ""
 if len(sys.argv) == 2:
 	if sys.argv[1] == "-getid": Mode = "GetID"
 
-if not Date() == BlueLoad("LastUpdate", "DATA"):
-	if os.path.exists("/home"): os.system("./Updater.pyw")
-	else: os.system("Updater.pyw")
-
-EntryList=["Kundennummer", "Vorname",  "Nachname", "Tel", "Adresse", "Ort"]
-EntryList2=["Vorname",  "Nachname", "Tel", "Adresse", "Ort"]
+EntryList=["Kundennummer", "Name", "Tel", "Adresse", "Ort"]
+EntryList2=["Name",  "Tel", "Adresse", "Ort"]
 appSuche = gui("Kunden Suche", "800x600") 
 
 IDToChange = 0
@@ -32,7 +28,7 @@ def tbFuncSv(btn):
 	Debug("tbFuncSv")
 	for a in EntryList2:
 		print(appChange.getEntry(a))
-		send.KundeSetInfo(IDToChange, a, appChange.getEntry(a))
+		KundeSetInfo(IDToChange, a, appChange.getEntry(a))
 	appChange.stop()
 	Delete("")
 	appSuche.setEntry("Name", IDToChange)
@@ -44,7 +40,7 @@ def tbFunc(btn):
 	Debug("btn : " + btn)
 
 	if btn == "NEU":
-		Number = send.NeueKundenID()
+		Number = NeueKundenID()
 
 		IDToChange = Number
 		appChange = gui("Kunde Change", "800x600")
@@ -52,7 +48,7 @@ def tbFunc(btn):
 		GetThis = ""
 		for a in EntryList2:
 			GetThis = GetThis + "(zkz)" + str(a)
-		Data = send.KundeGetInfo(GetThis, str(IDToChange)).split(" | ")
+		Data = KundeGetInfo(GetThis, str(IDToChange)).split(" | ")
 		for x in range(0, len(EntryList2)):
 			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
 		
@@ -67,7 +63,7 @@ def tbFunc(btn):
 		GetThis = ""
 		for a in EntryList2:
 			GetThis = GetThis + "(zkz)" + str(a)
-		Data = send.KundeGetInfo(GetThis, str(IDToChange)).split(" | ")
+		Data = KundeGetInfo(GetThis, str(IDToChange)).split(" | ")
 		print(Data)
 		for x in range(0, len(EntryList2)):
 			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
@@ -81,7 +77,7 @@ appSuche.addToolbar(tools, tbFunc, findIcon=True)
 
 appSuche.addTickOptionBox("Anzeigen", EntryList2)
 try:
-	for eachAnzeigenOption in BlueLoad("Anzeigen-Kunden", "DATA").split("/"):
+	for eachAnzeigenOption in BlueLoad("Anzeigen-Kunden", "DATA/DATA").split("/"):
 		appSuche.setOptionBox("Anzeigen", eachAnzeigenOption, value=True, callFunction=True)
 except: print("Anzeigen nicht gefunden")
 
@@ -106,7 +102,7 @@ def Suche(btn):
 	Debug("Suche")
 	appSuche.setMeter("status", 0, text="Suche wird gestartet")
 	
-	AntwortList=send.SendeSucheKunde(appSuche.getEntry("Name").lower(), appSuche.getEntry("Tel"), appSuche.getEntry("Adresse/Ort").lower())
+	AntwortList=SendeSucheKunde(appSuche.getEntry("Name").lower(), appSuche.getEntry("Tel"), appSuche.getEntry("Adresse/Ort").lower())
 	appSuche.setMeter("status", 10, text="Warte auf daten")
 	appSuche.clearListBox("Suche")
 
@@ -120,11 +116,11 @@ def Suche(btn):
 			for a in EntryList2:
 				if appSuche.getOptionBox("Anzeigen")[a] and not IDs.rstrip() == "":
 					GetThis = GetThis + "(zkz)" + str(a)
-			Linie = send.KundeGetInfo(GetThis, IDs)
+			Linie = KundeGetInfo(GetThis, IDs)
 
 			appSuche.addListItem("Suche", Linie)
 	
-	appSuche.setLabel("infoAnzahl", str(send.GetKundenZahl()) + " Kunden im System")
+	appSuche.setLabel("infoAnzahl", str(GetKundenZahl()) + " Kunden im System")
 	appSuche.setMeter("status", 100, text="")
 
 def SaveIt():
@@ -135,15 +131,15 @@ def SaveIt():
 			except: AnzeigenListe = each
 	try:
 		print(AnzeigenListe)
-		BlueSave("Anzeigen-Kunden", AnzeigenListe, "DATA")
+		BlueSave("Anzeigen-Kunden", AnzeigenListe, "DATA/DATA")
 	except:
 		print("AnzeigenListe ist leer")
-		BlueSave("Anzeigen-Kunden", "Vorname/Nachname/Tel/Adresse/Ort", "DATA")
+		BlueSave("Anzeigen-Kunden", "Vorname/Nachname/Tel/Adresse/Ort", "DATA/DATA")
 	return True
 
 appSuche.setFocus("Name")
 appSuche.addLabel("info", "Enter = Suche \nDelete = Clear")
-appSuche.addLabel("infoAnzahl", str(send.GetKundenZahl()) + " Kunden im System")
+appSuche.addLabel("infoAnzahl", str(GetKundenZahl()) + " Kunden im System")
 if Mode == "GetID":
 	appSuche.addLabel("info2", "ESC = Kunde auswaehlen")
 	ID = BlueLoad("KundenID", "TMP")
