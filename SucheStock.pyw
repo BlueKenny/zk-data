@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from libs.appjar0061 import gui  
 from libs.BlueFunc import *
 from libs.debug import Debug
@@ -7,6 +8,7 @@ import subprocess
 from random import randint
 from libs.send import *
 import shutil
+from libs.barcode import *
 
 EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
@@ -17,12 +19,20 @@ IDToChange = 0
 appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
 
+#PrintBarcode(IP, ID, Barcode, Name, Price)
+def BtnPrintBarcode(btn):
+	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]
+	print("ID " + str(ID))
+	GetData = StockGetArtInfo("(zkz)Barcode(zkz)Name(zkz)PreisVK", ID).split(" | ")
+	print("GetData " + str(GetData))
+	PrintBarcode("", GetData[0], GetData[1], GetData[2], GetData[3])
 
+def BtnPrintOrt(btn):
+	PrintLocation(StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
 
-def PrintOrt(btn):
-	open("PrintOrt.txt", "w").write(StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
-	try: os.startfile("PrintOrt.txt", "print")
-	except: os.system("gedit ./PrintOrt.txt")
+	#open("PrintOrt.txt", "w").write(StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
+	#try: os.startfile("PrintOrt.txt", "print")
+	#except: os.system("gedit ./PrintOrt.txt")
 
 def tbFuncSv(btn):
 	global IDToChange
@@ -181,12 +191,13 @@ def StockChange(btn):
 		except: appSuche.infoBox("Error", "Error")
 
 appSuche.setFocus("Suche")
-appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\nF1 = Stock MINUS\nF2 = Stock PLUS")
+appSuche.addLabel("info", "Enter = Suche \nDelete = Clear\n\nF1 = Stock MINUS\nF2 = Stock PLUS\nF11 = Ort Drucken\nF12 = Barcode Drucken")
 appSuche.addLabel("infoAnzahl", str(GetStockZahl()) + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
-appSuche.bindKey("<F12>", PrintOrt)
+appSuche.bindKey("<F11>", BtnPrintOrt)
+appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 appSuche.setStopFunction(SaveIt)
 appSuche.go()

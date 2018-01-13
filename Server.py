@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import sys
 import socket
 from libs.debug import *
@@ -309,7 +310,8 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 					PreisePreisEKList.insert(PreiseID, str(eachLine.split(":")[IntPreisEK]).replace(",", "."))
 					PreisePreisVKList.insert(PreiseID, str(eachLine.split(":")[IntPreisVK]).replace(",", "."))
 					if IntPreisVK == 0:
-						PreisePreisVKList[PreiseID] = RoundUp0000(float(str(PreisePreisVKHList[PreiseID]).replace(",", "."))*1.21)
+						PreisePreisVKList[PreiseID] = RoundUp05(float(str(PreisePreisVKHList[PreiseID]).replace(",", "."))*1.21)
+						PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
 					if IntPreisVKH == 0:
 						PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
 					if IntPreisEK == 0:
