@@ -2,6 +2,7 @@
 import os
 import time
 import datetime
+import codecs
 
 def Date():
 	now = datetime.datetime.now()
@@ -26,9 +27,14 @@ def BlueMkDir(directory):#	Macht ein verzeichnis wenn es noch nicht existiert
 SplitIt = "&zKz&"
 def BlueLoad(VarName, File):
 	if os.path.exists(File): 
-		Datei = open(File, "r", errors="ignore")
-		DateiDatenIndex = Datei.readlines()
-		Datei.close()
+		try:
+			Datei = codecs.open(File, "r", "utf-8")
+			DateiDatenIndex = Datei.readlines()
+			Datei.close()
+		except:
+			Datei = codecs.open(File, "r", "latin-1")
+			DateiDatenIndex = Datei.readlines()
+			Datei.close()
 		Gefunden=False
 		for AlleLinien in DateiDatenIndex:
 			LinienVarName = AlleLinien.split(SplitIt)[0]

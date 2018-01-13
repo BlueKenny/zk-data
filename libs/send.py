@@ -22,6 +22,19 @@ while SERVER_IP == (0, 10000):
 			sock.close()
 	
 
+def StockSetBCode():
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.connect(SERVER_IP)
+	data = "StockSetBCode(zKz)"
+
+	Debug("Send " + str(data))
+	data = data.encode()
+	sock.sendto(data, SERVER_IP)
+	data = sock.recv(2048)
+	Debug("Get " + str(data.decode()))
+	sock.close()
+	return data.decode()
+
 def SendeSaveArbeiterLinie(Arbeiter, Linie, Text):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(SERVER_IP)

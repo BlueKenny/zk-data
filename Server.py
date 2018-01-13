@@ -46,6 +46,8 @@ KundeAdresseList = []
 KundeOrtList = []
 ArbeiterListe = []
 
+BlockedBCode=[]
+
 try:
 	INDEXLIMIT = int(BlueLoad("IndexLimit", DIR + "DATA/DATA"))
 except:
@@ -266,11 +268,17 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 		if os.path.exists(ImportDateiDATA):
 			Debug("Preis " + str(datei))
 			SearchName = BlueLoad("Name", ImportDateiDATA)
+			Debug("SearchName " + str(SearchName))
 			SearchArtikel = BlueLoad("Artikel", ImportDateiDATA)
+			Debug("SearchArtikel " + str(SearchArtikel))
 			SearchArtikel2 = BlueLoad("Artikel2", ImportDateiDATA)
+			Debug("SearchArtikel2 " + str(SearchArtikel2))
 			SearchPreisEK = BlueLoad("PreisEK", ImportDateiDATA)
+			Debug("SearchPreisEK " + str(SearchPreisEK))
 			SearchPreisVKH = BlueLoad("PreisVKH", ImportDateiDATA)
+			Debug("SearchPreisVKH " + str(SearchPreisVKH))
 			SearchPreisVK = BlueLoad("PreisVK", ImportDateiDATA)
+			Debug("SearchPreisVK " + str(SearchPreisVK))
 
 			AnzahlDerSpalten = len(open("Import/Preise/" + datei, "r").readlines()[0].split(":"))
 			IntName = 0
@@ -279,22 +287,46 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 			IntPreisEK = 0
 			IntPreisVKH = 0
 			IntPreisVK = 0
+			OKName = False
+			OKArtikel = False
+			OKArtikel2 = False
+			OKPreisEK = False
+			OKPreisVKH = False 
+			OKPreisVK = False
 
-			AlleTitel = open("Import/Preise/" + datei, "r").readlines()[0].split(":")
+			AlleTitel = open("Import/Preise/" + datei, "r", errors="ignore").readlines()[0].split(":")
 			Debug("AlleTitel " + str(AlleTitel))
 			for x in range(0, AnzahlDerSpalten):
-				if SearchName == AlleTitel[x]: IntName = x
-				if SearchArtikel == AlleTitel[x]: IntArtikel = x
-				if SearchArtikel2 == AlleTitel[x]: IntArtikel2 = x
-				if SearchPreisEK == AlleTitel[x]: IntPreisEK = x
-				if SearchPreisVKH == AlleTitel[x]: IntPreisVKH = x
-				if SearchPreisVK == AlleTitel[x]: IntPreisVK = x
-			if IntName == 0: Debug("Kein Name")
-			if IntArtikel == 0: Debug("Kein Artikel")
-			if IntArtikel2 == 0: Debug("Kein Artikel 2")
-			if IntPreisEK == 0: Debug("Kein PreisEK")
-			if IntPreisVKH == 0: Debug("Kein PreisVKH")
-			if IntPreisVK == 0: Debug("Kein PreisVK")
+				if SearchName == AlleTitel[x]:
+					IntName = x
+					OKName = True
+					Debug("IntName " + str(IntName))
+				if SearchArtikel == AlleTitel[x]:
+					IntArtikel = x
+					OKArtikel = True
+					Debug("IntArtikel " + str(IntArtikel))
+				if SearchArtikel2 == AlleTitel[x]:
+					IntArtikel2 = x
+					OKArtikel2 = True
+					Debug("IntArtikel2 " + str(IntArtikel2))
+				if SearchPreisEK == AlleTitel[x]:
+					IntPreisEK = x
+					OKPreisEK = True
+					Debug("IntPreisEK " + str(IntPreisEK))
+				if SearchPreisVKH == AlleTitel[x]:
+					IntPreisVKH = x
+					OKPreisVKH = True
+					Debug("IntPreisVKH " + str(IntPreisVKH))
+				if SearchPreisVK == AlleTitel[x]:
+					IntPreisVK = x
+					OKPreisVK = True
+					Debug("IntPreisVK " + str(IntPreisVK))
+			if not OKName: Debug("Kein Name")
+			if not OKArtikel: Debug("Kein Artikel")
+			if not OKArtikel2: Debug("Kein Artikel2")
+			if not OKPreisEK: Debug("Kein PreisEK")
+			if not OKPreisVKH: Debug("Kein PreisVKH")
+			if not OKPreisVK: Debug("Kein PreisVK")
 			ErsteLinie = open("Import/Preise/" + datei, "r").readlines()[0]
 			for eachLine in open("Import/Preise/" + datei, "r").readlines():
 				try:
@@ -318,7 +350,7 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 						PreisePreisEKList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))*0.65)
 
 					PreiseID = PreiseID + 1
-				except: Debug("linie nicht gultig ..")
+				except: Debug("linie nicht gultig ..\n" + eachLine + "\n")
 					
 
 for Arbeiter in os.listdir(DIR + "Arbeiter"):
@@ -359,7 +391,15 @@ while True:
 		mode = DATA.split("(zKz)")[0]
 
 		Antwort = "x"
-		
+
+		if mode == "StockSetBCode":
+			Debug("Mode : " + mode)
+			for counter, DATA in enumerate(StockNameList):
+					if str(DATA) == "x" and len(str(counter)) == 6 and not str(counter) in BlockedBCode:
+						Antwort=str(counter)
+						BlockedBCode.append(str(counter))
+						break
+
 		if mode == "SaveArbeiterLinie":
 			Debug("Mode : " + mode)
 			Arbeiter = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
@@ -541,8 +581,9 @@ while True:
 			
 			BlueMkDir(DIR + "StockBewegung/" + str(Date()).split("-")[0])
 			BlueMkDir(DIR + "StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1])
-			DateiStockBewegung = DIR + "StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1] + "/" + str(Date()).split("-")[2]
-			open(DateiStockBewegung, "a").write("\n" + str(BcodeSuche) + " from " + str(AltStock) + " to " + str(StockAnzahlList[BcodeSuche]))
+			DateiStockBewegung = DIR + "StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1] + "/" + str(Date()).split("-")[2] + ".csv"
+			if not os.path.exists(DateiStockBewegung): open(DateiStockBewegung, "a").write("ID:QUANTITY FROM:QUANTITY TO:COST:PRICE VAT INCL.:PRICE VAT EXCL.:MODE\n")
+			open(DateiStockBewegung, "a").write(str(BcodeSuche) + ":" + str(AltStock) + ":" + str(StockAnzahlList[BcodeSuche]) + ":" + str(StockPreisEKList[BcodeSuche]) + ":" + str(StockPreisVKHList[BcodeSuche]) + ":" + str(StockPreisVKList[BcodeSuche]) + ":MISC" + "\n")
 
 		if mode == "SearchStock":
 			Debug("Mode : " + mode)
