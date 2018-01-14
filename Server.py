@@ -392,6 +392,26 @@ while True:
 
 		Antwort = "x"
 
+
+		
+		if mode == "StockGetBewegung":
+			Debug("Mode : " + mode)
+			ID = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
+			Debug("ID : " + str(ID))
+			
+			DATA = []
+			for Jahr in sorted(os.listdir("StockBewegung/")):
+				for Monat in sorted(os.listdir("StockBewegung/" + str(Jahr))):
+					for Dateiname in sorted(os.listdir("StockBewegung/" + str(Jahr) + "/" + str(Monat))):
+						Datei = "StockBewegung/" + str(Jahr) + "/" + str(Monat) + "/" + Dateiname
+						FirstLine = open(Datei, "r").readlines()[0]
+						for eachLine in open(Datei, "r").readlines():
+							if not eachLine == FirstLine and eachLine.split(":")[0] == str(ID):
+								DATA.append(Jahr + Monat + Dateiname.replace(".csv", "") + "|" + eachLine.split(":")[2])
+			Antwort=str(DATA)
+
+
+
 		if mode == "StockSetBCode":
 			Debug("Mode : " + mode)
 			for counter, DATA in enumerate(StockNameList):

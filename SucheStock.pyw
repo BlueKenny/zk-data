@@ -9,6 +9,7 @@ from random import randint
 from libs.send import *
 import shutil
 from libs.barcode import *
+import libs.ArtGraph
 
 EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
@@ -19,7 +20,12 @@ IDToChange = 0
 appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
 
-#PrintBarcode(IP, ID, Barcode, Name, Price)
+def BtnStockGraph(btn):
+	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]
+	libs.ArtGraph.Datum_Anzahl(ID)
+	
+
+
 def BtnPrintBarcode(btn):
 	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]
 	print("ID " + str(ID))
@@ -89,6 +95,7 @@ def tbFunc(btn):
 			for x in range(0, len(EntryList2)):
 				appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
 			if appChange.getEntry("Barcode") == "" or appChange.getEntry("Barcode") == "x": appChange.setEntry("Barcode", IDToChange)
+			if appChange.getEntry("Anzahl") == "" or appChange.getEntry("Anzahl") == "x": appChange.setEntry("Anzahl", "0")
 			
 			appChange.addLabel("Creation", "Erstellung : " + StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
 			appChange.addLabel("Change", "Letzte änderung : " + StockGetArtInfo("(zkz)LastChange", IDToChange).split(" | ")[1])
@@ -203,6 +210,7 @@ appSuche.addLabel("infoAnzahl", str(GetStockZahl()) + " Artikel im Stock")
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
+appSuche.bindKey("<F5>", BtnStockGraph)
 appSuche.bindKey("<F11>", BtnPrintOrt)
 appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
