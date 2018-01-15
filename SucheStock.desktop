@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Stock
 Keywords=zk-data;stock;
+Path=/home/kenny/zk-data/
 Exec=/home/kenny/zk-data/SucheStock.pyw
 Terminal=false
 Type=Application
