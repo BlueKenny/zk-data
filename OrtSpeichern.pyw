@@ -4,10 +4,6 @@ from libs.send import *
 from libs.BlueFunc import *
 import os
 
-if not Date() == BlueLoad("LastUpdate", "DATA"):
-	if os.path.exists("/home"): os.system("./Updater.pyw")
-	else: os.system("Updater.pyw")
-
 appKasse = gui("Ort", "600x600")	
 
 def PrintOrt(btn):
