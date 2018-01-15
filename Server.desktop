@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Server
+Keywords=zk-data;server;
+Exec=/home/kenny/zk-data/Server.py
+Terminal=true
+Type=Application
+StartupNotify=true
+Icon=None
