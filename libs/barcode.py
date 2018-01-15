@@ -22,7 +22,7 @@ def PrintBarcode(IP, ID, Barcode, Name, Price):
 	IDText = "^AOB^FD" + ID + "^FS"
 	ID = IDPos + IDText
 
-	MaxStringLen = 16
+	MaxStringLen = 32
 	if len(Name) < MaxStringLen:
 		NamePos = "^FO150,80^BY1"
 		NameText = "^AON^FD" + Name + "^FS"

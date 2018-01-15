@@ -36,10 +36,6 @@ def BtnPrintBarcode(btn):
 def BtnPrintOrt(btn):
 	PrintLocation(StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
 
-	#open("PrintOrt.txt", "w").write(StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
-	#try: os.startfile("PrintOrt.txt", "print")
-	#except: os.system("gedit ./PrintOrt.txt")
-
 def tbFuncSv(btn):
 	global IDToChange
 	Debug("tbFuncSv")
@@ -72,7 +68,7 @@ def tbFunc(btn):
 		Data = StockGetArtInfo(GetThis, str(IDToChange)).split(" | ")
 		for x in range(0, len(EntryList2)):
 			appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
-		if appChange.getEntry("Barcode") == "" or appChange.getEntry("Barcode") == "x": appChange.setEntry("Barcode", IDToChange)
+		if appChange.getEntry("Barcode") == "" or appChange.getEntry("Barcode") == "x": appChange.setEntry("Barcode", "1234567" + IDToChange)
 		if appChange.getEntry("Anzahl") == "" or appChange.getEntry("Anzahl") == "x": appChange.setEntry("Anzahl", "0")
 
 		appChange.addLabel("info", "F5 = Speichern")
@@ -94,7 +90,7 @@ def tbFunc(btn):
 			print(Data)
 			for x in range(0, len(EntryList2)):
 				appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
-			if appChange.getEntry("Barcode") == "" or appChange.getEntry("Barcode") == "x": appChange.setEntry("Barcode", IDToChange)
+			if appChange.getEntry("Barcode") == "" or appChange.getEntry("Barcode") == "x": appChange.setEntry("Barcode", "1234567" + IDToChange)
 			if appChange.getEntry("Anzahl") == "" or appChange.getEntry("Anzahl") == "x": appChange.setEntry("Anzahl", "0")
 			
 			appChange.addLabel("Creation", "Erstellung : " + StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
@@ -118,7 +114,7 @@ def tbFunc(btn):
 			appChange.setEntry("PreisVKH", Data[5])
 			appChange.setEntry("PreisVK", Data[6])
 			appChange.setEntry("Anzahl", "0")
-			appChange.setEntry("Barcode", IDToChange)
+			appChange.setEntry("Barcode", "1234567" + IDToChange)
 
 			appChange.addLabel("info", "F5 = Speichern")
 			appChange.bindKey("<F5>", tbFuncSv)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from libs.appjar0830 import gui 
-from numpy import sin, pi, arange
+#from numpy import sin, pi, arange
 import random
 from libs.send import *
 import sys

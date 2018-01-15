@@ -1,10 +1,19 @@
 #!/usr/bin/env python
 
 def RoundUp05(Zahl): # 0.05
+	Zahl = float(Zahl)
+	#print("Zahl " + str(Zahl))
+	Zahl = int(Zahl*100)/100
+	#print("Zahl " + str(Zahl))
 	Zahl = float(Zahl) * 10.0000
+	#print("Zahl " + str(Zahl))
 	ZahlRest = Zahl - int(Zahl)
-	if ZahlRest < 0.5: ZahlRest = 0.5000
-	else: ZahlRest = 1.0000
+	#print("ZahlRest " + str(ZahlRest))
+	if ZahlRest < 0.5:
+		if not ZahlRest == 0:
+			ZahlRest = 0.5000
+	if ZahlRest > 0.5:  ZahlRest = 1.0000
+	#print("ZahlRest " + str(ZahlRest))
 	Zahl = int(Zahl) + ZahlRest
 	Zahl = float(Zahl) / 10.0000
 	return Zahl

@@ -8,6 +8,7 @@ import os
 from libs.RoundUp import * 
 import datetime
 import time
+import csv
 
 # Ordner
 DIR = ""
@@ -103,6 +104,14 @@ for datei in sorted(os.listdir("Import/Stock/")):
 			SearchCreation = BlueLoad("Creation", ImportDateiDATA)
 			SearchLastChange = BlueLoad("LastChange", ImportDateiDATA)
 
+			try:
+				AlleTitel = open("Import/Stock/" + datei, "r").readlines()[0].split(":")
+				Debug("Import is UTF-8")
+			except:
+				TESTOPEN = codecs.open("Import/Stock/" + datei, "r", "latin-1").read()
+				codecs.open("Import/Stock/" + datei, "w", "utf-8").write(TESTOPEN)
+				Debug("Convert Import to UTF-8")
+
 			AnzahlDerSpalten = len(open("Import/Stock/" + datei, "r").readlines()[0].split(":"))
 			IntName = 0
 			IntAnzahl = 0
@@ -116,8 +125,11 @@ for datei in sorted(os.listdir("Import/Stock/")):
 			IntLastChange = 0
 
 			AlleTitel = open("Import/Stock/" + datei, "r").readlines()[0].split(":")
+			Debug("AlleTitel " + str(AlleTitel))
 			for x in range(0, AnzahlDerSpalten):
-				if SearchName == AlleTitel[x]: IntName = x
+				if SearchName == AlleTitel[x]:
+					IntName = x
+					Debug("IntName " + str(IntName))
 				if SearchAnzahl == AlleTitel[x]: IntAnzahl = x
 				if SearchBarcode == AlleTitel[x]: IntBarcode = x
 				if SearchArtikel == AlleTitel[x]: IntArtikel = x
@@ -138,35 +150,36 @@ for datei in sorted(os.listdir("Import/Stock/")):
 			if IntCreation == 0: Debug("Keine Creation")
 			if IntLastChange == 0: Debug("Kein LastChange")
 
+			with open("Import/Stock/" + datei, "r") as csvfile:
+				reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
+				for eachLine in reader:
+					ID = eachLine[0]
+					if ID.isdigit():
+						ID = int(ID)
+						if StockNameList[ID] == "x":
+							StockNameList[ID] = str(eachLine[IntName])
+							StockArtikelAnzahl = StockArtikelAnzahl  + 1
 
-			for eachLine in open("Import/Stock/" + datei, "r").readlines():
-				try: 
-					int(eachLine.split(":")[0])
-					eachFile = int(eachLine.split(":")[0])
-					if str(eachFile)[-3] + str(eachFile)[-2] + str(eachFile)[-1] == "000": Debug("Lade BCode " + str(eachFile))
-					if StockNameList[eachFile] == "x":
-						StockNameList[eachFile] = str(eachLine.split(":")[IntName])
-						StockArtikelAnzahl = StockArtikelAnzahl  + 1
-					if StockBarcodeList[eachFile] == "x" or not len(str(StockBarcodeList[eachFile])) == 13:
-						StockBarcodeList[eachFile] = str(eachLine.split(":")[IntBarcode])
-					if StockArtikelList[eachFile] == "x":
-						StockArtikelList[eachFile] = str(eachLine.split(":")[IntArtikel])
-						if StockArtikelList[eachFile] == "": StockArtikelList[eachFile] = "import"
-					if StockLieferantList[eachFile] == "x" or StockLieferantList[eachFile] == "":
-						StockLieferantList[eachFile] = datei.replace(".csv", "")
-					if StockPreisEKList[eachFile] == "x":
-						StockPreisEKList[eachFile] = str(eachLine.split(":")[IntPreisEK])
-					if StockPreisVKHList[eachFile] == "x":
-						StockPreisVKHList[eachFile] = str(eachLine.split(":")[IntPreisVKH])
-					if StockPreisVKList[eachFile] == "x":
-						StockPreisVKList[eachFile] = str(eachLine.split(":")[IntPreisVK])
-					if StockAnzahlList[eachFile] == "x":
-						StockAnzahlList[eachFile] = str(eachLine.split(":")[IntAnzahl])
-					if StockCreationList[eachFile] == "x":
-						StockCreationList[eachFile] = str(eachLine.split(":")[IntCreation])
-					if StockLastChangeList[eachFile] == "x":
-						StockLastChangeList[eachFile] = str(eachLine.split(":")[IntLastChange])
-				except: Debug("linie nicht gultig ..")
+						if StockBarcodeList[ID] == "x" or not len(str(StockBarcodeList[ID])) == 13:
+							StockBarcodeList[ID] = str(eachLine[IntBarcode])
+						if StockArtikelList[ID] == "x":
+							StockArtikelList[ID] = str(eachLine[IntArtikel])
+							if StockArtikelList[ID] == "": StockArtikelList[ID] = "import"
+						if StockLieferantList[ID] == "x" or StockLieferantList[ID] == "":
+							StockLieferantList[ID] = datei.replace(".csv", "")
+						if StockPreisEKList[ID] == "x":
+							StockPreisEKList[ID] = str(eachLine[IntPreisEK])
+						if StockPreisVKHList[ID] == "x":
+							StockPreisVKHList[ID] = str(eachLine[IntPreisVKH])
+						if StockPreisVKList[ID] == "x":
+							StockPreisVKList[ID] = str(eachLine[IntPreisVK])
+						if StockAnzahlList[ID] == "x":
+							StockAnzahlList[ID] = str(eachLine[IntAnzahl])
+						if StockCreationList[ID] == "x":
+							StockCreationList[ID] = str(eachLine[IntCreation])
+						if StockLastChangeList[ID] == "x":
+							StockLastChangeList[ID] = str(eachLine[IntLastChange])
+			
         
 
 for datei in os.listdir("Import/Kunden/"):
@@ -280,6 +293,13 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 			SearchPreisVK = BlueLoad("PreisVK", ImportDateiDATA)
 			Debug("SearchPreisVK " + str(SearchPreisVK))
 
+			try:
+				Debug("Convert Import to UTF-8")
+				TESTOPEN = codecs.open("Import/Preise/" + datei, "r", "latin-1").read()
+				codecs.open("Import/Preise/" + datei, "w", "utf-8").write(TESTOPEN)
+			except:
+				Debug("Import is UTF-8")
+
 			AnzahlDerSpalten = len(open("Import/Preise/" + datei, "r").readlines()[0].split(":"))
 			IntName = 0
 			IntArtikel = 0
@@ -327,30 +347,32 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 			if not OKPreisEK: Debug("Kein PreisEK")
 			if not OKPreisVKH: Debug("Kein PreisVKH")
 			if not OKPreisVK: Debug("Kein PreisVK")
-			ErsteLinie = open("Import/Preise/" + datei, "r").readlines()[0]
-			for eachLine in open("Import/Preise/" + datei, "r").readlines():
-				try:
-					StockArtikelAnzahl = StockArtikelAnzahl  + 1
-					if len(str(PreiseID)) > 2:
-						if str(PreiseID)[-3] + str(PreiseID)[-2] + str(PreiseID)[-1] == "000": Debug("Lade PreiseID " + str(PreiseID))
-						
-					PreiseArtikelList.insert(PreiseID, eachLine.split(":")[IntArtikel]) #+ " " + eachLine.split(":")[IntArtikel2])
-					PreiseLieferantList.insert(PreiseID, datei.replace(".csv", ""))
-					PreiseNameList.insert(PreiseID, eachLine.split(":")[IntName])
-					## Achtung PreisVK oder PreisVKH muss drin sein !
-					PreisePreisVKHList.insert(PreiseID, str(eachLine.split(":")[IntPreisVKH]).replace(",", "."))
-					PreisePreisEKList.insert(PreiseID, str(eachLine.split(":")[IntPreisEK]).replace(",", "."))
-					PreisePreisVKList.insert(PreiseID, str(eachLine.split(":")[IntPreisVK]).replace(",", "."))
-					if IntPreisVK == 0:
-						PreisePreisVKList[PreiseID] = RoundUp05(float(str(PreisePreisVKHList[PreiseID]).replace(",", "."))*1.21)
-						PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
-					if IntPreisVKH == 0:
-						PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
-					if IntPreisEK == 0:
-						PreisePreisEKList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))*0.65)
 
-					PreiseID = PreiseID + 1
-				except: Debug("linie nicht gultig ..\n" + eachLine + "\n")
+			with open("Import/Preise/" + datei, "r") as csvfile:
+				reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
+				for eachLine in reader:
+					try:
+						StockArtikelAnzahl = StockArtikelAnzahl  + 1
+								
+						PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel])
+						PreiseLieferantList.insert(PreiseID, datei.replace(".csv", ""))
+						PreiseNameList.insert(PreiseID, eachLine[IntName])
+						## Achtung PreisVK oder PreisVKH muss drin sein !
+						PreisePreisVKHList.insert(PreiseID, str(eachLine[IntPreisVKH]).replace(",", "."))
+						PreisePreisEKList.insert(PreiseID, str(eachLine[IntPreisEK]).replace(",", "."))
+						PreisePreisVKList.insert(PreiseID, str(eachLine[IntPreisVK]).replace(",", "."))
+						if IntPreisVK == 0:
+							PreisePreisVKList[PreiseID] = RoundUp05(float(str(PreisePreisVKHList[PreiseID]).replace(",", "."))*1.21)
+							PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
+						if IntPreisVKH == 0:
+							PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
+						if IntPreisEK == 0:
+							PreisePreisEKList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))*0.65)
+						PreisePreisVKList[PreiseID] = RoundUp05(PreisePreisVKList[PreiseID])
+						PreisePreisVKHList[PreiseID] = RoundUp0000(float(PreisePreisVKList[PreiseID])/1.21)
+
+						PreiseID = PreiseID + 1
+					except: Debug("Linie ist ungültig \n" + str(eachLine))
 					
 
 for Arbeiter in os.listdir(DIR + "Arbeiter"):
