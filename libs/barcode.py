@@ -4,6 +4,10 @@ import socket
 #from libs.BlueFunc import *
 #from libs.debug import *
 
+def IDToBarcode(ID):
+	print("ID To Barcode")
+	
+
 def PrintBarcode(IP, ID, Barcode, Name, Price):
 	print("Barcode")
 	TCP_IP = "10.0.0.26"#22
@@ -50,7 +54,7 @@ def PrintBarcode(IP, ID, Barcode, Name, Price):
 
 
 def PrintLocation(Location):
-	TCP_IP = "192.168.188.67"
+	TCP_IP = "10.0.0.26"#22
 	TCP_PORT = 9100
 
 	Location = str(Location)
