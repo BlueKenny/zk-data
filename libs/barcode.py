@@ -6,7 +6,7 @@ import socket
 
 def PrintBarcode(IP, ID, Barcode, Name, Price):
 	print("Barcode")
-	TCP_IP = "192.168.188.67"
+	TCP_IP = "10.0.0.26"#22
 	TCP_PORT = 9100
 
 	ID = str(ID)
@@ -19,27 +19,27 @@ def PrintBarcode(IP, ID, Barcode, Name, Price):
 	BarcodeString = "^FD" + Barcode + "^FS"
 	Barcode = BarcodePos + BarcodeType + BarcodeString
 
-	IDPos = "^FO120,30^BY3"
-	IDText = "^AOB^FD" + ID + "^FS"
+	IDPos = "^FO120,30^BY2"
+	IDText = "^ACB^FD" + ID + "^FS" # ^AOB^FD
 	ID = IDPos + IDText
 
-	MaxStringLen = 32
+	MaxStringLen = 15
 	if len(Name) < MaxStringLen:
-		NamePos = "^FO150,80^BY1"
-		NameText = "^AON^FD" + Name + "^FS"
+		NamePos = "^FO150,70^BY1"
+		NameText = "^ACN^FD" + Name + "^FS"
 		Name = NamePos + NameText
 	else:
 		Name1 = Name[0:MaxStringLen]
 		Name2 = Name[MaxStringLen:len(Name)]
-		NamePos1 = "^FO150,80^BY1"
-		NameText1 = "^AON^FD" + Name1 + "^FS"
-		NamePos2 = "^FO150,110^BY1"
-		NameText2 = "^AON^FD" + Name2 + "^FS"
+		NamePos1 = "^FO150,70^BY1"
+		NameText1 = "^ACN^FD" + Name1 + "^FS"
+		NamePos2 = "^FO150,100^BY1"
+		NameText2 = "^ACN^FD" + Name2 + "^FS"
 		Name = NamePos1 + NameText1 + NamePos2 + NameText2
 	
 
 	PricePos = "^FO160,40^BY1"
-	PriceText = "^AON^FD" + Price + "^FS"
+	PriceText = "^ACN^FD" + Price + "^FS"
 	Price = PricePos + PriceText
 
 	zpl="^XA" + Barcode + ID + Name + Price + "^XZ"
