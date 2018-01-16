@@ -6,6 +6,21 @@ import socket
 
 def IDToBarcode(ID):
 	print("ID To Barcode")
+	Barcode = "123456" + str(ID)
+	if len(str(ID)) == 6:
+		print("Barcode " + str(Barcode))
+		Sum = 0
+		for x in range(1, 14):
+			print("Sum = " + str(Sum) + " + " + str(Barcode[-13+x]) + " * " + str(x))
+			Sum = Sum + int(Barcode[-13+x])*x
+		print("Sum " + str(Sum))
+		Equal = Sum / 11
+		print("Equal " + str(Equal))
+		Rest = int((Equal - int(Equal)) * 11)
+		print("Rest " + str(Rest))
+		Barcode = str(Barcode) + str(Rest)
+		print("Barcode " + str(Barcode) )
+	return str(Barcode)
 	
 
 def PrintBarcode(IP, ID, Barcode, Name, Price):
