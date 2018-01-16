@@ -45,7 +45,7 @@ def tbFuncSv(btn):
 	appChange.stop()
 	Delete("")
 	appSuche.setEntry("Suche", IDToChange)
-	Suche("")
+	Suche("first")
 
 def tbFunc(btn):
 	global IDToChange
@@ -53,7 +53,7 @@ def tbFunc(btn):
 	Debug("btn : " + btn)
 
 	if btn == "NEU":
-		#Enable this do disable ID generation
+		#Enable this do disable ID generation 
 		#Number = appSuche.numberBox("Neu", "Neuer Artike\nBcode n° ?")
 		#try: print(int(Number))
 		#except: Number = 800000
@@ -144,10 +144,17 @@ def Suche(btn):
 	appSuche.setMeter("status", 0, text="Suche wird gestartet")
 	
 	AntwortList=SendeSucheStock(appSuche.getEntry("Suche").replace(" ", ""), appSuche.getEntry("Ort").upper(), appSuche.getEntry("Lieferant").lower())
+
+
 	appSuche.setMeter("status", 10, text="Warte auf daten")
 	appSuche.clearListBox("Suche")
 
-	Schritt = (100-10)/(len(AntwortList.split("<K>"))-1); print("Schritt : " + str(Schritt))
+	if btn == "first":
+		AntwortList = AntwortList.split("<K>")[0]
+		Schritt = (100-10)/(1); print("Schritt : " + str(Schritt))
+	else:
+		Schritt = (100-10)/(len(AntwortList.split("<K>"))-1); print("Schritt : " + str(Schritt))
+
 	for IDs in AntwortList.split("<K>"):
 		if not IDs == "":
 			appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text="Sammle Daten")
@@ -160,7 +167,12 @@ def Suche(btn):
 			Linie = StockGetArtInfo(GetThis, IDs)
 
 			appSuche.addListItem("Suche", Linie)
-	
+			if "P" in IDs:
+				appSuche.setListItemBg("Suche", Linie, "#0000ff")
+			else:
+				appSuche.setListItemBg("Suche", Linie, "#ffffff")
+	#print(appSuche.getListItems("Suche"))
+	#appSuche.selectListItem("Suche", appSuche.getListItems("Suche")[0], callFunction=False)
 	appSuche.setLabel("infoAnzahl", str(GetStockZahl()) + " Artikel im Stock")
 	appSuche.setMeter("status", 100, text="")
 
@@ -188,7 +200,7 @@ def StockChange(btn):
 			SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
 			Debug(IDToChange)
 			appSuche.infoBox("Stock Geändert", "Sie haben " + str(int(Anzahl)) + "x " + str(Name) + " Entfernt")
-			Suche("")
+			Suche("first")
 		except: appSuche.infoBox("Error", "Error")
 	if btn == "<F2>": # PLUS
 		Anzahl = appSuche.numberBox("Anzahl", Name + "\n\nBitte Anzahl eingeben die in Stock gesetzt wird :")
@@ -196,8 +208,7 @@ def StockChange(btn):
 			SendeChangeAnzahl(IDToChange, int(Anzahl))
 			Debug(IDToChange)
 			appSuche.infoBox("Stock Geändert", "Sie haben " + str(int(Anzahl)) + " zu " + str(Name) + " Hinzugefuegt")
-			os.system("")
-			Suche("")
+			Suche("first")
 		except: appSuche.infoBox("Error", "Error")
 
 appSuche.setFocus("Suche")

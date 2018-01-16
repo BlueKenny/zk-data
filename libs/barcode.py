@@ -5,6 +5,7 @@ import socket
 #from libs.debug import *
 
 def PrintBarcode(IP, ID, Barcode, Name, Price):
+	print("Barcode")
 	TCP_IP = "192.168.188.67"
 	TCP_PORT = 9100
 

@@ -104,13 +104,13 @@ for datei in sorted(os.listdir("Import/Stock/")):
 			SearchCreation = BlueLoad("Creation", ImportDateiDATA)
 			SearchLastChange = BlueLoad("LastChange", ImportDateiDATA)
 
-			try:
-				AlleTitel = open("Import/Stock/" + datei, "r").readlines()[0].split(":")
-				Debug("Import is UTF-8")
-			except:
-				TESTOPEN = codecs.open("Import/Stock/" + datei, "r", "latin-1").read()
-				codecs.open("Import/Stock/" + datei, "w", "utf-8").write(TESTOPEN)
-				Debug("Convert Import to UTF-8")
+			#try:
+			#	AlleTitel = open("Import/Stock/" + datei, "r").readlines()[0].split(":")
+			#	Debug("Import is UTF-8")
+			#except:
+			#	TESTOPEN = codecs.open("Import/Stock/" + datei, "r", "latin-1").read()
+			#	codecs.open("Import/Stock/" + datei, "w", "utf-8").write(TESTOPEN)
+			#	Debug("Convert Import to UTF-8")
 
 			AnzahlDerSpalten = len(open("Import/Stock/" + datei, "r").readlines()[0].split(":"))
 			IntName = 0
@@ -293,12 +293,12 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 			SearchPreisVK = BlueLoad("PreisVK", ImportDateiDATA)
 			Debug("SearchPreisVK " + str(SearchPreisVK))
 
-			try:
-				Debug("Convert Import to UTF-8")
-				TESTOPEN = codecs.open("Import/Preise/" + datei, "r", "latin-1").read()
-				codecs.open("Import/Preise/" + datei, "w", "utf-8").write(TESTOPEN)
-			except:
-				Debug("Import is UTF-8")
+			#try:
+			#	Debug("Convert Import to UTF-8")
+			#	TESTOPEN = codecs.open("Import/Preise/" + datei, "r", "latin-1").read()
+			#	codecs.open("Import/Preise/" + datei, "w", "utf-8").write(TESTOPEN)
+			#except:
+			#	Debug("Import is UTF-8")
 
 			AnzahlDerSpalten = len(open("Import/Preise/" + datei, "r").readlines()[0].split(":"))
 			IntName = 0
@@ -400,7 +400,8 @@ def Date():
 while True:
 	Debug("Warte auf befehl...")
 	c, addr = s.accept()
-	ipname = socket.gethostbyaddr(addr[0])
+	try: ipname = socket.gethostbyaddr(addr[0])
+	except: ipname = ["nix"]
 	Debug("Verbunden mit " + str(ipname[0]))
 	while True:
 		DATA = c.recv(2048)
