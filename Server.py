@@ -146,6 +146,8 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 			Debug("SearchArtikel " + str(SearchArtikel))
 			SearchArtikel2 = BlueLoad("Artikel2", ImportDateiDATA)
 			Debug("SearchArtikel2 " + str(SearchArtikel2))
+			SearchArtikel3 = BlueLoad("Artikel3", ImportDateiDATA)
+			Debug("SearchArtikel3 " + str(SearchArtikel3))
 			SearchPreisEK = BlueLoad("PreisEK", ImportDateiDATA)
 			Debug("SearchPreisEK " + str(SearchPreisEK))
 			SearchPreisVKH = BlueLoad("PreisVKH", ImportDateiDATA)
@@ -157,12 +159,14 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 			IntName = 0
 			IntArtikel = 0
 			IntArtikel2 = 0
+			IntArtikel3 = 0
 			IntPreisEK = 0
 			IntPreisVKH = 0
 			IntPreisVK = 0
 			OKName = False
 			OKArtikel = False
 			OKArtikel2 = False
+			OKArtikel3 = False
 			OKPreisEK = False
 			OKPreisVKH = False 
 			OKPreisVK = False
@@ -182,6 +186,10 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 					IntArtikel2 = x
 					OKArtikel2 = True
 					Debug("IntArtikel2 " + str(IntArtikel2))
+				if SearchArtikel3 == AlleTitel[x]:
+					IntArtikel3 = x
+					OKArtikel3 = True
+					Debug("IntArtikel3 " + str(IntArtikel3))
 				if SearchPreisEK == AlleTitel[x]:
 					IntPreisEK = x
 					OKPreisEK = True
@@ -197,6 +205,7 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 			if not OKName: Debug("Kein Name")
 			if not OKArtikel: Debug("Kein Artikel")
 			if not OKArtikel2: Debug("Kein Artikel2")
+			if not OKArtikel3: Debug("Kein Artikel3")
 			if not OKPreisEK: Debug("Kein PreisEK")
 			if not OKPreisVKH: Debug("Kein PreisVKH")
 			if not OKPreisVK: Debug("Kein PreisVK")
@@ -206,8 +215,13 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 				for eachLine in reader:
 					try:
 						StockArtikelAnzahl = StockArtikelAnzahl  + 1
-								
-						PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel])
+						if OKArtikel3:
+							PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel] + " " + eachLine[IntArtikel2] + " " + eachLine[IntArtikel3])
+						else:
+							if OKArtikel2:	
+								PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel] + " " + eachLine[IntArtikel2])
+							else: 
+								PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel])
 						PreiseLieferantList.insert(PreiseID, datei.replace(".csv", ""))
 						PreiseNameList.insert(PreiseID, eachLine[IntName])
 						## Achtung PreisVK oder PreisVKH muss drin sein !
