@@ -10,22 +10,26 @@ def IDToBarcode(ID):
 	if len(str(ID)) == 6:
 		print("Barcode " + str(Barcode))
 		Sum = 0
-		for x in range(1, 14):
-			print("Sum = " + str(Sum) + " + " + str(Barcode[-13+x]) + " * " + str(x))
-			Sum = Sum + int(Barcode[-13+x])*x
+		for x in range(1, 13):
+			if int(x/2) == x/2:
+				print("a = 3")
+				a=3
+			else:
+				print("a = 1")
+				a=1
+			Sum = Sum + int(Barcode[-13+x])*a
+		print("Sum = " + str(Sum) + " + " + str(Barcode[-13+x]) + " * " + str(x))
 		print("Sum " + str(Sum))
-		Equal = Sum / 11
-		print("Equal " + str(Equal))
-		Rest = int((Equal - int(Equal)) * 11)
-		print("Rest " + str(Rest))
-		Barcode = str(Barcode) + str(Rest)
+		End = str(10 - int(str(Sum)[-1]))[-1]
+		Barcode = str(Barcode) + str(End)
 		print("Barcode " + str(Barcode) )
 	return str(Barcode)
 	
+IDToBarcode("654321")
 
 def PrintBarcode(IP, ID, Barcode, Name, Price):
 	print("Barcode")
-	TCP_IP = "10.0.0.26"#22
+	TCP_IP = "ZBR7681522"#ZBR5581684#ZBR7681522#"10.0.0.22"#35#ZBR5581684
 	TCP_PORT = 9100
 
 	ID = str(ID)
@@ -69,7 +73,7 @@ def PrintBarcode(IP, ID, Barcode, Name, Price):
 
 
 def PrintLocation(Location):
-	TCP_IP = "10.0.0.26"#22
+	TCP_IP = "ZBR7681522"#ZBR5581684#ZBR7681522#"10.0.0.22"#35#ZBR5581684
 	TCP_PORT = 9100
 
 	Location = str(Location)
@@ -88,4 +92,5 @@ def PrintLocation(Location):
 	s.connect((TCP_IP, TCP_PORT))
 	s.send(bytes(zpl, "utf-8"))
 	s.close()
+
 
