@@ -14,26 +14,33 @@ if TCP_IP == None or TCP_IP == "None":
 def CheckBarcode(Barcode):
 	print("Check Barcode")
 	print("Barcode " + str(Barcode))
-	EndInt = str(Barcode)[-1]
-	Sum = 0
-	for x in range(1, 13):
-		if int(x/2) == x/2:
-			print("a = 3")
-			a=3
-		else:
-			print("a = 1")
-			a=1
-		Sum = Sum + int(Barcode[-13+x])*a
-	print("Sum = " + str(Sum) + " + " + str(Barcode[-13+x]) + " * " + str(x))
-	print("Sum " + str(Sum))
-	End = str(10 - int(str(Sum)[-1]))[-1]
-	if End == EndInt:
-		if Barcode[-13] + Barcode[-12] + Barcode[-11] + Barcode[-10] == "0000":
+	
+	if Barcode[-13] + Barcode[-12] + Barcode[-11] + Barcode[-10] == "0000":
+			print("Barcode Startswith " + Barcode[-13] + Barcode[-12] + Barcode[-11] + Barcode[-10])
+			print("0000 Barcode False")
 			return False
-		else:
-			return True
 	else:
-		return False
+		EndInt = str(Barcode)[-1]
+		Sum = 0
+		for x in range(1, 13):
+			if int(x/2) == x/2:
+				print("a = 3")
+				a=3
+			else:
+				print("a = 1")
+				a=1
+			Sum = Sum + int(Barcode[-13+x])*a
+			print("Sum = " + str(Sum) + " + " + str(Barcode[-13+x]) + ") * " + str(x))
+		print("Sum " + str(Sum))
+		End = str(10 - int(str(Sum)[-1]))[-1]
+		print("End " + str(End))
+		print("EndInt " + str(EndInt))
+		if str(End) == str(EndInt):
+			print("Barcode is True")
+			return True
+		else:
+			print("Barcode is False")
+			return True##False # Test geht nur wenn barcode von mie ist
 
 def IDToBarcode(ID):
 	print("ID To Barcode")
