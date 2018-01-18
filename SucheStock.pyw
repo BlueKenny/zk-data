@@ -21,7 +21,8 @@ IDToChange = 0
 appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
 
-os.system("git pull")
+if not os.path.exists("/home"):
+	os.system("git pull")
 
 def BtnStockGraph(btn):
 	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]
