@@ -14,11 +14,14 @@ import libs.ArtGraph
 EntryList=["Bcode", "Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 EntryList2=["Barcode",  "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 appSuche = gui("Stock Suche", "800x600") 
+appSuche.setBg("#FFFFFF")
 
 IDToChange = 0
 
 appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
+
+os.system("git pull")
 
 def BtnStockGraph(btn):
 	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]
@@ -168,7 +171,7 @@ def Suche(btn):
 
 			appSuche.addListItem("Suche", Linie)
 			if "P" in IDs:
-				appSuche.setListItemBg("Suche", Linie, "#0000ff")
+				appSuche.setListItemBg("Suche", Linie, "#FFF68F")
 			else:
 				appSuche.setListItemBg("Suche", Linie, "#ffffff")
 	#print(appSuche.getListItems("Suche"))

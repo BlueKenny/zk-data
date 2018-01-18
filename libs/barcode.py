@@ -24,12 +24,10 @@ def IDToBarcode(ID):
 		Barcode = str(Barcode) + str(End)
 		print("Barcode " + str(Barcode) )
 	return str(Barcode)
-	
-IDToBarcode("654321")
 
 def PrintBarcode(IP, ID, Barcode, Name, Price):
 	print("Barcode")
-	TCP_IP = "10.0.0.22"#ZBR5581684 ##### ZBR7681522
+	TCP_IP = "ZBR7681522"#ZBR5581684 ##### ZBR7681522
 	TCP_PORT = 9100
 
 	ID = str(ID)
@@ -73,7 +71,7 @@ def PrintBarcode(IP, ID, Barcode, Name, Price):
 
 
 def PrintLocation(Location):
-	TCP_IP = "10.0.0.22"#ZBR5581684 ##### ZBR7681522
+	TCP_IP = "ZBR7681522"#ZBR5581684 ##### ZBR7681522
 	TCP_PORT = 9100
 
 	Location = str(Location)
