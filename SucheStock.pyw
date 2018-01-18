@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import os
+if not os.path.exists("/home"):
+	os.system("git pull")
+
 from libs.appjar0061 import gui  
 from libs.BlueFunc import *
 from libs.debug import Debug
-import os
 import subprocess
 from random import randint
 from libs.send import *
@@ -21,8 +24,6 @@ IDToChange = 0
 appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
 
-if not os.path.exists("/home"):
-	os.system("git pull")
 
 def BtnStockGraph(btn):
 	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]
@@ -98,7 +99,8 @@ def tbFunc(btn):
 				appChange.setEntry("Barcode", IDToBarcode(IDToChange))
 			else:
 				if not CheckBarcode(appChange.getEntry("Barcode")):
-					if appChange.yesNoBox("Barcode", "Achtung Barcode " + str(appChange.getEntry("Barcode")) + " ist nicht gultig\n Durch ... Ersetzen?", parent=None):
+					if appChange.yesNoBox("Barcode", "Achtung Barcode " + str(appChange.getEntry("Barcode")) + " ist nicht gultig\n Durch " + str(IDToBarcode(IDToChange)) + " Ersetzen?"):
+						appChange.setEntry("Barcode", IDToBarcode(IDToChange))
 						print("ok")
 			if appChange.getEntry("Anzahl") == "" or appChange.getEntry("Anzahl") == "x": appChange.setEntry("Anzahl", "0")
 			
