@@ -10,6 +10,31 @@ if TCP_IP == None or TCP_IP == "None":
 	TCP_IP="ZBR7681522"
 	BlueSave("PrinterIP", TCP_IP, "DATA/DATA")
 
+
+def CheckBarcode(Barcode):
+	print("Check Barcode")
+	print("Barcode " + str(Barcode))
+	EndInt = str(Barcode)[-1]
+	Sum = 0
+	for x in range(1, 13):
+		if int(x/2) == x/2:
+			print("a = 3")
+			a=3
+		else:
+			print("a = 1")
+			a=1
+		Sum = Sum + int(Barcode[-13+x])*a
+	print("Sum = " + str(Sum) + " + " + str(Barcode[-13+x]) + " * " + str(x))
+	print("Sum " + str(Sum))
+	End = str(10 - int(str(Sum)[-1]))[-1]
+	if End == EndInt:
+		if Barcode[-13] + Barcode[-12] + Barcode[-11] + Barcode[-10] == "0000":
+			return False
+		else:
+			return True
+	else:
+		return False
+
 def IDToBarcode(ID):
 	print("ID To Barcode")
 	Barcode = "123456" + str(ID)

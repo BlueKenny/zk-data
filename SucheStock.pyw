@@ -94,7 +94,12 @@ def tbFunc(btn):
 			print(Data)
 			for x in range(0, len(EntryList2)):
 				appChange.addLabelEntry(EntryList2[x]); appChange.setEntry(EntryList2[x], Data[x+1], callFunction=False)
-			if appChange.getEntry("Barcode") == "" or appChange.getEntry("Barcode") == "x": appChange.setEntry("Barcode", IDToBarcode(IDToChange))
+			if appChange.getEntry("Barcode") == "" or appChange.getEntry("Barcode") == "x":
+				appChange.setEntry("Barcode", IDToBarcode(IDToChange))
+			else:
+				if not CheckBarcode(appChange.getEntry("Barcode")):
+					if appChange.yesNoBox("Barcode", "Achtung Barcode " + str(appChange.getEntry("Barcode")) + " ist nicht gultig\n Durch ... Ersetzen?", parent=None):
+						print("ok")
 			if appChange.getEntry("Anzahl") == "" or appChange.getEntry("Anzahl") == "x": appChange.setEntry("Anzahl", "0")
 			
 			appChange.addLabel("Creation", "Erstellung : " + StockGetArtInfo("(zkz)Creation", IDToChange).split(" | ")[1])
