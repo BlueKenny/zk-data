@@ -4,6 +4,12 @@ import socket
 #from libs.BlueFunc import *
 #from libs.debug import *
 
+TCP_IP = BlueLoad("PrinterIP", "../DATA/DATA")#ZBR5581684 ##### ZBR7681522
+TCP_PORT = 9100
+if TCP_IP == None or TCP_IP == "None":
+	TCP_IP="ZBR7681522"
+	BlueSave("PrinterIP", TCP_IP)
+
 def IDToBarcode(ID):
 	print("ID To Barcode")
 	Barcode = "123456" + str(ID)
@@ -27,8 +33,6 @@ def IDToBarcode(ID):
 
 def PrintBarcode(IP, ID, Barcode, Name, Price):
 	print("Barcode")
-	TCP_IP = "ZBR7681522"#ZBR5581684 ##### ZBR7681522
-	TCP_PORT = 9100
 
 	ID = str(ID)
 	Barcode = str(Barcode)
@@ -71,9 +75,6 @@ def PrintBarcode(IP, ID, Barcode, Name, Price):
 
 
 def PrintLocation(Location):
-	TCP_IP = "ZBR7681522"#ZBR5581684 ##### ZBR7681522
-	TCP_PORT = 9100
-
 	Location = str(Location)
 
 	BarcodePos = "^FO150,10^BY1"
