@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 import sys
 import socket
-#from libs.BlueFunc import *
+from .BlueFunc import *
 #from libs.debug import *
 
 TCP_IP = BlueLoad("PrinterIP", "../DATA/DATA")#ZBR5581684 ##### ZBR7681522
 TCP_PORT = 9100
 if TCP_IP == None or TCP_IP == "None":
 	TCP_IP="ZBR7681522"
-	BlueSave("PrinterIP", TCP_IP)
+	BlueSave("PrinterIP", TCP_IP, "../DATA/DATA")
 
 def IDToBarcode(ID):
 	print("ID To Barcode")
