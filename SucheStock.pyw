@@ -86,25 +86,25 @@ appSuche.addToolbar(tools, tbFunc, findIcon=True)
 appSuche.addTickOptionBox(string[13], EntryList2)
 try:
 	for eachAnzeigenOption in BlueLoad("Anzeigen-Stock", "DATA/DATA").split("/"):
-		appSuche.setOptionBox("Anzeigen", eachAnzeigenOption, value=True, callFunction=True)
+		appSuche.setOptionBox(string[13], eachAnzeigenOption, value=True, callFunction=True)
 except: print("Anzeigen nicht gefunden")
 
-appSuche.addLabelEntry("Suche")
-appSuche.addLabelEntry("Ort")
-appSuche.addLabelEntry("Lieferant")
+appSuche.addLabelEntry(string[37])
+appSuche.addLabelEntry(string[8])
+appSuche.addLabelEntry(string[6])
 appSuche.addListBox("Suche")
 
 def Delete(btn):
 	Debug("Delete")
-	appSuche.setEntry("Suche", "")
-	appSuche.setEntry("Ort", "")
-	appSuche.setEntry("Lieferant", "")
+	appSuche.setEntry(string[37], "")
+	appSuche.setEntry(string[8], "")
+	appSuche.setEntry(string[6], "")
 
 def Suche(btn):
 	Debug("Suche")
 	appSuche.setMeter("status", 0, text=string[27])
 	
-	AntwortList=SendeSucheStock(appSuche.getEntry("Suche").replace(" ", ""), appSuche.getEntry("Ort").upper(), appSuche.getEntry("Lieferant").lower())
+	AntwortList=SendeSucheStock(appSuche.getEntry(string[37]).replace(" ", ""), appSuche.getEntry(string[8]).upper(), appSuche.getEntry(string[6]).lower())
 
 
 	appSuche.setMeter("status", 10, text=string[28])
@@ -135,16 +135,14 @@ def Suche(btn):
 				appSuche.setListItemBg("Suche", Linie, "#FFF68F")
 			else:
 				appSuche.setListItemBg("Suche", Linie, "#ffffff")
-	#print(appSuche.getListItems("Suche"))
 	appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
-	#appSuche.selectListItem("Suche", appSuche.getListItems("Suche")[0], callFunction=False)
 	appSuche.setLabel("infoAnzahl", string[20].replace("X",str(GetStockZahl())))
 	appSuche.setMeter("status", 100, text="")
 
 def SaveIt():
 	Debug("SaveIt")
 	for each in EntryList2:
-		if appSuche.getOptionBox("Anzeigen")[each]:
+		if appSuche.getOptionBox(string[13])[each]:
 			try: AnzeigenListe = AnzeigenListe + "/" + each
 			except: AnzeigenListe = each
 	try:
@@ -152,13 +150,13 @@ def SaveIt():
 		BlueSave("Anzeigen-Stock", AnzeigenListe, "DATA/DATA")
 	except:
 		print(string[32])
-		BlueSave("Anzeigen-Stock", "Lieferant/Name/Ort/PreisVK/Anzahl", "DATA/DATA")
+		BlueSave("Anzeigen-Stock", string[6] + "/" + string[7] + "/" + string[8] + "/" + string[2] + "/" + string[9], "DATA/DATA")
 	return True
 
 def StockChange(btn):
 	Debug("StockChange")
 	IDToChange = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
-	Name = "[ " + StockGetArtInfo("(zkz)Name", str(IDToChange)) + " ]"
+	Name = "[ " + StockGetArtInfo(["Name"], str(IDToChange)) + " ]"
 	if btn == "<F1>": # MINUS
 		Anzahl = appSuche.numberBox(string[9], Name + "\n\n" + string[21])
 		try:
@@ -176,7 +174,7 @@ def StockChange(btn):
 			Suche("first")
 		except: appSuche.infoBox(string[26], string[26])
 
-appSuche.setFocus("Suche")
+appSuche.setFocus(string[37])
 appSuche.addLabel("info", string[14] + "\n" + string[15] + "\n\n" + string[16] + "\n" + string[17] + "\n" + string[18] + "\n" + string[19])
 appSuche.addLabel("infoAnzahl", string[20].replace("X", str(GetStockZahl())))
 appSuche.bindKey("<Return>", Suche)
