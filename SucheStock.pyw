@@ -72,6 +72,7 @@ def tbFunc(btn):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
 		os.system(COMMAND)
+		Suche("")
 		
 	if btn == string[11]:# ÄNDERN
 		ID = appSuche.getListBox("Suche")[0].split(" | ")[0]
@@ -79,6 +80,7 @@ def tbFunc(btn):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
 		os.system(COMMAND + " " + ID)
+		Suche("")
 
 tools = [string[10], string[11]]
 appSuche.addToolbar(tools, tbFunc, findIcon=True)
@@ -163,6 +165,7 @@ def StockChange(btn):
 			SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
 			Debug(IDToChange)
 			appSuche.infoBox(string[23], string[24].replace("X", str(int(Anzahl))).replace("N", str(Name)))
+			appSuche.setEntry(string[37], IDToChange)
 			Suche("first")
 		except: appSuche.infoBox(string[26], string[26])
 	if btn == "<F2>": # PLUS
@@ -171,6 +174,7 @@ def StockChange(btn):
 			SendeChangeAnzahl(IDToChange, int(Anzahl))
 			Debug(IDToChange)
 			appSuche.infoBox(string[23], string[25].replace("X", str(int(Anzahl))).replace("N", str(Name)))
+			appSuche.setEntry(string[37], IDToChange)
 			Suche("first")
 		except: appSuche.infoBox(string[26], string[26])
 
