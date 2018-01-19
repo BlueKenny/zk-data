@@ -43,7 +43,8 @@ def BtnStockGraph(btn):
 def BtnPrintBarcode(btn):
 	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]
 	print("ID " + str(ID))
-	GetData = StockGetArtInfo("(zkz)Barcode(zkz)Name(zkz)PreisVK", ID).split(" | ")
+	
+	GetData = StockGetArtInfo(["Barcode", "Name", "PreisVK"], ID).split(" | ")
 	print("GetData " + str(GetData))
 	PrintBarcode("", GetData[0], GetData[1], GetData[2], GetData[3])
 

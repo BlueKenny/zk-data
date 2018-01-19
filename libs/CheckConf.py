@@ -17,7 +17,7 @@ def ChangeLanguage(btn):
 
 if LANGUAGE == None:
 	app = gui("Configuration", "500x500") 
-	LanguageList = {"Deutsch":"DE"}
+	LanguageList = {"Deutsch":"DE", "Français":"FR"}
 	app.addLabel("Title", "Choose your Language :")
 	app.addListBox("ListLanguage", LanguageList)
 	app.addButton("Select", ChangeLanguage)
