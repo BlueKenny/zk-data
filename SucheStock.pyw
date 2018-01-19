@@ -15,7 +15,7 @@ import csv
 
 from libs.CheckConf import *
 string = {}
-with open("LANG/" + BlueLoad("LANG", "DATA/DATA") + ".csv", "r") as csvfile:
+with codecs.open("LANG/" + BlueLoad("LANG", "DATA/DATA") + ".csv", "r", "utf-8") as csvfile:
 	reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
 	for eachLine in reader:
 		try: string[int(eachLine[0])] = eachLine[1]
