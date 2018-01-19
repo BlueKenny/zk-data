@@ -28,7 +28,7 @@ def Datum_Anzahl(ID):
 
 	def showLabels():
 	    axes.legend(['Stock von ' + str(ID)])
-	    axes.set_xlabel("Monate")
+	    axes.set_xlabel("Zeit")
 	    axes.set_ylabel("Anzahl")
 	    app.refreshPlot("p1")
 
