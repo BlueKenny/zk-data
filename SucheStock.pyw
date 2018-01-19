@@ -51,17 +51,6 @@ def BtnPrintBarcode(btn):
 def BtnPrintOrt(btn):
 	PrintLocation(StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
 
-def tbFuncSv(btn):
-	global IDToChange
-	Debug("tbFuncSv")
-	for a in EntryList2:
-		print(appChange.getEntry(a))
-		StockSetArtInfo(IDToChange, a, appChange.getEntry(a))
-	appChange.stop()
-	Delete("")
-	appSuche.setEntry("Suche", IDToChange)
-	Suche("first")
-
 def tbFunc(btn):
 	global IDToChange
 	global appChange
@@ -180,6 +169,7 @@ def StockChange(btn):
 
 appSuche.setFocus(string[37])
 appSuche.addLabel("info", string[14] + "\n" + string[15] + "\n\n" + string[16] + "\n" + string[17] + "\n" + string[18] + "\n" + string[19])
+#appSuche.setListBoxChangeFunction("Suche", tbFunc(string[11]))
 appSuche.addLabel("infoAnzahl", string[20].replace("X", str(GetStockZahl())))
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
