@@ -5,13 +5,6 @@ from libs.BlueFunc import *
 import os
 import sys
 
-#if len(sys.argv) = 2:
-	
-
-if not Date() == BlueLoad("LastUpdate", "DATA"):
-	if os.path.exists("/home"): os.system("./Updater.pyw")
-	else: os.system("Updater.pyw")
-
 def SaveIt():
 	print("SaveIt")
 	for x in range(0, 10):
@@ -27,27 +20,14 @@ def GetArbeiter(btn):
 		if not text == "None":
 			appKasse.setEntry("e" + str(x), text)
 		else: appKasse.setEntry("e" + str(x), "")
+	appKasse.setFocus("e0")
 
 appKasse = gui("Kasse", "600x600")
 EntryZahl = 10
 
-ListeDerArbeiter=GetListeDerArbeiter().split("|")
+ListeDerArbeiter=sorted(GetListeDerArbeiter().split("|"))
 appKasse.addLabelOptionBox("Arbeiter", ListeDerArbeiter)
 appKasse.setOptionBoxSubmitFunction("Arbeiter", GetArbeiter) 
-
-
-def Kunden(btn):
-	print("Kunden")
-	if os.path.exists("/home"): os.system("./SucheKunde.pyw -getid")
-	else: os.system("SucheKunde.pyw -getid")
-	KundenID = BlueLoad("KundenID", "TMP")
-	KundenData = KundeGetInfo("(zkz)Vorname(zkz)Nachname", KundenID)
-	KundenVorname = KundenData.split(" | ")[1]
-	KundenNachname = KundenData.split(" | ")[2]
-	appKasse.setButton("SetKunde", KundenID + " | " + KundenVorname + " | " + KundenNachname)
-	
-
-#appKasse.addNamedButton("Kunde...", "SetKunde", Kunden)
 
 def Verify(entryName):
 	print("Verify " + str(entryName))
@@ -61,22 +41,34 @@ def Verify(entryName):
 	if len(text) == 13 or len(text) == 6:
 		if len(text) == 6: ID = text
 		else: ID = SendeSucheStock(text, "", "").rstrip("<K>")
-		Anzahl = str(StockGetArtInfo("(zkz)Anzahl", ID)).split(" | ")[1]
-		Name = str(StockGetArtInfo("(zkz)Name", ID)).split(" | ")[1]
 		
+		DATA = StockGetArtInfo(["Name", "Anzahl"], ID).split(" | ")
+		print(DATA)
+		Name = DATA[1]
+		Anzahl = DATA[2]
+			
 
 		if Anzahl == "x" or Anzahl == "0":
 			appKasse.setEntryInvalid(entryName)
 		else:
 			appKasse.setEntryValid(entryName)
-			
+				
 		appKasse.setLabel("l" + str(EntryIndex), ID + " | " + Name + " | Anzahl : " + Anzahl)
+
+
+def NextFocus(entry):
+	print("NextFocus")
+	EntryID = int(entry.replace("e", ""))
+	if EntryID == 9: EntryID = -1
+	NextEntry = "e" + str(EntryID + 1)
+	appKasse.setFocus(NextEntry)
 
 for EntryName in range(EntryZahl):
 	appKasse.addValidationEntry("e" + str(EntryName))
 	appKasse.setEntryChangeFunction("e" + str(EntryName), Verify)
-
+	appKasse.setEntrySubmitFunction("e" + str(EntryName), NextFocus)
 	appKasse.addLabel("l" + str(EntryName), "")
+
 
 def Go(btn):
 	print("Go ")
@@ -93,6 +85,7 @@ def Go(btn):
 						appKasse.setLabel("l" + str(EntryName), "")
 						#appKasse.infoBox("Stock Geändert", "Sie haben 1x " + str(Name) + " Entfernt")
 					except: appKasse.infoBox("Error", "Error: ID " + str(ID))
+	SaveIt()
 			
 appKasse.setStopFunction(SaveIt)
 appKasse.addButton("OK", Go)
