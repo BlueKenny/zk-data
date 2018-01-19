@@ -9,6 +9,32 @@ from libs.RoundUp import *
 import datetime
 import time
 import csv
+from libs.barcode import *
+		
+def find_keys_dict(dic, val):
+	"""return the keys of dictionary dic given the value"""
+	dic2 = dic.copy()
+	keys=[]
+	while True:
+		if val in dic2.values():
+			key = list(dic2.keys())[list(dic2.values()).index(val)]
+			keys.append(key)
+			del dic2[key]
+		else: break
+	if len(keys) == 0: return None
+	else: return keys
+
+def find_key_dict(dic, val):
+	"""return the key of dictionary dic given the value"""
+	if val in dic.values():
+		return list(dic.keys())[list(dic.values()).index(val)]
+	else: return None
+
+def find_value_dict(dic, key):
+	"""return the value of dictionary dic given the key"""
+	if val in dic.values():
+		return val
+	else: return None
 
 # Ordner
 DIR = ""
@@ -18,36 +44,40 @@ BlueMkDir(DIR + "Kunden")
 BlueMkDir(DIR + "Arbeiter")
 BlueMkDir(DIR + "Import")
 BlueMkDir(DIR + "Import/Preise")
-BlueMkDir(DIR + "Import/Stock")
+#BlueMkDir(DIR + "Import/Stock")
 BlueMkDir(DIR + "Import/Kunden")
 BlueMkDir(DIR + "DATA")
 
-PreiseArtikelList = []
-PreiseLieferantList = []
-PreiseNameList = []
-PreisePreisEKList = []
-PreisePreisVKHList = []
-PreisePreisVKList = []
 
-StockCreationList = []
-StockLastChangeList = []
-StockBarcodeList = []
-StockArtikelList = []
-StockLieferantList = []
-StockNameList = []
-StockOrtList = []
-StockPreisEKList = []
-StockPreisVKHList = []
-StockPreisVKList = []
-StockAnzahlList = []
+#ArticleInfos = {"Creation": StockCreationList}
+
+PreiseArtikelList = {}
+PreiseLieferantList = {}
+PreiseNameList = {}
+PreisePreisEKList = {}
+PreisePreisVKHList = {}
+PreisePreisVKList = {}
+
+StockCreationList = {}
+StockLastChangeList = {}
+StockBarcodeList = {}
+StockArtikelList = {}
+StockLieferantList = {}
+StockNameList = {}
+StockOrtList = {}
+StockPreisEKList = {}
+StockPreisVKHList = {}
+StockPreisVKList = {}
+StockAnzahlList = {}
+KundeNameList = {}
+KundeTelList = {}
+KundeAdresseList = {}
+KundeOrtList = {}
+
+StockIDList = []
 ListeDerLieferanten = []
-KundeNameList = []
-KundeTelList = []
-KundeAdresseList = []
-KundeOrtList = []
 ArbeiterListe = []
-
-BlockedBCode=[]
+BlockedIDList= []
 
 try:
 	INDEXLIMIT = int(BlueLoad("IndexLimit", DIR + "DATA/DATA"))
@@ -55,32 +85,32 @@ except:
 	INDEXLIMIT = 20
 	BlueSave("IndexLimit", "20", DIR + "DATA/DATA")
 
-Debug("Make Cache")
-if not BlueLoad("CacheLimit", DIR + "DATA/DATA") == None:
-	MINCache = int(BlueLoad("CacheLimit", DIR + "DATA/DATA").split("-")[0])
-	MAXCache = int(BlueLoad("CacheLimit", DIR + "DATA/DATA").split("-")[1])
-else:
-	MINCache = 0
-	MAXCache = 999999
-	BlueSave("CacheLimit", "0-999999", DIR + "DATA/DATA")
-Debug("MINCache " + str(MINCache))
-Debug("MAXCache " + str(MAXCache))
-for x in range(MINCache, MAXCache):
-	StockCreationList.insert(x, "x")
-	StockLastChangeList.insert(x, "x")
-	StockBarcodeList.insert(x, "x")
-	StockArtikelList.insert(x, "x")
-	StockLieferantList.insert(x, "x")
-	StockNameList.insert(x, "x")
-	StockOrtList.insert(x, "x")
-	StockPreisEKList.insert(x, "x")
-	StockPreisVKHList.insert(x, "x")
-	StockPreisVKList.insert(x, "x")
-	StockAnzahlList.insert(x, "x")
-	KundeNameList.insert(x, "x")
-	KundeTelList.insert(x, "x")
-	KundeAdresseList.insert(x, "x")
-	KundeOrtList.insert(x, "x")
+#Debug("Make Cache")
+#if not BlueLoad("CacheLimit", DIR + "DATA/DATA") == None:
+#	MINCache = int(BlueLoad("CacheLimit", DIR + "DATA/DATA").split("-")[0])
+#	MAXCache = int(BlueLoad("CacheLimit", DIR + "DATA/DATA").split("-")[1])
+#else:
+#	MINCache = 0
+#	MAXCache = 999999
+#	BlueSave("CacheLimit", "0-999999", DIR + "DATA/DATA")
+#Debug("MINCache " + str(MINCache))
+#Debug("MAXCache " + str(MAXCache))
+#for x in range(MINCache, MAXCache):
+#	StockCreationList.insert(x, "x")
+#	StockLastChangeList.insert(x, "x")
+#	StockBarcodeList.insert(x, "x")
+#	StockArtikelList.insert(x, "x")
+#	StockLieferantList.insert(x, "x")
+#	StockNameList.insert(x, "x")
+#	StockOrtList.insert(x, "x")
+#	StockPreisEKList.insert(x, "x")
+#	StockPreisVKHList.insert(x, "x")
+#	StockPreisVKList.insert(x, "x")
+#	StockAnzahlList.insert(x, "x")
+#	KundeNameList.insert(x, "x")
+#	KundeTelList.insert(x, "x")
+#	KundeAdresseList.insert(x, "x")
+#	KundeOrtList.insert(x, "x")
 
 # LOAD
 print("LOAD DATAbase Stock") 
@@ -90,36 +120,74 @@ NeueKundenID = 10
 
 for eachDir in os.listdir(DIR + "Stock/"):
 	for eachFile in os.listdir(DIR + "Stock/" + eachDir):
+		try:
+			Debug("Load Stock file " + str(eachFile))
+			datei = DIR + "Stock/" + eachDir + "/" + eachFile
+			eachFile = int(eachFile)
+			#	ID
+			StockIDList.append(eachFile)
+			#	Creation
+			ArticleCreation = BlueLoad("Creation", datei)
+			if ArticleCreation == None or ArticleCreation == "x":
+				ArticleCreation="2000-01-01"
+				BlueSave("Creation", ArticleCreation, datei)
+			StockCreationList[eachFile] = str(ArticleCreation)
+			#	Last Change
+			ArticleLastChange = BlueLoad("LastChange", datei)
+			if ArticleLastChange == None or ArticleLastChange == "x":
+				ArticleLastChange="2000-01-01"
+				BlueSave("LastChange", ArticleLastChange, datei)
+			StockLastChangeList[eachFile] = str(ArticleLastChange)
+			#	Barcode
+			ArticleBarcode = int(BlueLoad("Barcode", datei))
+			if ArticleBarcode == None or ArticleBarcode == "x":
+				ArticleBarcode = IDToBarcode(eachFile)
+				BlueSave("Barcode", ArticleBarcode, datei)
+			StockBarcodeList[eachFile] = int(ArticleBarcode)
+			#	Article
+			ArticleNumber = BlueLoad("Artikel", datei).lower()
+			StockArtikelList[eachFile] = str(ArticleNumber)
+			#	Supplier
+			ArticleSupplier = BlueLoad("Lieferant", datei).lower()
+			if ArticleSupplier == None or ArticleSupplier == "x":
+				ArticleSupplier = ""
+				BlueSave("Lieferant", ArticleSupplier, datei)
+			StockLieferantList[eachFile] = str(ArticleSupplier)
+			#	Name
+			ArticleName = BlueLoad("Name", datei)
+			StockNameList[eachFile] = str(ArticleName)
+			#	Location
+			ArticleLocation = BlueLoad("Ort", datei).upper()
+			if ArticleLocation == None or ArticleLocation == "x":
+				ArticleLocation = ""
+				BlueSave("Ort", ArticleLocation, datei)
+			StockOrtList[eachFile] = str(ArticleLocation)
+			#	Cost and Prices
+			
+			ArticleCost=RoundUp0000(str(BlueLoad("PreisEK", datei)).replace(",", "."))
+			ArticlePriceVatIncl=RoundUp05(str(BlueLoad("PreisEK", datei)).replace(",", "."))
+			ArticlePriceVatExcl=RoundUp0000(float(ArticlePriceVatIncl)/1.21)
+			StockPreisEKList[eachFile] = float(ArticleCost)
+			StockPreisVKHList[eachFile] = float(ArticlePriceVatExcl)
+			StockPreisVKList[eachFile] = float(ArticlePriceVatIncl)
 
-		datei = DIR + "Stock/" + eachDir + "/" + eachFile
-		eachFile = int(eachFile)
-	
-		if BlueLoad("Creation", datei) == None: BlueSave("Creation", "x", datei)
-		StockCreationList[eachFile]=BlueLoad("Creation", datei)
+			#try: StockPreisEKList[eachFile]=RoundUp0000(str(BlueLoad("PreisEK", datei)).replace(",", "."))
+			#except: StockPreisEKList[eachFile] = "x"
+			#try: StockPreisVKHList[eachFile]=RoundUp0000(str(BlueLoad("PreisVKH", datei)).replace(",", "."))
+			#except: StockPreisVKHList[eachFile] = "x"
+			#try: StockPreisVKList[eachFile]=RoundUp0000(str(BlueLoad("PreisVK", datei)).replace(",", "."))
+			#except: StockPreisVKList[eachFile] = "x"
 
-		if BlueLoad("LastChange", datei) == None: BlueSave("LastChange", "x", datei)
-		StockLastChangeList[eachFile]=BlueLoad("LastChange", datei)
+			#	Quantity
+			ArticleQuantity = int(BlueLoad("Anzahl", datei))
+			if ArticleQuantity == None or ArticleQuantity == "x":
+				ArticleQuantity = 0
+				BlueSave("Anzahl", ArticleQuantity, datei)
+			StockAnzahlList[eachFile]=ArticleQuantity
 
-		if BlueLoad("Barcode", datei) == None: BlueSave("Barcode", "x", datei)
-		if StockBarcodeList[eachFile] == "x":
-			StockBarcodeList[eachFile]=BlueLoad("Barcode", datei)
-
-		StockArtikelList[eachFile]=BlueLoad("Artikel", datei)
-		if BlueLoad("Lieferant", datei) == None: BlueSave("Lieferant", "x", datei)
-		StockLieferantList[eachFile]=BlueLoad("Lieferant", datei).lower()
-		StockNameList[eachFile]=BlueLoad("Name", datei)
-		if BlueLoad("Ort", datei) == None: BlueSave("Ort", "x", datei)
-		StockOrtList[eachFile]=str(BlueLoad("Ort", datei)).upper()
-		try: StockPreisEKList[eachFile]=RoundUp0000(str(BlueLoad("PreisEK", datei)).replace(",", "."))
-		except: StockPreisEKList[eachFile] = "x"
-		try: StockPreisVKHList[eachFile]=RoundUp0000(str(BlueLoad("PreisVKH", datei)).replace(",", "."))
-		except: StockPreisVKHList[eachFile] = "x"
-		try: StockPreisVKList[eachFile]=RoundUp0000(str(BlueLoad("PreisVK", datei)).replace(",", "."))
-		except: StockPreisVKList[eachFile] = "x"
-		StockAnzahlList[eachFile]=BlueLoad("Anzahl", datei)
-
-		StockArtikelAnzahl = StockArtikelAnzahl  + 1
-		if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
+			StockArtikelAnzahl = StockArtikelAnzahl  + 1
+			if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
+		except: Debug("Failed to load")
 
 for eachDir in os.listdir(DIR + "Kunden/"):
 	for eachFile in os.listdir(DIR + "Kunden/" + eachDir):
@@ -282,8 +350,6 @@ while True:
 
 		Antwort = "x"
 
-
-		
 		if mode == "StockGetBewegung":
 			Debug("Mode : " + mode)
 			ID = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
@@ -304,11 +370,13 @@ while True:
 
 		if mode == "StockSetBCode":
 			Debug("Mode : " + mode)
-			for counter, DATA in enumerate(StockNameList):
-					if str(DATA) == "x" and len(str(counter)) == 6 and not str(counter) in BlockedBCode:
-						Antwort=str(counter)
-						BlockedBCode.append(str(counter))
-						break
+			ID = 100000
+			while True:
+				if not ID in StockIDList and not ID in BlockedIDList:
+					BlockedIDList.append(ID)
+					break
+				else: ID = ID + 1
+			Antwort = str(ID)
 
 		if mode == "SaveArbeiterLinie":
 			Debug("Mode : " + mode)
@@ -400,6 +468,10 @@ while True:
 				KundeOrtList[ID]=str(Var).upper()
 				BlueSave(str(VarName), str(Var).upper(), DIR + "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 
+		if mode == "GetArticleInfo":
+			Debug("Mode : " + mode)
+			print(DATA.split("(zKz)")[1])
+			
 		if mode == "StockGetArtInfo":
 			Debug("Mode : " + mode)
 			print(DATA.split("(zKz)")[1])
@@ -496,6 +568,62 @@ while True:
 			open(DateiStockBewegung, "a").write(str(BcodeSuche) + ":" + str(AltStock) + ":" + str(StockAnzahlList[BcodeSuche]) + ":" + str(StockPreisEKList[BcodeSuche]) + ":" + str(StockPreisVKHList[BcodeSuche]) + ":" + str(StockPreisVKList[BcodeSuche]) + ":MISC:" + str(ipname[0]) + "\n")
 
 		if mode == "SearchStock":
+			Debug("Mode : " + mode)
+			SucheSuche = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
+			Debug("SucheSuche : " + SucheSuche)
+			OrtSuche = DATA.split("(zKz)")[1].split("(zkz)")[1]
+			Debug("OrtSuche : " + OrtSuche)
+			LieferantSuche = DATA.split("(zKz)")[1].split("(zkz)")[2]
+			Debug("LieferantSuche : " + LieferantSuche)
+
+			indices = []
+			#	ID		only 1 is possible 
+			if len(SucheSuche) == 6:
+				try:
+					if int(SucheSuche) in StockIDList:
+						indices.append(int(SucheSuche)) 
+				except: Debug("Search is not an ID")
+
+			#	Barcode		only 1 is possible
+			if len(SucheSuche) == 13:# Only Barcodes with 13 integers
+				try:
+					ID = find_key_dict(StockBarcodeList, int(SucheSuche))
+					if not ID in indices: indices.append(ID)
+				except: Debug("Search is not a Barcode")
+			#	Article		multiple choice possible
+			ListOfArticles = find_keys_dict(StockArtikelList, str(SucheSuche))
+			if not ListOfArticles == None:
+				for ID in ListOfArticles:
+					if not ID in indices: indices.append(ID)
+			#	Location		multiple choice possible
+			if not OrtSuche == "":
+				indices2 = indices
+				indices = []
+				ListOfLocations = find_keys_dict(StockOrtList, str(OrtSuche).upper())
+				if not ListOfLocations == None:
+					for ID in ListOfLocations:
+						if ID in indices2: indices.append(ID)
+			#	Supplier		multiple choice possible
+			if not LieferantSuche == "":
+				indices2 = indices
+				indices = []
+				ListOfSupplier = find_keys_dict(StockLieferantList, str(LieferantSuche).lower())
+				if not ListOfSupplier == None:
+					for ID in ListOfSupplier:
+						if ID in indices2: indices.append(ID)
+
+
+			indices = indices[:INDEXLIMIT]
+			if indices == []: indices = [0]
+		
+			try:
+				Antwort = " "
+				for eachDat in indices:
+					Antwort = Antwort.rstrip() + str(eachDat) + "<K>"
+
+			except: Debug("Nichts gefunden")
+
+		if mode == "SearchStockOld":
 			Debug("Mode : " + mode)
 			SucheSuche = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
 			Debug("SucheSuche : " + SucheSuche)

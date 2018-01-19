@@ -20,7 +20,6 @@ while SERVER_IP == (0, 10000):
 			print("Keine verbindung : " + str(IPX))
 		finally:
 			sock.close()
-	
 
 def StockGetBewegung(ID):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -100,11 +99,14 @@ def NeueKundenID():
 	sock.close()
 	return data.decode()
 
-def StockGetArtInfo(Var, IDToChange):
+def StockGetArtInfo(Vars, IDToChange):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(SERVER_IP)
-	data = "StockGetArtInfo(zKz)" + str(IDToChange) + str(Var)
 
+	data = "StockGetArtInfo(zKz)" + str(IDToChange)
+	for Var in Vars:
+		data = data + "(zkz)" + str(Var)
+	
 	Debug("Send " + str(data))
 	data = data.encode()
 	sock.sendto(data, SERVER_IP)
