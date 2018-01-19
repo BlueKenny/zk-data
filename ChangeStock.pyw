@@ -61,6 +61,7 @@ def VerifyInput(Entry):
 	if ConvertedEntry in Int:
 		print("Verify this input " + str(appChange.getEntry(Entry)))
 		myInt = appChange.getEntry(Entry)
+		appChange.setEntryMaxLength(Entry, 13)
 		try:	
 			appChange.setEntry(Entry, int(myInt))
 		except:
