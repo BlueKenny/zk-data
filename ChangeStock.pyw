@@ -53,6 +53,11 @@ def VerifyInput(Entry):
 	ConvertedEntry=EntryList[EntryList2.index(Entry)]
 	print("Verify ConvertedEntry " + str(ConvertedEntry))
 
+	if ConvertedEntry == "Ort":
+		print("Verify this input " + str(appChange.getEntry(Entry)))
+		myLocation = appChange.getEntry(Entry).replace(",", ".").upper()
+		appChange.setEntry(Entry, myLocation)
+
 	if ConvertedEntry in Int:
 		print("Verify this input " + str(appChange.getEntry(Entry)))
 		myInt = appChange.getEntry(Entry)
