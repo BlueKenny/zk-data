@@ -411,6 +411,12 @@ while True:
 			BlueSave("LastChange", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			StockLastChangeList[ID] = str(Date())
 
+			if not ID in StockIDList:
+				StockArtikelAnzahl = StockArtikelAnzahl  + 1 # Neuer Artikel
+				BlueSave("Creation", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+				StockCreationList[ID] = str(Date())
+				StockIDList.append(ID)
+
 			if VarName == "Barcode": 
 				StockBarcodeList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
@@ -421,11 +427,7 @@ while True:
 				StockLieferantList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 				if not StockLieferantList[ID] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[ID]) # Neuer Artikel
-			if VarName == "Name":  
-				if StockNameList[ID] == "x":
-					StockArtikelAnzahl = StockArtikelAnzahl  + 1 # Neuer Artikel
-					BlueSave("Creation", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-					StockCreationList[ID] = str(Date())
+			if VarName == "Name": 
 				StockNameList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Ort":  
