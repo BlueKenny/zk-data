@@ -36,7 +36,7 @@ def Save():
 	del ServerInfo[0]# Remove ID from List
 	#print(ServerInfo)
 	#print(StartInfo)
-	if not ServerInfo == StartInfo and IDExists:
+	if not ServerInfo == StartInfo and IDExists and not PID:
 		appChange.infoBox(string[33], string[36], parent=None)
 	else:
 		print("Send Data to Server")
@@ -142,7 +142,7 @@ else:
 	DATA = StockGetArtInfo(EntryList, PID).split(" | ")
 	DATA.insert(1, IDToBarcode(ID))
 	DATA.insert(5, "")
-	DATA.insert(9, "")
+	DATA.insert(9, 0)
 	DATA[0] = ID
 print("DATA " + str(DATA))
 print("EntryList2 " + str(EntryList2))
