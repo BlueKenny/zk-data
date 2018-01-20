@@ -71,6 +71,7 @@ def VerifyInput(Entry):
 		print("Verify this input " + str(appChange.getEntry(Entry)))
 		myFloat = appChange.getEntry(Entry)
 		myFloat = myFloat.replace(",", ".")
+		myFloat = myFloat.replace("..", ".")
 		try:
 			if ConvertedEntry == "PreisEK":
 				print("PreisEK")
@@ -147,14 +148,15 @@ else:
 print("DATA " + str(DATA))
 print("EntryList2 " + str(EntryList2))
 for Entry in EntryList2:
-	print("Entry " + str(Entry))
+	print("Entry " + str(Entry)) 
 	appChange.addLabelEntry(Entry)
 	appChange.setEntryChangeFunction(Entry, VerifyInput)
+	
 	if IDExists:
-		appChange.setEntry(Entry, DATA[EntryList2.index(Entry) + 1], callFunction=False)
+		appChange.setEntry(Entry, DATA[EntryList2.index(Entry) + 1], callFunction=True)
 		StartInfo.append(DATA[EntryList2.index(Entry) + 1])
 	else:
-		appChange.setEntry(Entry, "", callFunction=False)
+		appChange.setEntry(Entry, "", callFunction=True)
 		StartInfo.append("")
 
 appChange.setStopFunction(VerifyChanges)
