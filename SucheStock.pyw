@@ -69,7 +69,7 @@ def tbFunc(btn):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
 		os.system(COMMAND + " " + ID)
-		Suche("")
+		#Suche("")
 
 tools = [string[10], string[11]]
 appSuche.addToolbar(tools, tbFunc, findIcon=True)
