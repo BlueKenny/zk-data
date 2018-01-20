@@ -598,6 +598,11 @@ while True:
 					ID = find_key_dict(StockBarcodeList, int(SucheSuche))
 					if not ID in indices: indices.append(ID)
 				except: Debug("Search is not a Barcode")
+			#	Barcode		multiple choice possible
+			ListOfBarcode = find_keys_dict(StockBarcodeList, str(SucheSuche))
+			if not ListOfBarcode == None:
+				for ID in ListOfBarcode:
+					if not ID in indices: indices.append(ID)
 			#	Article		multiple choice possible
 			ListOfArticles = find_keys_dict(StockArtikelList, str(SucheSuche))
 			if not ListOfArticles == None:
