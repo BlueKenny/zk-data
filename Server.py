@@ -120,7 +120,7 @@ NeueKundenID = 10
 
 for eachDir in os.listdir(DIR + "Stock/"):
 	for eachFile in os.listdir(DIR + "Stock/" + eachDir):
-		try:
+		if True:#try:
 			#Debug("Load Stock file " + str(eachFile))
 			datei = DIR + "Stock/" + eachDir + "/" + eachFile
 			eachFile = int(eachFile)
@@ -187,7 +187,7 @@ for eachDir in os.listdir(DIR + "Stock/"):
 
 			StockArtikelAnzahl = StockArtikelAnzahl  + 1
 			if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
-		except: Debug("Failed to load")
+		#except: Debug("Failed to load")
 
 for eachDir in os.listdir(DIR + "Kunden/"):
 	for eachFile in os.listdir(DIR + "Kunden/" + eachDir):
