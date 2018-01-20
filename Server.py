@@ -121,7 +121,7 @@ NeueKundenID = 10
 for eachDir in os.listdir(DIR + "Stock/"):
 	for eachFile in os.listdir(DIR + "Stock/" + eachDir):
 		try:
-			Debug("Load Stock file " + str(eachFile))
+			#Debug("Load Stock file " + str(eachFile))
 			datei = DIR + "Stock/" + eachDir + "/" + eachFile
 			eachFile = int(eachFile)
 			#	ID
@@ -292,7 +292,7 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 							else: 
 								PreiseArtikelList[PreiseID] = eachLine[IntArtikel]
 								#PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel])
-						PreiseLieferantListPreiseID] = datei.replace(".csv", "")
+						PreiseLieferantList[PreiseID] = datei.replace(".csv", "")
 						#PreiseLieferantList.insert(PreiseID, datei.replace(".csv", ""))
 						PreiseNameList[PreiseID] = eachLine[IntName]
 						#PreiseNameList.insert(PreiseID, eachLine[IntName])
@@ -301,7 +301,7 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 						#PreisePreisVKHList.insert(PreiseID, str(eachLine[IntPreisVKH]).replace(",", "."))
 						PreisePreisEKList[PreiseID] = str(eachLine[IntPreisEK]).replace(",", ".")
 						#PreisePreisEKList.insert(PreiseID, str(eachLine[IntPreisEK]).replace(",", "."))
-						PreisePreisVKList[reiseID] = str(eachLine[IntPreisVK]).replace(",", ".")
+						PreisePreisVKList[PreiseID] = str(eachLine[IntPreisVK]).replace(",", ".")
 						#PreisePreisVKList.insert(PreiseID, str(eachLine[IntPreisVK]).replace(",", "."))
 						if IntPreisVK == 0:
 							PreisePreisVKList[PreiseID] = RoundUp05(float(str(PreisePreisVKHList[PreiseID]).replace(",", "."))*1.21)
