@@ -109,7 +109,7 @@ def Suche(btn):
 
 	for IDs in AntwortList.split("<K>"):
 		Debug("Get Info for ID " + str(IDs))
-		if not IDs == "" and not IDs == "0":
+		if not IDs == "" and not IDs == "0"and not IDs == None and not IDs == "None":
 			appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text=string[30])
 			print(string[31].replace("X", str(appSuche.getMeter("status")[0] + Schritt)))
 			Linie = str(IDs).rstrip()
