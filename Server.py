@@ -165,7 +165,7 @@ for eachDir in os.listdir(DIR + "Stock/"):
 			#	Cost and Prices
 			
 			ArticleCost=RoundUp0000(str(BlueLoad("PreisEK", datei)).replace(",", "."))
-			ArticlePriceVatIncl=RoundUp05(str(BlueLoad("PreisEK", datei)).replace(",", "."))
+			ArticlePriceVatIncl=RoundUp05(str(BlueLoad("PreisVK", datei)).replace(",", "."))
 			ArticlePriceVatExcl=RoundUp0000(float(ArticlePriceVatIncl)/1.21)
 			StockPreisEKList[eachFile] = float(ArticleCost)
 			StockPreisVKHList[eachFile] = float(ArticlePriceVatExcl)
