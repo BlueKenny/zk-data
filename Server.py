@@ -284,18 +284,25 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 					if True:#try:
 						StockArtikelAnzahl = StockArtikelAnzahl  + 1
 						if OKArtikel3:
-							PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel] + " " + eachLine[IntArtikel2] + " " + eachLine[IntArtikel3])
+							PreiseArtikelList[PreiseID] = eachLine[IntArtikel] + " " + eachLine[IntArtikel2] + " " + eachLine[IntArtikel3]
 						else:
 							if OKArtikel2:	
-								PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel] + " " + eachLine[IntArtikel2])
+								PreiseArtikelList[PreiseID] = eachLine[IntArtikel] + " " + eachLine[IntArtikel2]
+								#PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel] + " " + eachLine[IntArtikel2])
 							else: 
-								PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel])
-						PreiseLieferantList.insert(PreiseID, datei.replace(".csv", ""))
-						PreiseNameList.insert(PreiseID, eachLine[IntName])
+								PreiseArtikelList[PreiseID] = eachLine[IntArtikel]
+								#PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel])
+						PreiseLieferantListPreiseID] = datei.replace(".csv", "")
+						#PreiseLieferantList.insert(PreiseID, datei.replace(".csv", ""))
+						PreiseNameList[PreiseID] = eachLine[IntName]
+						#PreiseNameList.insert(PreiseID, eachLine[IntName])
 						## Achtung PreisVK oder PreisVKH muss drin sein !
-						PreisePreisVKHList.insert(PreiseID, str(eachLine[IntPreisVKH]).replace(",", "."))
-						PreisePreisEKList.insert(PreiseID, str(eachLine[IntPreisEK]).replace(",", "."))
-						PreisePreisVKList.insert(PreiseID, str(eachLine[IntPreisVK]).replace(",", "."))
+						PreisePreisVKHList[PreiseID] = str(eachLine[IntPreisVKH]).replace(",", ".")
+						#PreisePreisVKHList.insert(PreiseID, str(eachLine[IntPreisVKH]).replace(",", "."))
+						PreisePreisEKList[PreiseID] = str(eachLine[IntPreisEK]).replace(",", ".")
+						#PreisePreisEKList.insert(PreiseID, str(eachLine[IntPreisEK]).replace(",", "."))
+						PreisePreisVKList[reiseID] = str(eachLine[IntPreisVK]).replace(",", ".")
+						#PreisePreisVKList.insert(PreiseID, str(eachLine[IntPreisVK]).replace(",", "."))
 						if IntPreisVK == 0:
 							PreisePreisVKList[PreiseID] = RoundUp05(float(str(PreisePreisVKHList[PreiseID]).replace(",", "."))*1.21)
 							PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
