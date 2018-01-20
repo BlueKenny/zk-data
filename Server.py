@@ -281,7 +281,7 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 			with open("Import/Preise/" + datei, "r") as csvfile:
 				reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
 				for eachLine in reader:
-					try:
+					if True:#try:
 						StockArtikelAnzahl = StockArtikelAnzahl  + 1
 						if OKArtikel3:
 							PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel] + " " + eachLine[IntArtikel2] + " " + eachLine[IntArtikel3])
@@ -307,7 +307,7 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 						PreisePreisVKHList[PreiseID] = RoundUp0000(float(PreisePreisVKList[PreiseID])/1.21)
 
 						PreiseID = PreiseID + 1
-					except: Debug("Linie ist ungültig \n" + str(eachLine))
+					#except: Debug("Linie ist ungültig \n" + str(eachLine))
 					
 
 for Arbeiter in os.listdir(DIR + "Arbeiter"):
