@@ -604,6 +604,12 @@ while True:
 			if not ListOfArticles == None:
 				for ID in ListOfArticles:
 					if not ID in indices: indices.append(ID)
+			#	PArticle		multiple choice possible
+			ListOfArticles = find_keys_dict(PreiseArtikelList, str(SucheSuche))
+			if not ListOfArticles == None:
+				for ID in ListOfArticles:
+					ID = "P" + str(ID)
+					if not ID in indices: indices.append(ID)
 			#	Location		multiple choice possible
 			if not OrtSuche == "":
 				indices2 = indices
