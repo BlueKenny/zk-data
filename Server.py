@@ -374,7 +374,6 @@ while True:
 			Antwort=str(DATA)
 
 
-
 		if mode == "StockSetBCode":
 			Debug("Mode : " + mode)
 			ID = 100000

@@ -122,15 +122,32 @@ def BtnStockGraph(btn):
 	else: COMMAND = "ArtGraph.py "
 	os.system(COMMAND + str(ID))
 
+if "P" in ID:
+	print("P")
+	PID = ID
+	ID = StockSetBCode()
+else: PID = False
+
 ID = int(ID)
 appChange = gui(string[32], "800x600", handleArgs=False) 
 appChange.setBg("#ffffff")
 appChange.addLabel("Title", str(ID))
 
 StartInfo=[]# App Started with these informations
-DATA = StockGetArtInfo(EntryList, ID).split(" | ")
-print(DATA)
+if not PID:
+	print("Exists")
+	DATA = StockGetArtInfo(EntryList, ID).split(" | ")
+else:
+	print("New")
+	DATA = StockGetArtInfo(EntryList, PID).split(" | ")
+	DATA.insert(1, IDToBarcode(ID))
+	DATA.insert(5, "")
+	DATA.insert(9, "")
+	DATA[0] = ID
+print("DATA " + str(DATA))
+print("EntryList2 " + str(EntryList2))
 for Entry in EntryList2:
+	print("Entry " + str(Entry))
 	appChange.addLabelEntry(Entry)
 	appChange.setEntryChangeFunction(Entry, VerifyInput)
 	if IDExists:
