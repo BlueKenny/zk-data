@@ -19,8 +19,8 @@ while True:#def Check():
 		OldData = NewData
 		
 		DATA_ID = SendeSucheStock(NewData, "", "").split("<K>")
-		if DATA_ID[0] == "0":
-			command = subprocess.Popen(["./Popup.pyw", DATA_ID[0], NewData])
+		if DATA_ID[0] == "0" or "P" in DATA_ID[0]:
+			command = subprocess.Popen(["./Popup.pyw", "0", NewData])
 		else:
 			command = subprocess.Popen(["./Popup.pyw", DATA_ID[0]])
 	

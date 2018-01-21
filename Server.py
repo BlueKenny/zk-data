@@ -252,11 +252,11 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 					Debug("IntArtikel " + str(IntArtikel))
 				if SearchArtikel2 == AlleTitel[x]:
 					IntArtikel2 = x
-					OKArtikel2 = True
+					#OKArtikel2 = True
 					Debug("IntArtikel2 " + str(IntArtikel2))
 				if SearchArtikel3 == AlleTitel[x]:
 					IntArtikel3 = x
-					OKArtikel3 = True
+					#OKArtikel3 = True
 					Debug("IntArtikel3 " + str(IntArtikel3))
 				if SearchPreisEK == AlleTitel[x]:
 					IntPreisEK = x
