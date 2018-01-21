@@ -4,6 +4,10 @@ import pyperclip
 from libs.send import *
 import subprocess
 
+# for autostart on windows
+# copy a link in
+# C:\users\<your username>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+
 OldData = ""
 	
 
