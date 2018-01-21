@@ -159,7 +159,13 @@ for Entry in EntryList2:
 		appChange.setEntry(Entry, "", callFunction=True)
 		StartInfo.append("")
 
+def StopWindow(btn):
+	Debug("StopWindow")
+	appChange.stop()
+
 appChange.setStopFunction(VerifyChanges)
+appChange.addLabel("Info", "F4 = Grafik anzeigen\nF5 = Speichern und Schliesen")
 appChange.bindKey("<F4>", BtnStockGraph)
+appChange.bindKey("<F5>", StopWindow)
 appChange.go()
 
