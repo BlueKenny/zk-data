@@ -60,7 +60,7 @@ def tbFunc(btn):
 		if os.path.exists("/home"):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
-		os.system(COMMAND)
+		os.popen(COMMAND)
 		Suche("")
 		
 	if btn == string[11]:# ÄNDERN
@@ -68,7 +68,7 @@ def tbFunc(btn):
 		if os.path.exists("/home"):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
-		os.system(COMMAND + " " + ID)
+		os.popen(COMMAND + " " + ID)
 		#Suche("")
 
 tools = [string[10], string[11]]
@@ -83,7 +83,8 @@ except: print("Anzeigen nicht gefunden")
 appSuche.addLabelEntry(string[37])
 appSuche.addLabelEntry(string[8])
 appSuche.addLabelEntry(string[6])
-appSuche.addListBox("Suche")
+ListBoxSuche = appSuche.addListBox("Suche")
+ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc(string[11]))# if List Item double click then change
 
 def Delete(btn):
 	Debug("Delete")
@@ -169,7 +170,6 @@ def StockChange(btn):
 
 appSuche.setFocus(string[37])
 appSuche.addLabel("info", string[14] + "\n" + string[15] + "\n\n" + string[16] + "\n" + string[17] + "\n" + string[18] + "\n" + string[19])
-#appSuche.setListBoxChangeFunction("Suche", tbFunc(string[11]))
 appSuche.addLabel("infoAnzahl", string[20].replace("X", str(GetStockZahl())))
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
