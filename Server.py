@@ -32,9 +32,32 @@ def find_key_dict(dic, val):
 
 def find_value_dict(dic, key):
 	"""return the value of dictionary dic given the key"""
-	if val in dic.values():
-		return val
+	if key in dic:
+		return dic[key]
 	else: return None
+
+def StockInventar():
+	DateiName = "DATA/Inventur.csv"
+	if os.path.exists(DateiName): os.remove(DateiName)
+	Datei = open(DateiName, "a")
+	
+	Datei.write("ID:DESCRIPTION:QUANTITY:PRICE:TOTAL:" + Date() + "\n")
+	TOTAL_END = 0.00
+	for ID in StockIDList:
+		ID = str(ID)
+		DESCRIPTION = str(find_value_dict(StockNameList, int(ID))).replace(":", "")
+		QUANTITY = str(find_value_dict(StockAnzahlList, int(ID)))
+		PRICE = str(find_value_dict(StockPreisEKList, int(ID)))
+		try: TOTAL = str(RoundUp0000(float(QUANTITY) * float(PRICE)))
+		except: TOTAL = "0.00"
+		TOTAL_END = TOTAL_END + float(TOTAL)
+
+		PRICE = PRICE.replace(".", ",")# Show better in LibreOffice :)
+		TOTAL = TOTAL.replace(".", ",")
+
+		if not QUANTITY == "0": Datei.write(ID + ":" + DESCRIPTION + ":" + QUANTITY + ":" + PRICE + ":" + TOTAL + "\n")
+	
+	Datei.write(":::TOTAL:" + str(RoundUp0000(TOTAL_END)).replace(".", ",") + "\n")
 
 # Ordner
 DIR = ""
@@ -120,7 +143,7 @@ NeueKundenID = 10
 
 for eachDir in os.listdir(DIR + "Stock/"):
 	for eachFile in os.listdir(DIR + "Stock/" + eachDir):
-		try:
+		if True:#try:
 			#Debug("Load Stock file " + str(eachFile))
 			datei = DIR + "Stock/" + eachDir + "/" + eachFile
 			eachFile = int(eachFile)
@@ -139,13 +162,15 @@ for eachDir in os.listdir(DIR + "Stock/"):
 				BlueSave("LastChange", ArticleLastChange, datei)
 			StockLastChangeList[eachFile] = str(ArticleLastChange)
 			#	Barcode
-			ArticleBarcode = int(BlueLoad("Barcode", datei))
-			if ArticleBarcode == None or ArticleBarcode == "x":
+			ArticleBarcode = str(BlueLoad("Barcode", datei))
+			if ArticleBarcode == None or ArticleBarcode == "None" or ArticleBarcode == "x" or ArticleBarcode == "":
 				ArticleBarcode = IDToBarcode(eachFile)
 				BlueSave("Barcode", ArticleBarcode, datei)
 			StockBarcodeList[eachFile] = int(ArticleBarcode)
 			#	Article
-			ArticleNumber = BlueLoad("Artikel", datei).lower()
+			ArticleNumber = BlueLoad("Artikel", datei)
+			if ArticleNumber == None: ArticleNumber = ""
+			else: ArticleNumber = ArticleNumber.lower()
 			StockArtikelList[eachFile] = str(ArticleNumber)
 			#	Supplier
 			ArticleSupplier = BlueLoad("Lieferant", datei).lower()
@@ -157,15 +182,19 @@ for eachDir in os.listdir(DIR + "Stock/"):
 			ArticleName = BlueLoad("Name", datei)
 			StockNameList[eachFile] = str(ArticleName)
 			#	Location
-			ArticleLocation = BlueLoad("Ort", datei).upper()
+			ArticleLocation = BlueLoad("Ort", datei)
 			if ArticleLocation == None or ArticleLocation == "x":
 				ArticleLocation = ""
 				BlueSave("Ort", ArticleLocation, datei)
-			StockOrtList[eachFile] = str(ArticleLocation)
+			StockOrtList[eachFile] = str(ArticleLocation).upper()
 			#	Cost and Prices
-			
-			ArticleCost=RoundUp0000(str(BlueLoad("PreisEK", datei)).replace(",", "."))
-			ArticlePriceVatIncl=RoundUp05(str(BlueLoad("PreisVK", datei)).replace(",", "."))
+			ArticleCost = str(BlueLoad("PreisEK", datei))
+			if ArticleCost == "x" or ArticleCost == "None" or ArticleCost == "": ArticleCost = "0.00"
+			ArticleCost=RoundUp0000(str(ArticleCost).replace(",", "."))
+			ArticlePriceVatIncl = str(BlueLoad("PreisVK", datei))
+			if ArticlePriceVatIncl == "x" or ArticlePriceVatIncl == "None" or ArticlePriceVatIncl == "": ArticlePriceVatIncl = "0.00"
+			ArticlePriceVatIncl=RoundUp05(str(ArticlePriceVatIncl).replace(",", "."))
+			ArticlePriceVatExcl = str(BlueLoad("PreisVKH", datei))
 			ArticlePriceVatExcl=RoundUp0000(float(ArticlePriceVatIncl)/1.21)
 			StockPreisEKList[eachFile] = float(ArticleCost)
 			StockPreisVKHList[eachFile] = float(ArticlePriceVatExcl)
@@ -179,15 +208,15 @@ for eachDir in os.listdir(DIR + "Stock/"):
 			#except: StockPreisVKList[eachFile] = "x"
 
 			#	Quantity
-			ArticleQuantity = int(BlueLoad("Anzahl", datei))
-			if ArticleQuantity == None or ArticleQuantity == "x":
+			ArticleQuantity = str(BlueLoad("Anzahl", datei))
+			if ArticleQuantity == None or ArticleQuantity == "None" or ArticleQuantity == "x":
 				ArticleQuantity = 0
 				BlueSave("Anzahl", ArticleQuantity, datei)
-			StockAnzahlList[eachFile]=ArticleQuantity
+			StockAnzahlList[eachFile]=int(ArticleQuantity)
 
 			StockArtikelAnzahl = StockArtikelAnzahl  + 1
 			if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
-		except: Debug("Failed to load")
+		#except: Debug("Failed to load")
 
 for eachDir in os.listdir(DIR + "Kunden/"):
 	for eachFile in os.listdir(DIR + "Kunden/" + eachDir):
@@ -326,6 +355,7 @@ print("ListeDerLieferanten : " + str(ListeDerLieferanten))
 print("KundenAnzahl : " + str(KundenAnzahl))
 print("NeueKundenID : " + str(NeueKundenID))
 
+StockInventar()
 
 SERVER_IP = ("", 10000)
 s = socket.socket()
@@ -373,7 +403,7 @@ while True:
 								DATA.append(Jahr + Monat + Dateiname.replace(".csv", "") + "|" + eachLine.split(":")[2])
 			Antwort=str(DATA)
 
-
+		
 		if mode == "StockSetBCode":
 			Debug("Mode : " + mode)
 			ID = 100000
