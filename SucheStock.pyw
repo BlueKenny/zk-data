@@ -179,4 +179,5 @@ appSuche.bindKey("<F11>", BtnPrintOrt)
 appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 appSuche.setStopFunction(SaveIt)
+
 appSuche.go()
