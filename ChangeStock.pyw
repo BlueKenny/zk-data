@@ -64,6 +64,10 @@ def VerifyInput(Entry):
 		appChange.setEntryMaxLength(Entry, 13)
 		try:	
 			appChange.setEntry(Entry, int(myInt))
+			if ConvertedEntry == "Barcode":
+				if not len(appChange.getEntry(Entry)) == 13:
+					appChange.setEntry(Entry, IDToBarcode(ID))
+					appChange.infoBox("Achtung", "Dieser Barcode ist ungültig und wird jetzt neu generiert")
 		except:
 			if ConvertedEntry == "Barcode":	appChange.setEntry(Entry, IDToBarcode(ID))
 			else: appChange.setEntry(Entry, "0")
@@ -72,6 +76,7 @@ def VerifyInput(Entry):
 		myFloat = appChange.getEntry(Entry)
 		myFloat = myFloat.replace(",", ".")
 		myFloat = myFloat.replace("..", ".")
+		myFloat = myFloat.replace(".0.", ".")
 		try:
 			if ConvertedEntry == "PreisEK":
 				print("PreisEK")
@@ -152,12 +157,14 @@ for Entry in EntryList2:
 	appChange.addLabelEntry(Entry)
 	appChange.setEntryChangeFunction(Entry, VerifyInput)
 	
+	
 	if IDExists:
 		appChange.setEntry(Entry, DATA[EntryList2.index(Entry) + 1], callFunction=True)
 		StartInfo.append(DATA[EntryList2.index(Entry) + 1])
 	else:
 		appChange.setEntry(Entry, "", callFunction=True)
 		StartInfo.append("")
+	if EntryList[EntryList2.index(Entry)] == "Anzahl": appChange.setEntryState(Entry, "disabled")
 
 def StopWindow(btn):
 	Debug("StopWindow")
