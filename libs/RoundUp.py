@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 def RoundUp05(Zahl): # 0.05
 	Zahl = float(Zahl)

@@ -32,7 +32,17 @@ appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
 
 #NEWS
-appSuche.infoBox("Update", open("news", "r").read(), parent=None)
+NEWS_INDEX = BlueLoad("NEWS_INDEX", "DATA/DATA")
+if NEWS_INDEX == None: NEWS_INDEX = 0
+NEWS_INDEX = int(NEWS_INDEX)
+with codecs.open("news.csv", "r", "utf-8") as csvfile:
+	reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
+	for eachLine in reader:#sorted(reader, reverse=True):
+		if not "INDEX" in eachLine and NEWS_INDEX < int(eachLine[0]):
+			print(eachLine)
+			NEWS_INDEX = int(eachLine[0])
+			appSuche.infoBox("Update " + eachLine[0], eachLine[1] + "\n\n" + eachLine[3], parent=None)
+BlueSave("NEWS_INDEX", NEWS_INDEX, "DATA/DATA")
 
 def BtnStockGraph(btn):
 	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]

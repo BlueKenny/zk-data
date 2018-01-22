@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from libs.appjar0061 import gui  
 from libs.BlueFunc import *
 from libs.debug import Debug

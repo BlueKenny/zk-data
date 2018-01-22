@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from libs.appjar0830 import gui 
 #from numpy import sin, pi, arange
 import random
