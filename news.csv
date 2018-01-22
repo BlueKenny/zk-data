@@ -6,7 +6,7 @@ INDEX:DATE:MODE:INFO
 5:22/01/17:FIX:"Barcode und Anzahl kann nicht mehr bei ""Change Stock"" geändert werden"
 6:22/01/17:FEATURE:Neues programm zeigt sofort ob etwas auf lager ist und wo es sich befindet
 7:22/01/17:FEATURE:Beim öffnen werden jetzt nur noch neue NEWS angezeigt
-8:22/01/17:INFO:ZK-DATA besteht  aus 17 906 linien, und wurde am 9/07/17 auf Github.com veröffendlicht
+8:22/01/17:INFO:ZK-DATA besteht  aus 17 945 linien, und wurde am 9/07/17 auf Github.com veröffendlicht
 9:22/01/17:FEATURE:Die suche zeigt nun immer die aktuellen informationen an wenn etwas geändert wurde
 10:22/01/17:INFO:Sprach dateien sind nun in einem anderen format (.ini)
 11:22/01/17:FIX:Ort kann nun wieder gedruckt werden
