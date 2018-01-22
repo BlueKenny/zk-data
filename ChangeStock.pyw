@@ -164,6 +164,7 @@ for Entry in EntryList2:
 	else:
 		appChange.setEntry(Entry, "", callFunction=True)
 		StartInfo.append("")
+	if EntryList[EntryList2.index(Entry)] == "Barcode": appChange.setEntryState(Entry, "disabled")
 	if EntryList[EntryList2.index(Entry)] == "Anzahl": appChange.setEntryState(Entry, "disabled")
 
 def StopWindow(btn):
