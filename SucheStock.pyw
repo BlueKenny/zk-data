@@ -14,16 +14,9 @@ from libs.barcode import *
 import csv
 
 from libs.CheckConf import *
-string = {}
-with codecs.open("LANG/" + BlueLoad("LANG", "DATA/DATA") + ".csv", "r", "utf-8") as csvfile:
-	reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
-	for eachLine in reader:
-		try: string[int(eachLine[0])] = eachLine[1]
-		except: True
 
 EntryList=["Barcode", "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
-EntryList2=[string[4],  string[5], string[6], string[7], string[8], string[0], string[1], string[2], string[9]]
-appSuche = gui(string[12], "800x600") 
+appSuche = gui("Search Stock", "800x650") 
 appSuche.setBg("#ffffff")
 
 IDToChange = 0
@@ -37,7 +30,7 @@ if NEWS_INDEX == None: NEWS_INDEX = 0
 NEWS_INDEX = int(NEWS_INDEX)
 with codecs.open("news.csv", "r", "utf-8") as csvfile:
 	reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
-	for eachLine in reader:#sorted(reader, reverse=True):
+	for eachLine in reader:
 		if not "INDEX" in eachLine and NEWS_INDEX < int(eachLine[0]):
 			print(eachLine)
 			NEWS_INDEX = int(eachLine[0])
@@ -61,78 +54,86 @@ def BtnPrintBarcode(btn):
 	PrintBarcode("", GetData[0], GetData[1], GetData[2], GetData[3])
 
 def BtnPrintOrt(btn):
-	PrintLocation(StockGetArtInfo("(zkz)Ort", appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
+	PrintLocation(StockGetArtInfo(["Ort"], appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
+
+
+appSuche.addLabelEntry("Search")
+appSuche.addLabelEntry("Location")
+appSuche.addLabelEntry("Supplier")
+ListBoxSuche = appSuche.addListBox("Suche")
+ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc("CHANGE"))# if List Item double click then change
 
 def tbFunc(btn):
 	global IDToChange
 	global appChange
 	Debug("btn : " + btn)
 
-	if btn == string[10]:# NEU
+	if btn == "NEW":
 		if os.path.exists("/home"):
 			COMMAND = "./ChangeStock.pyw"
-		else: COMMAND = "ChangeStock.pyw"
-		os.popen(COMMAND)
-		Suche("")
+		else: COMMAND = "pythonw ChangeStock.pyw"
+		application = os.popen(COMMAND).readlines()
+		LookAt = application[-1].rstrip()
+		Suche(LookAt)
 		
-	if btn == string[11]:# ÄNDERN
+	if btn == "CHANGE":
 		ID = appSuche.getListBox("Suche")[0].split(" | ")[0]
 		if os.path.exists("/home"):
 			COMMAND = "./ChangeStock.pyw"
-		else: COMMAND = "ChangeStock.pyw"
-		os.popen(COMMAND + " " + ID)
-		#Suche("")
+		else: COMMAND = "pythonw ChangeStock.pyw"
+		application = os.popen(COMMAND + " " + ID).readlines()
+		LookAt = application[-1].rstrip()
+		Suche(LookAt)
 
-tools = [string[10], string[11]]
-appSuche.addToolbar(tools, tbFunc, findIcon=True)
+tools = ["NEW", "CHANGE"]
+appSuche.addToolbar(tools, tbFunc, findIcon=False)
 
-appSuche.addTickOptionBox(string[13], EntryList2)
-try:
-	for eachAnzeigenOption in BlueLoad("Anzeigen-Stock", "DATA/DATA").split("/"):
-		appSuche.setOptionBox(string[13], eachAnzeigenOption, value=True, callFunction=True)
-except: print("Anzeigen nicht gefunden")
+#appSuche.addTickOptionBox("Anzeigen", EntryList)
 
-appSuche.addLabelEntry(string[37])
-appSuche.addLabelEntry(string[8])
-appSuche.addLabelEntry(string[6])
-ListBoxSuche = appSuche.addListBox("Suche")
-ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc(string[11]))# if List Item double click then change
+#for each in EntryList:#try:
+#	print(appSuche.getOptionBox("Anzeigen")[each])
+#	appSuche.setOptionBox("Anzeigen", each, value=True, callFunction=True)
+	#for eachAnzeigenOption in BlueLoad("Anzeigen-Stock", "DATA/DATA").split("/"):
+	#	print(eachAnzeigenOption + " is True")
+	#	print(EntryList[int(eachAnzeigenOption)])
+	#	appSuche.setOptionBox("Anzeigen", str(EntryList[int(eachAnzeigenOption)]), value=True, callFunction=True)
+#except: print("Anzeigen nicht gefunden")
 
 def Delete(btn):
 	Debug("Delete")
-	appSuche.setEntry(string[37], "")
-	appSuche.setEntry(string[8], "")
-	appSuche.setEntry(string[6], "")
+	appSuche.setEntry("Search", "")
+	appSuche.setEntry("Location", "")
+	appSuche.setEntry("Supplier", "")
 
 def Suche(btn):
 	Debug("Suche")
-	appSuche.setMeter("status", 0, text=string[27])
+	if len(btn) == 6:
+		try:
+			ID = int(btn)
+			appSuche.setEntry("Search", str(ID))
+		except: True
+
+	appSuche.setMeter("status", 0, text=appSuche.translate("TextStartSearch", "Start searching"))
 	
-	AntwortList=SendeSucheStock(appSuche.getEntry(string[37]).replace(" ", ""), appSuche.getEntry(string[8]).upper(), appSuche.getEntry(string[6]).lower())
+	AntwortList=SendeSucheStock(appSuche.getEntry("Search").replace(" ", ""), appSuche.getEntry("Location").upper(), appSuche.getEntry("Supplier").lower())
 
 
-	appSuche.setMeter("status", 10, text=string[28])
+	appSuche.setMeter("status", 10, text=appSuche.translate("TextWaitingForData", "Waiting for data"))
 	appSuche.clearListBox("Suche")
 
 	if btn == "first":
 		AntwortList = AntwortList.split("<K>")[0]
-		Schritt = (100-10)/(1); print(string[29].replace("X", str(Schritt)))
+		Schritt = (100-10)/(1); print(appSuche.translate("TextStep", "Step") + " " + str(Schritt))
 	else:
-		Schritt = (100-10)/(len(AntwortList.split("<K>"))-1); print(string[29].replace("X", str(Schritt)))
+		Schritt = (100-10)/(len(AntwortList.split("<K>"))-1); print(appSuche.translate("TextStep", "Step") + " " + str(Schritt))
 
 	for IDs in AntwortList.split("<K>"):
 		Debug("Get Info for ID " + str(IDs))
 		if not IDs == "" and not IDs == "0"and not IDs == None and not IDs == "None":
-			appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text=string[30])
-			print(string[31].replace("X", str(appSuche.getMeter("status")[0] + Schritt)))
+			appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text=appSuche.translate("TextQueryData", "Get Data"))
+			print(appSuche.translate("TextStatus", "Status") + " " + str(appSuche.getMeter("status")[0] + Schritt))
 			Linie = str(IDs).rstrip()
-			SaveIt() # Save All to DATA
-			GetThis2 = BlueLoad("Anzeigen-Stock", "DATA/DATA").split("/")
-			GetThis = []
-			for each in GetThis2:
-				GetThis.append(EntryList[EntryList2.index(each)])
-				print(GetThis)
-			Linie = StockGetArtInfo(GetThis, IDs)
+			Linie = StockGetArtInfo(["Artikel", "Lieferant", "Name", "Ort", "PreisVK", "Anzahl"], IDs)
 
 			appSuche.addListItem("Suche", Linie)
 			if "P" in IDs:
@@ -140,21 +141,22 @@ def Suche(btn):
 			else:
 				appSuche.setListItemBg("Suche", Linie, "#ffffff")
 	appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
-	appSuche.setLabel("infoAnzahl", string[20].replace("X",str(GetStockZahl())))
+	appSuche.setLabel("infoAnzahl",  str(GetStockZahl() + " " + appSuche.translate("TextArticleInStock", "Article in stock")))
 	appSuche.setMeter("status", 100, text="")
 
 def SaveIt():
 	Debug("SaveIt")
-	for each in EntryList2:
-		if appSuche.getOptionBox(string[13])[each]:
-			try: AnzeigenListe = AnzeigenListe + "/" + each
-			except: AnzeigenListe = each
-	try:
-		print(AnzeigenListe)
-		BlueSave("Anzeigen-Stock", AnzeigenListe, "DATA/DATA")
-	except:
-		print(string[32])
-		BlueSave("Anzeigen-Stock", string[6] + "/" + string[7] + "/" + string[8] + "/" + string[2] + "/" + string[9], "DATA/DATA")
+	#PosInList = 0
+	#for each in appSuche.getOptionBox("Anzeigen"):
+	#	value = appSuche.getOptionBox("Anzeigen")[each]
+	#	if value:
+	#		print(each + " = " + str(PosInList) + " is True")
+	#		try: AnzeigenListe = AnzeigenListe + "/" + str(PosInList)
+	#		except: AnzeigenListe = str(PosInList)
+	#	PosInList = PosInList + 1
+	#try: BlueSave("Anzeigen-Stock", AnzeigenListe, "DATA/DATA")
+	#except: BlueSave("Anzeigen-Stock", "0/1/2", "DATA/DATA")
+
 	return True
 
 def StockChange(btn):
@@ -162,27 +164,41 @@ def StockChange(btn):
 	IDToChange = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
 	Name = "[ " + StockGetArtInfo(["Name"], str(IDToChange)) + " ]"
 	if btn == "<F1>": # MINUS
-		Anzahl = appSuche.numberBox(string[9], Name + "\n\n" + string[21])
+		Anzahl = appSuche.numberBox("QuantityToRemove", "Quantity to remove")
 		try:
 			SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
 			Debug(IDToChange)
-			appSuche.infoBox(string[23], string[24].replace("X", str(int(Anzahl))).replace("N", str(Name)))
-			appSuche.setEntry(string[37], IDToChange)
+			appSuche.infoBox("QuantityChanged", "Quantity Changed")
+			appSuche.setEntry("Search", IDToChange)
 			Suche("first")
-		except: appSuche.infoBox(string[26], string[26])
+		except: appSuche.infoBox("Error", "Error")
 	if btn == "<F2>": # PLUS
-		Anzahl = appSuche.numberBox(string[9], Name + "\n\n" + string[22])
+		Anzahl = appSuche.numberBox("QuantityToAdd", "Quantity to add")
 		try:
 			SendeChangeAnzahl(IDToChange, int(Anzahl))
 			Debug(IDToChange)
-			appSuche.infoBox(string[23], string[25].replace("X", str(int(Anzahl))).replace("N", str(Name)))
-			appSuche.setEntry(string[37], IDToChange)
+			appSuche.infoBox("QuantityChanged", "Quantity Changed")
+			appSuche.setEntry("Search", IDToChange)
 			Suche("first")
-		except: appSuche.infoBox(string[26], string[26])
+		except: appSuche.infoBox("Error", "Error")
 
-appSuche.setFocus(string[37])
-appSuche.addLabel("info", string[14] + "\n" + string[15] + "\n\n" + string[16] + "\n" + string[17] + "\n" + string[18] + "\n" + string[19])
-appSuche.addLabel("infoAnzahl", string[20].replace("X", str(GetStockZahl())))
+appSuche.setFocus("Search")
+appSuche.addLabel("InfoKeyEnter", "")
+appSuche.addLabel("InfoKeyDelete", "")
+appSuche.addLabel("InfoKeyF1", "")
+appSuche.addLabel("InfoKeyF2", "")
+appSuche.addLabel("InfoKeyF11", "")
+appSuche.addLabel("InfoKeyF12", "")
+appSuche.addLabel("space", "")
+
+#appSuche.translate("TextKeyEnter", "Enter = Article search")
+#appSuche.translate("TextKeyDelete", "Delete = Clear all searches")
+#appSuche.translate("TextKeyF1", "F1 = remove article")
+#appSuche.translate("TextKeyF2", "F2 = add article")
+#appSuche.translate("TextKeyF11", "F11 = print location")
+#appSuche.translate("TextKeyF12", "F12 = print barcode")
+
+appSuche.addLabel("infoAnzahl",  str(GetStockZahl()) + " " + appSuche.translate("TextArticleInStock", "Article in stock"))
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
@@ -192,4 +208,4 @@ appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 appSuche.setStopFunction(SaveIt)
 
-appSuche.go()
+appSuche.go(BlueLoad("LANG", "DATA/DATA"))
