@@ -31,6 +31,8 @@ IDToChange = 0
 appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 appSuche.setMeter("status", 100, text="")
 
+#NEWS
+appSuche.infoBox("Update", open("news", "r").read(), parent=None)
 
 def BtnStockGraph(btn):
 	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]
