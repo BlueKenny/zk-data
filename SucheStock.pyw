@@ -107,6 +107,7 @@ def Delete(btn):
 	appSuche.setEntry("Search", "")
 	appSuche.setEntry("Location", "")
 	appSuche.setEntry("Supplier", "")
+	appSuche.setFocus("Search")
 
 def Suche(btn):
 	Debug("Suche")
