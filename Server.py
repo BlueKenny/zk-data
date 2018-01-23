@@ -17,6 +17,10 @@ def find_keys_dict(dic, val):
 	keys=[]
 	while True:
 		if val in dic2.values():
+			#for key in list(dic2.keys()):
+			#	for eachpart in dic2[key].split(" "):
+			#		if val == eachpart and not key in keys:
+			#			keys.append(key)
 			key = list(dic2.keys())[list(dic2.values()).index(val)]
 			keys.append(key)
 			del dic2[key]
