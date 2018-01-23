@@ -165,7 +165,7 @@ def SaveIt():
 
 def StockChange(btn):
 	Debug("StockChange")
-	IDToChange = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
+	IDToChange = appSuche.getListBox("Suche")[0].split(" | ")[0].rstrip()
 	if not "P" in IDToChange:
 		Name = "[ " + StockGetArtInfo(["Name"], str(IDToChange)) + " ]"
 		if btn == "<F1>": # MINUS
@@ -213,4 +213,5 @@ appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 appSuche.setStopFunction(SaveIt)
 
-appSuche.go(BlueLoad("LANG", "DATA/DATA"))
+#appSuche.go(BlueLoad("LANG", "DATA/DATA"))
+appSuche.go("de")

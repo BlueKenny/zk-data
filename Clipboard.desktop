@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Clipboard
+Keywords=zk-data;clipboard;
+Path=/home/kenny/zk-data/
+Exec=/home/kenny/zk-data/Clipboard.pyw
+Terminal=false
+Type=Application
+StartupNotify=true
+Icon=None
+Name[de_DE]=Clipboard
