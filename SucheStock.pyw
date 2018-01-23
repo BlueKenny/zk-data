@@ -51,7 +51,10 @@ def BtnPrintBarcode(btn):
 	
 	GetData = StockGetArtInfo(["Barcode", "Name", "PreisVK"], ID).split(" | ")
 	print("GetData " + str(GetData))
-	PrintBarcode("", GetData[0], GetData[1], GetData[2], GetData[3])
+
+	Anzahl = appSuche.numberBox("QuantityToPrint", "Quantity to print")
+	for a in range(0, Anzahl):
+		PrintBarcode("", GetData[0], GetData[1], GetData[2], GetData[3])
 
 def BtnPrintOrt(btn):
 	PrintLocation(StockGetArtInfo(["Ort"], appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
