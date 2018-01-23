@@ -313,7 +313,8 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 			with open("Import/Preise/" + datei, "r") as csvfile:
 				reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
 				for eachLine in reader:
-					try:
+					if not SearchArtikel in eachLine:#try:
+						print("eachLine : " + str(eachLine))
 						StockArtikelAnzahl = StockArtikelAnzahl  + 1
 						if OKArtikel3:
 							PreiseArtikelList[PreiseID] = eachLine[IntArtikel] + " " + eachLine[IntArtikel2] + " " + eachLine[IntArtikel3]
@@ -339,6 +340,7 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 							PreisePreisVKList[PreiseID] = RoundUp05(float(str(PreisePreisVKHList[PreiseID]).replace(",", "."))*1.21)
 							PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
 						if IntPreisVKH == 0:
+							if str(PreisePreisVKList[PreiseID]) == "": PreisePreisVKList[PreiseID] = 0
 							PreisePreisVKHList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))/1.21)
 						if IntPreisEK == 0:
 							PreisePreisEKList[PreiseID] = RoundUp0000(float(str(PreisePreisVKList[PreiseID]).replace(",", "."))*0.65)
@@ -346,7 +348,7 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 						PreisePreisVKHList[PreiseID] = RoundUp0000(float(PreisePreisVKList[PreiseID])/1.21)
 
 						PreiseID = PreiseID + 1
-					except: Debug("Linie ist ungültig \n" + str(eachLine))
+					#except: Debug("Linie ist ungültig \n" + str(eachLine))
 					
 
 for Arbeiter in os.listdir(DIR + "Arbeiter"):

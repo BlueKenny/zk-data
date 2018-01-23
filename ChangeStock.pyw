@@ -52,6 +52,7 @@ def VerifyInput(Entry):
 	String = ["Artikel", "Lieferant", "Name", "Ort"]
 	ConvertedEntry=EntryList[EntryList2.index(Entry)]
 	print("Verify ConvertedEntry " + str(ConvertedEntry))
+	appChange.setEntry(Entry, appChange.getEntry(Entry).replace("?", ""))
 
 	if ConvertedEntry == "Ort":
 		print("Verify this input " + str(appChange.getEntry(Entry)))
@@ -171,6 +172,9 @@ for Entry in EntryList2:
 		StartInfo.append("")
 	if EntryList[EntryList2.index(Entry)] == "Barcode": appChange.setEntryState(Entry, "disabled")
 	if EntryList[EntryList2.index(Entry)] == "Anzahl": appChange.setEntryState(Entry, "disabled")
+	if EntryList[EntryList2.index(Entry)] == "Lieferant":
+		if "_" in appChange.getEntry(Entry):
+			appChange.setEntry(Entry, appChange.getEntry(Entry).split("_")[0])
 
 def StopWindow(btn):
 	Debug("StopWindow")

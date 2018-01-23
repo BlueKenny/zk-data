@@ -26,7 +26,7 @@ appSuche.setMeter("status", 100, text="")
 
 #NEWS
 NEWS_INDEX = BlueLoad("NEWS_INDEX", "DATA/DATA")
-if NEWS_INDEX == None: NEWS_INDEX = 0
+if NEWS_INDEX == None: NEWS_INDEX = 20
 NEWS_INDEX = int(NEWS_INDEX)
 with codecs.open("news.csv", "r", "utf-8") as csvfile:
 	reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
@@ -166,25 +166,26 @@ def SaveIt():
 def StockChange(btn):
 	Debug("StockChange")
 	IDToChange = appSuche.getListItems("Suche")[0].split(" | ")[0].rstrip()
-	Name = "[ " + StockGetArtInfo(["Name"], str(IDToChange)) + " ]"
-	if btn == "<F1>": # MINUS
-		Anzahl = appSuche.numberBox("QuantityToRemove", "Quantity to remove")
-		try:
-			SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
-			Debug(IDToChange)
-			appSuche.infoBox("QuantityChanged", "Quantity Changed")
-			appSuche.setEntry("Search", IDToChange)
-			Suche("first")
-		except: appSuche.infoBox("Error", "Error")
-	if btn == "<F2>": # PLUS
-		Anzahl = appSuche.numberBox("QuantityToAdd", "Quantity to add")
-		try:
-			SendeChangeAnzahl(IDToChange, int(Anzahl))
-			Debug(IDToChange)
-			appSuche.infoBox("QuantityChanged", "Quantity Changed")
-			appSuche.setEntry("Search", IDToChange)
-			Suche("first")
-		except: appSuche.infoBox("Error", "Error")
+	if not "P" in IDToChange:
+		Name = "[ " + StockGetArtInfo(["Name"], str(IDToChange)) + " ]"
+		if btn == "<F1>": # MINUS
+			Anzahl = appSuche.numberBox("QuantityToRemove", "Quantity to remove")
+			try:
+				SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
+				Debug(IDToChange)
+				appSuche.infoBox("QuantityChanged", "Quantity Changed")
+				appSuche.setEntry("Search", IDToChange)
+				Suche("first")
+			except: appSuche.infoBox("Error", "Error")
+		if btn == "<F2>": # PLUS
+			Anzahl = appSuche.numberBox("QuantityToAdd", "Quantity to add")
+			try:
+				SendeChangeAnzahl(IDToChange, int(Anzahl))
+				Debug(IDToChange)
+				appSuche.infoBox("QuantityChanged", "Quantity Changed")
+				appSuche.setEntry("Search", IDToChange)
+				Suche("first")
+			except: appSuche.infoBox("Error", "Error")
 
 appSuche.setFocus("Search")
 appSuche.addLabel("InfoKeyEnter", "")
