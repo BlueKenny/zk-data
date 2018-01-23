@@ -209,7 +209,7 @@ for eachDir in os.listdir(DIR + "Stock/"):
 
 			#	Quantity
 			ArticleQuantity = str(BlueLoad("Anzahl", datei))
-			if ArticleQuantity == None or ArticleQuantity == "None" or ArticleQuantity == "x":
+			if ArticleQuantity == None or ArticleQuantity == "None" or ArticleQuantity == "x" or ArticleQuantity == "":
 				ArticleQuantity = 0
 				BlueSave("Anzahl", ArticleQuantity, datei)
 			StockAnzahlList[eachFile]=int(ArticleQuantity)
