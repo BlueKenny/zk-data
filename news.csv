@@ -10,3 +10,4 @@ INDEX:DATE:MODE:INFO
 9:22/01/17:FEATURE:Die suche zeigt nun immer die aktuellen informationen an wenn etwas geändert wurde
 10:22/01/17:INFO:Sprach dateien sind nun in einem anderen format (.ini)
 11:22/01/17:FIX:Ort kann nun wieder gedruckt werden
+12:23/01/17:FEATURE:Beim drucken wird jetzt nach der Anzahl gefragt
