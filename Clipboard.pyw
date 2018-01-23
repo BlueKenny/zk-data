@@ -16,7 +16,7 @@ OldData = ""
 while True:#def Check():
 	NewData = pyperclip.paste()
 
-	if not OldData == NewData:
+	if not OldData == NewData and not NewData == "":
 		print(NewData)
 		OldData = NewData
 		
