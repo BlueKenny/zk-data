@@ -55,7 +55,9 @@ def StockInventar():
 		PRICE = PRICE.replace(".", ",")# Show better in LibreOffice :)
 		TOTAL = TOTAL.replace(".", ",")
 
-		try: if not QUANTITY == "0": Datei.write(ID + ":" + DESCRIPTION + ":" + QUANTITY + ":" + PRICE + ":" + TOTAL + "\n")
+		try:
+			if not QUANTITY == "0":
+				Datei.write(ID + ":" + DESCRIPTION + ":" + QUANTITY + ":" + PRICE + ":" + TOTAL + "\n")
 		except: True
 	
 	Datei.write(":::TOTAL:" + str(RoundUp0000(TOTAL_END)).replace(".", ",") + "\n")
