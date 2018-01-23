@@ -4,6 +4,7 @@
 import pyperclip
 from libs.send import *
 import subprocess
+import os
 
 # for autostart on windows
 # copy a link in
@@ -22,10 +23,10 @@ while True:#def Check():
 		DATA_ID = SendeSucheStock(NewData, "", "").split("<K>")
 		if DATA_ID[0] == "0" or "P" in DATA_ID[0]:
 			try: command = subprocess.Popen(["./Popup.pyw", "0", NewData])
-			except: command = subprocess.Popen(["Popup.pyw", "0", NewData])
+			except: os.system("Popup.pyw 0 " + str(NewData))
 		else:
 			try: command = subprocess.Popen(["./Popup.pyw", DATA_ID[0]])
-			except: command = subprocess.Popen(["Popup.pyw", DATA_ID[0]])
+			except: os.system("Popup.pyw " + str(DATA_ID[0]))
 	
 		
 		
