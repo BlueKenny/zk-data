@@ -26,7 +26,7 @@ else:
 AppMsg.setLocation(0, 0)
 AppMsg.hideTitleBar()
 AppMsg.setBg("#FFFFFF")
-AppMsg.setTransparency(50)
+#AppMsg.setTransparency(50)
 AppMsg.wm_state('normal')
 AppMsg.go()
 
