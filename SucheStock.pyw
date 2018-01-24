@@ -75,7 +75,7 @@ def tbFunc(btn):
 		if os.path.exists("/home"):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
-		application = os.popen(COMMAND).readlines()
+		application = os.Popen(COMMAND).readlines()
 		LookAt = application[-1].rstrip()
 		Suche(LookAt)
 		
@@ -84,7 +84,7 @@ def tbFunc(btn):
 		if os.path.exists("/home"):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
-		application = os.popen(COMMAND + " " + ID).readlines()
+		application = os.Popen(COMMAND + " " + ID).readlines()
 		LookAt = application[-1].rstrip()
 		Suche(LookAt)
 
