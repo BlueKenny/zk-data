@@ -119,6 +119,7 @@ def VerifyChanges():
 				BlueSave("LastID", ID, "DATA/DATA")
 				return True
 			else:
+				BlueSave("LastID", ID, "DATA/DATA")
 				appChange.infoBox(string[26], string[35], parent=None)
 				return False
 		else:

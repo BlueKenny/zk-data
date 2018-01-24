@@ -11,7 +11,8 @@ def CloseIt():
 	AppMsg.stop()
 
 AppMsg = gui("Message", "300x100", handleArgs=False)
-AppMsg.attributes("-topmost", True)
+#AppMsg.attributes("-topmost", True)
+AppMsg.topLevel.attributes("-topmost", True)
 
 ID = sys.argv[1]
 if ID == "0": # Nothing found

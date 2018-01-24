@@ -84,7 +84,6 @@ def tbFunc(btn):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
 		application = os.popen(COMMAND + " " + ID).readlines()
-		LookAt = application[-1].rstrip()
 		Suche(BlueLoad("LastID", "DATA/DATA"))
 
 tools = ["NEW", "CHANGE"]

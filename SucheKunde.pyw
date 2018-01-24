@@ -10,11 +10,6 @@ from libs.send import *
 import shutil
 import sys
 
-Mode = ""
-
-if len(sys.argv) == 2:
-	if sys.argv[1] == "-getid": Mode = "GetID"
-
 EntryList=["Kundennummer", "Name", "Tel", "Adresse", "Ort"]
 EntryList2=["Name",  "Tel", "Adresse", "Ort"]
 appSuche = gui("Kunden Suche", "800x600") 
