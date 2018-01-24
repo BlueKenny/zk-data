@@ -75,18 +75,17 @@ def tbFunc(btn):
 		if os.path.exists("/home"):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
-		application = os.Popen(COMMAND).readlines()
-		LookAt = application[-1].rstrip()
-		Suche(LookAt)
+		application = os.popen(COMMAND).readlines()
+		Suche(BlueLoad("LastID", "DATA/DATA"))
 		
 	if btn == "CHANGE":
 		ID = appSuche.getListBox("Suche")[0].split(" | ")[0]
 		if os.path.exists("/home"):
 			COMMAND = "./ChangeStock.pyw"
 		else: COMMAND = "ChangeStock.pyw"
-		application = os.Popen(COMMAND + " " + ID).readlines()
+		application = os.popen(COMMAND + " " + ID).readlines()
 		LookAt = application[-1].rstrip()
-		Suche(LookAt)
+		Suche(BlueLoad("LastID", "DATA/DATA"))
 
 tools = ["NEW", "CHANGE"]
 appSuche.addToolbar(tools, tbFunc, findIcon=False)

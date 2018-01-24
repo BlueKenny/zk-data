@@ -17,3 +17,4 @@ INDEX:DATE:MODE:INFO
 16:23/01/17:FEATURE:"Suche: mit der DEL taste kann sofort ein neue scan gestartet werden"
 17:23/01/17:FEATURE:Beim öffnen eines Preisvorschlag wird das datum vom Lieferanten entfernt
 18:23/01/17:FIX:"Stock Change: jedes ? Wird jetzt automatich entfernt"
+19:23/01/17:FIX:"Stock Search: ID wird jetzt nach jeder änderung angezeigt"

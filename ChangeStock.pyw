@@ -116,16 +116,16 @@ def VerifyChanges():
 	if UserMadeChanges:
 		if appChange.yesNoBox(string[33], string[34], parent=None):
 			if Save():
-				print(ID)
+				BlueSave("LastID", ID, "DATA/DATA")
 				return True
 			else:
 				appChange.infoBox(string[26], string[35], parent=None)
 				return False
 		else:
-			print(ID)
+			BlueSave("LastID", ID, "DATA/DATA")
 			return True
 	else:
-		print(ID)
+		BlueSave("LastID", ID, "DATA/DATA")
 		return True
 
 def BtnStockGraph(btn):
