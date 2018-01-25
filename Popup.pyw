@@ -18,7 +18,10 @@ ID = sys.argv[1]
 if ID == "0": # Nothing found
 	AppMsg.addLabel("ArtInfo", sys.argv[2] + "\nis nicht im Stock")
 	AppMsg.after(5000, CloseIt)
-else:
+if ID == "PowerOff":
+	AppMsg.addLabel("Info", "ACHTUNG\ndieser PC geht in " + sys.argv[2] + " sekunden aus")
+	AppMsg.after(10000, CloseIt)
+if not ID == "0" and not ID == "PowerOff":
 	DATA_INFO = StockGetArtInfo(["Name", "Anzahl", "Ort"], ID).split(" | ")
 	print(DATA_INFO)
 	AppMsg.addLabel("ArtInfo", DATA_INFO[2] + "x " + DATA_INFO[1] + "\nOrt: " + DATA_INFO[3])
