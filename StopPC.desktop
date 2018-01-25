@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=StopPC
+Keywords=zk-data;
+Path=/home/kenny/zk-data/
+Exec=/home/kenny/zk-data/StopPC.pyw
+Terminal=true
+Type=Application
+StartupNotify=true
+Icon=None
