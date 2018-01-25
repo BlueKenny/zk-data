@@ -7,8 +7,7 @@ if not os.path.exists("/home"):
 from libs.appjar0830 import gui  
 from libs.BlueFunc import *
 from libs.debug import Debug
-import subprocess
-from random import randint
+import platform
 from libs.send import *
 from libs.barcode import *
 import csv
@@ -40,9 +39,8 @@ BlueSave("NEWS_INDEX", NEWS_INDEX, "DATA/DATA")
 def BtnStockGraph(btn):
 	ID = appSuche.getListItems("Suche")[0].split(" | ")[0]
 
-	if os.path.exists("/home"):
-		COMMAND = "./ArtGraph.py "
-	else: COMMAND = "ArtGraph.py "
+	if platform.system() == "Linux": COMMAND = "./ArtGraph.py "
+	if platform.system() == "Windows": COMMAND = "ArtGraph.py "
 	os.system(COMMAND + str(ID))
 	
 def BtnPrintBarcode(btn):
@@ -52,7 +50,7 @@ def BtnPrintBarcode(btn):
 	GetData = StockGetArtInfo(["Barcode", "Name", "PreisVK"], ID).split(" | ")
 	print("GetData " + str(GetData))
 
-	Anzahl = appSuche.numberBox("QuantityToPrint", "Quantity to print")
+	Anzahl = appSuche.numberBox("Drucken", "Welche Anzahl soll gedruckt werden?")
 	for a in range(0, Anzahl):
 		PrintBarcode("", GetData[0], GetData[1], GetData[2], GetData[3])
 
@@ -60,33 +58,31 @@ def BtnPrintOrt(btn):
 	PrintLocation(StockGetArtInfo(["Ort"], appSuche.getListItems("Suche")[0].split(" | ")[0]).split(" | ")[1])
 
 
-appSuche.addLabelEntry("Search")
-appSuche.addLabelEntry("Location")
-appSuche.addLabelEntry("Supplier")
+appSuche.addLabelEntry("Suche")
+appSuche.addLabelEntry("Ort")
+appSuche.addLabelEntry("Lieferant")
 ListBoxSuche = appSuche.addListBox("Suche")
-ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc("CHANGE"))# if List Item double click then change
+ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc("ÄNDER"))# if List Item double click then change
 
 def tbFunc(btn):
 	global IDToChange
 	global appChange
 	Debug("btn : " + btn)
 
-	if btn == "NEW":
-		if os.path.exists("/home"):
-			COMMAND = "./ChangeStock.pyw"
-		else: COMMAND = "ChangeStock.pyw"
+	if btn == "NEU":
+		if platform.system() == "Linux": COMMAND = "./ChangeStock.pyw"
+		if platform.system() == "Windows": COMMAND = "ChangeStock.pyw"
 		application = os.popen(COMMAND).readlines()
 		Suche(BlueLoad("LastID", "DATA/DATA"))
 		
-	if btn == "CHANGE":
+	if btn == "ÄNDERN":
 		ID = appSuche.getListBox("Suche")[0].split(" | ")[0]
-		if os.path.exists("/home"):
-			COMMAND = "./ChangeStock.pyw"
-		else: COMMAND = "ChangeStock.pyw"
+		if platform.system() == "Linux": COMMAND = "./ChangeStock.pyw"
+		if platform.system() == "Windows":  COMMAND = "ChangeStock.pyw"
 		application = os.popen(COMMAND + " " + ID).readlines()
 		Suche(BlueLoad("LastID", "DATA/DATA"))
 
-tools = ["NEW", "CHANGE"]
+tools = ["NEU", "ÄNDERN"]
 appSuche.addToolbar(tools, tbFunc, findIcon=False)
 
 #appSuche.addTickOptionBox("Anzeigen", EntryList)
@@ -102,38 +98,38 @@ appSuche.addToolbar(tools, tbFunc, findIcon=False)
 
 def Delete(btn):
 	Debug("Delete")
-	appSuche.setEntry("Search", "")
-	appSuche.setEntry("Location", "")
-	appSuche.setEntry("Supplier", "")
-	appSuche.setFocus("Search")
+	appSuche.setEntry("Suche", "")
+	appSuche.setEntry("Ort", "")
+	appSuche.setEntry("Lieferant", "")
+	appSuche.setFocus("Suche")
 
 def Suche(btn):
 	Debug("Suche")
 	if len(btn) == 6:
 		try:
 			ID = int(btn)
-			appSuche.setEntry("Search", str(ID))
+			appSuche.setEntry("Suche", str(ID))
 		except: True
 
-	appSuche.setMeter("status", 0, text=appSuche.translate("TextStartSearch", "Start searching"))
+	appSuche.setMeter("status", 0, text="Suche wird gestartet")
 	
-	AntwortList=SendeSucheStock(appSuche.getEntry("Search").replace(" ", ""), appSuche.getEntry("Location").upper(), appSuche.getEntry("Supplier").lower())
+	AntwortList=SendeSucheStock(appSuche.getEntry("Suche").replace(" ", ""), appSuche.getEntry("Ort").upper(), appSuche.getEntry("Lieferant").lower())
 
 
-	appSuche.setMeter("status", 10, text=appSuche.translate("TextWaitingForData", "Waiting for data"))
+	appSuche.setMeter("status", 10, text="Warte auf daten")
 	appSuche.clearListBox("Suche")
 
 	if btn == "first":
 		AntwortList = AntwortList.split("<K>")[0]
-		Schritt = (100-10)/(1); print(appSuche.translate("TextStep", "Step") + " " + str(Schritt))
+		Schritt = (100-10)/(1); print("Schritt " + str(Schritt))
 	else:
-		Schritt = (100-10)/(len(AntwortList.split("<K>"))-1); print(appSuche.translate("TextStep", "Step") + " " + str(Schritt))
+		Schritt = (100-10)/(len(AntwortList.split("<K>"))-1); print("Schritt " + str(Schritt))
 
 	for IDs in AntwortList.split("<K>"):
 		Debug("Get Info for ID " + str(IDs))
 		if not IDs == "" and not IDs == "0"and not IDs == None and not IDs == "None":
-			appSuche.setMeter("status", appSuche.getMeter("status")[0]*100 + Schritt, text=appSuche.translate("TextQueryData", "Get Data"))
-			print(appSuche.translate("TextStatus", "Status") + " " + str(appSuche.getMeter("status")[0] + Schritt))
+			appSuche.setMeter("status", appSuche.getMeter("status")[0] * 100 + Schritt, text="Lade Daten")
+			print(" " + str(appSuche.getMeter("status")[0] + Schritt))
 			Linie = str(IDs).rstrip()
 			Linie = StockGetArtInfo(["Artikel", "Lieferant", "Name", "Ort", "PreisVK", "Anzahl"], IDs)
 
@@ -143,7 +139,7 @@ def Suche(btn):
 			else:
 				appSuche.setListItemBg("Suche", Linie, "#ffffff")
 	appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
-	appSuche.setLabel("infoAnzahl",  str(GetStockZahl() + " " + appSuche.translate("TextArticleInStock", "Article in stock")))
+	appSuche.setLabel("infoAnzahl",  str(GetStockZahl() + " Artikel zu verfügung"))
 	appSuche.setMeter("status", 100, text="")
 
 def SaveIt():
@@ -167,32 +163,33 @@ def StockChange(btn):
 	if not "P" in IDToChange:
 		Name = "[ " + StockGetArtInfo(["Name"], str(IDToChange)) + " ]"
 		if btn == "<F1>": # MINUS
-			Anzahl = appSuche.numberBox("QuantityToRemove", "Quantity to remove")
+			Anzahl = appSuche.numberBox("Entfernen", "Wie viele wolen sie ENTFERNEN ?")
 			try:
 				SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
 				Debug(IDToChange)
-				appSuche.infoBox("QuantityChanged", "Quantity Changed")
-				appSuche.setEntry("Search", IDToChange)
+				appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
+				appSuche.setEntry("Suche", IDToChange)
 				Suche("first")
-			except: appSuche.infoBox("Error", "Error")
+			except: appSuche.infoBox("Fehler", "Fehler")
 		if btn == "<F2>": # PLUS
-			Anzahl = appSuche.numberBox("QuantityToAdd", "Quantity to add")
+			Anzahl = appSuche.numberBox("Hinzufügen", "Wie viele wollen sie HINZUFUGEN ?")
 			try:
 				SendeChangeAnzahl(IDToChange, int(Anzahl))
 				Debug(IDToChange)
-				appSuche.infoBox("QuantityChanged", "Quantity Changed")
-				appSuche.setEntry("Search", IDToChange)
+				appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
+				appSuche.setEntry("Suche", IDToChange)
 				Suche("first")
-			except: appSuche.infoBox("Error", "Error")
+			except: appSuche.infoBox("Fehler", "Fehler")
 
-appSuche.setFocus("Search")
-appSuche.addLabel("InfoKeyEnter", "")
-appSuche.addLabel("InfoKeyDelete", "")
-appSuche.addLabel("InfoKeyF1", "")
-appSuche.addLabel("InfoKeyF2", "")
-appSuche.addLabel("InfoKeyF11", "")
-appSuche.addLabel("InfoKeyF12", "")
-appSuche.addLabel("space", "")
+appSuche.setFocus("Suche")
+appSuche.addLabel("KeyEnter", "Enter = Suchen")
+appSuche.addLabel("KeyDelete", "Entfernen = Alle fehler leeren")
+appSuche.addLabel("space0", "")
+appSuche.addLabel("KeyF1", "F1 = Artikel entfernen")
+appSuche.addLabel("KeyF2", "F2 = Artikel hinzufügen")
+appSuche.addLabel("KeyF11", "F11 = Ort drucken")
+appSuche.addLabel("KeyF12", "F12 = Drucken")
+appSuche.addLabel("space1", "")
 
 #appSuche.translate("TextKeyEnter", "Enter = Article search")
 #appSuche.translate("TextKeyDelete", "Delete = Clear all searches")
@@ -201,7 +198,7 @@ appSuche.addLabel("space", "")
 #appSuche.translate("TextKeyF11", "F11 = print location")
 #appSuche.translate("TextKeyF12", "F12 = print barcode")
 
-appSuche.addLabel("infoAnzahl",  str(GetStockZahl()) + " " + appSuche.translate("TextArticleInStock", "Article in stock"))
+appSuche.addLabel("infoAnzahl",  str(GetStockZahl()) + " Artikel zu verfügung")
 appSuche.bindKey("<Return>", Suche)
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
@@ -211,5 +208,4 @@ appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 appSuche.setStopFunction(SaveIt)
 
-#appSuche.go(BlueLoad("LANG", "DATA/DATA"))
-appSuche.go("de")
+appSuche.go()

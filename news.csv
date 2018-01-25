@@ -19,3 +19,6 @@ INDEX:DATE:MODE:INFO
 18:23/01/17:FIX:"Stock Change: jedes ? Wird jetzt automatich entfernt"
 19:23/01/17:FIX:"Stock Search: ID wird jetzt nach jeder änderung angezeigt"
 20:24/01/17:FIX:Das Clipboard fenster wird jetzt auch unter windows immer im vordergrund angzeigt
+21:25/01/17:FIX:"Kasse: kann jetzt wieder genutzt werden"
+22:25/01/17:FIX:Ubersetzungen wurden wieder entfernt
+23:25/01/17:INFO:"WIP: Kunden Suchen wird entwickelt…"

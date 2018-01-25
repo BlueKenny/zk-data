@@ -6,12 +6,22 @@ import sys
 from libs.appjar0830 import gui
 from libs.RoundUp import *
 from libs.debug import Debug
+from random import randint
 from libs.send import *
 from libs.barcode import *
 import sys
+import csv
 
 
+from libs.CheckConf import *
+string = {}
+with codecs.open("LANG/" + BlueLoad("LANG", "DATA/DATA") + ".csv", "r", "utf-8") as csvfile:
+	reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
+	for eachLine in reader:
+		try: string[int(eachLine[0])] = eachLine[1]
+		except: True
 EntryList=["Barcode", "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
+EntryList2=[string[4],  string[5], string[6], string[7], string[8], string[0], string[1], string[2], string[9]]
 
 if len(sys.argv) == 1:
 	ID = StockSetBCode()
@@ -21,71 +31,69 @@ else:
 	IDExists = True
 
 def Save():
-    print("Save")
-    ServerInfo = {}
-    ServerInfoList = StockGetArtInfo(EntryList, ID).split(" | ")
-    for each in EntryList:
-        ServerInfo[each] = ServerInfoList[EntryList.index(each)+1]
-    #del ServerInfo[0]# Remove ID from List
-    print("ServerInfo " + str(ServerInfo))
-    print("StartInfo " + str(StartInfo))
-    if not ServerInfo == StartInfo and IDExists and not PID:
-        appChange.infoBox("Achtung", "Dieser Artikel wurde gerade von einem anderen ort aus geändert", parent=None)
-    else:
-        print("Send Data to Server")
-        for Entry in EntryList:
-            print("Save " + str(Entry))
-            StockSetArtInfo(ID, Entry, appChange.getEntry(Entry))
-    return True
+	print("Save")
+	ServerInfo = StockGetArtInfo(EntryList, ID).split(" | ")
+	del ServerInfo[0]# Remove ID from List
+	#print(ServerInfo)
+	#print(StartInfo)
+	if not ServerInfo == StartInfo and IDExists and not PID:
+		appChange.infoBox(string[33], string[36], parent=None)
+	else:
+		print("Send Data to Server")
+		for Entry in EntryList:
+			print("Save " + str(Entry))
+			StockSetArtInfo(ID, Entry, appChange.getEntry(EntryList2[EntryList.index(Entry)]))
+	return True
 
 def VerifyInput(Entry):
 	print("VerifyInput")
 	Float = ["PreisEK", "PreisVKH", "PreisVK"]
 	Int = ["Barcode", "Anzahl"]
 	String = ["Artikel", "Lieferant", "Name", "Ort"]
-	print("Verify Entry " + str(Entry))
+	ConvertedEntry=EntryList[EntryList2.index(Entry)]
+	print("Verify ConvertedEntry " + str(ConvertedEntry))
 	appChange.setEntry(Entry, appChange.getEntry(Entry).replace("?", ""))
 
-	if Entry == "Ort":
+	if ConvertedEntry == "Ort":
 		print("Verify this input " + str(appChange.getEntry(Entry)))
 		myLocation = appChange.getEntry(Entry).replace(",", ".").upper()
 		appChange.setEntry(Entry, myLocation)
 
-	if Entry in Int:
+	if ConvertedEntry in Int:
 		print("Verify this input " + str(appChange.getEntry(Entry)))
 		myInt = appChange.getEntry(Entry)
 		appChange.setEntryMaxLength(Entry, 13)
 		try:	
 			appChange.setEntry(Entry, int(myInt))
-			if Entry == "Barcode":
+			if ConvertedEntry == "Barcode":
 				if not len(appChange.getEntry(Entry)) == 13:
 					appChange.setEntry(Entry, IDToBarcode(ID))
 					appChange.infoBox("Achtung", "Dieser Barcode ist ungültig und wird jetzt neu generiert")
 		except:
-			if Entry == "Barcode":	appChange.setEntry(Entry, IDToBarcode(ID))
+			if ConvertedEntry == "Barcode":	appChange.setEntry(Entry, IDToBarcode(ID))
 			else: appChange.setEntry(Entry, "0")
-	if Entry in Float:
+	if ConvertedEntry in Float:
 		print("Verify this input " + str(appChange.getEntry(Entry)))
 		myFloat = appChange.getEntry(Entry)
 		myFloat = myFloat.replace(",", ".")
 		myFloat = myFloat.replace("..", ".")
 		myFloat = myFloat.replace(".0.", ".")
 		try:
-			if Entry == "PreisEK":
+			if ConvertedEntry == "PreisEK":
 				print("PreisEK")
 				myFloat = RoundUp0000(myFloat)
 				appChange.setEntry(Entry, float(myFloat))
-			if Entry == "PreisVKH":
+			if ConvertedEntry == "PreisVKH":
 				print("PreisVKH")
 				myFloat = RoundUp0000(myFloat)
-				appChange.setEntry("PreisVK", RoundUp05(myFloat*1.21), callFunction=False)
-				myFloat = RoundUp0000(float(appChange.getEntry("PreisVK"))/1.21)
+				appChange.setEntry(EntryList2[EntryList.index("PreisVK")], RoundUp05(myFloat*1.21), callFunction=False)
+				myFloat = RoundUp0000(float(appChange.getEntry(EntryList2[EntryList.index("PreisVK")]))/1.21)
 				appChange.setEntry(Entry, float(myFloat))
-			if Entry == "PreisVK":
+			if ConvertedEntry == "PreisVK":
 				print("PreisVK")
 				myFloat = RoundUp05(myFloat)
-				appChange.setEntry("PreisVKH", RoundUp0000(myFloat/1.2100), callFunction=False)
-				myFloat = RoundUp05(float(appChange.getEntry("PreisVKH"))*1.21)
+				appChange.setEntry(EntryList2[EntryList.index("PreisVKH")], RoundUp0000(myFloat/1.2100), callFunction=False)
+				myFloat = RoundUp05(float(appChange.getEntry(EntryList2[EntryList.index("PreisVKH")]))*1.21)
 				appChange.setEntry(Entry, float(myFloat))
 
 			
@@ -100,19 +108,19 @@ def VerifyInput(Entry):
 def VerifyChanges():
 	print("VerifyChanges")
 	UserMadeChanges = False
-	for Entry in EntryList:
+	for Entry in EntryList2:
 		NewInfo = appChange.getEntry(Entry)
-		OldInfo = StartInfo[Entry]
+		OldInfo = StartInfo[EntryList2.index(Entry)]
 		if not NewInfo == OldInfo:
 			UserMadeChanges = True
 	if UserMadeChanges:
-		if appChange.yesNoBox("Speichern", "Wollen sie speichern?", parent=None):
+		if appChange.yesNoBox(string[33], string[34], parent=None):
 			if Save():
 				BlueSave("LastID", ID, "DATA/DATA")
 				return True
 			else:
 				BlueSave("LastID", ID, "DATA/DATA")
-				appChange.infoBox("Speichern", "änderungen wurden nicht gespeichert", parent=None)
+				appChange.infoBox(string[26], string[35], parent=None)
 				return False
 		else:
 			BlueSave("LastID", ID, "DATA/DATA")
@@ -122,8 +130,9 @@ def VerifyChanges():
 		return True
 
 def BtnStockGraph(btn):
-	if platform.system() == "Linux": COMMAND = "./ArtGraph.py "
-	if platform.system() == "Windows": COMMAND = "ArtGraph.py "
+	if os.path.exists("/home"):
+		COMMAND = "./ArtGraph.py "
+	else: COMMAND = "ArtGraph.py "
 	os.system(COMMAND + str(ID))
 
 if "P" in ID:
@@ -133,11 +142,11 @@ if "P" in ID:
 else: PID = False
 
 ID = int(ID)
-appChange = gui("Stock ändern", "800x600", handleArgs=False)
+appChange = gui(string[32], "800x600", handleArgs=False) 
 appChange.setBg("#ffffff")
 appChange.addLabel("Title", str(ID))
 
-StartInfo={}# App Started with these informations
+StartInfo=[]# App Started with these informations
 if not PID:
 	print("Exists")
 	DATA = StockGetArtInfo(EntryList, ID).split(" | ")
@@ -148,29 +157,29 @@ else:
 	DATA.insert(5, "")
 	DATA.insert(9, 0)
 	DATA[0] = ID
-
 print("DATA " + str(DATA))
-for Entry in EntryList:
-    print("Entry " + str(Entry))
-    appChange.addLabelEntry(Entry)
-    appChange.setEntryChangeFunction(Entry, VerifyInput)
+print("EntryList2 " + str(EntryList2))
+for Entry in EntryList2:
+	print("Entry " + str(Entry)) 
+	appChange.addLabelEntry(Entry)
+	appChange.setEntryChangeFunction(Entry, VerifyInput)
 	
 	
-    if IDExists:
-        appChange.setEntry(Entry, DATA[EntryList.index(Entry) + 1], callFunction=True)
-        StartInfo[Entry] = DATA[EntryList.index(Entry) + 1]
-    else:
-        appChange.setEntry(Entry, "", callFunction=True)
-        StartInfo[Entry] = ""
-    if Entry == "Barcode": appChange.setEntryState(Entry, "disabled")
-    if Entry == "Anzahl": appChange.setEntryState(Entry, "disabled")
-    if Entry == "Lieferant":
-        if "_" in appChange.getEntry(Entry):
-            appChange.setEntry(Entry, appChange.getEntry(Entry).split("_")[0])
+	if IDExists:
+		appChange.setEntry(Entry, DATA[EntryList2.index(Entry) + 1], callFunction=True)
+		StartInfo.append(DATA[EntryList2.index(Entry) + 1])
+	else:
+		appChange.setEntry(Entry, "", callFunction=True)
+		StartInfo.append("")
+	if EntryList[EntryList2.index(Entry)] == "Barcode": appChange.setEntryState(Entry, "disabled")
+	if EntryList[EntryList2.index(Entry)] == "Anzahl": appChange.setEntryState(Entry, "disabled")
+	if EntryList[EntryList2.index(Entry)] == "Lieferant":
+		if "_" in appChange.getEntry(Entry):
+			appChange.setEntry(Entry, appChange.getEntry(Entry).split("_")[0])
 
 def StopWindow(btn):
-    Debug("StopWindow")
-    appChange.stop()
+	Debug("StopWindow")
+	appChange.stop()
 
 appChange.setStopFunction(VerifyChanges)
 appChange.addLabel("Info", "F4 = Grafik anzeigen\nF5 = Speichern und Schliesen")
