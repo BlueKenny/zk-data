@@ -23,7 +23,7 @@ else:
 def Save():
     print("Save")
     ServerInfo = {}
-    if IDExists:
+    if not PID and IDExists:
         ServerInfoList = StockGetArtInfo(EntryList, ID).split(" | ")
         print("ServerInfoList " + str(ServerInfoList))
         for each in EntryList:
