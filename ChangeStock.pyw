@@ -23,12 +23,14 @@ else:
 def Save():
     print("Save")
     ServerInfo = {}
-    ServerInfoList = StockGetArtInfo(EntryList, ID).split(" | ")
-    for each in EntryList:
-        ServerInfo[each] = ServerInfoList[EntryList.index(each)+1]
-    #del ServerInfo[0]# Remove ID from List
-    print("ServerInfo " + str(ServerInfo))
-    print("StartInfo " + str(StartInfo))
+    if IDExists:
+        ServerInfoList = StockGetArtInfo(EntryList, ID).split(" | ")
+        print("ServerInfoList " + str(ServerInfoList))
+        for each in EntryList:
+            ServerInfo[each] = ServerInfoList[EntryList.index(each) + 1]
+        #del ServerInfo[0]# Remove ID from List
+        print("ServerInfo " + str(ServerInfo))
+        print("StartInfo " + str(StartInfo))
     if not ServerInfo == StartInfo and IDExists and not PID:
         appChange.infoBox("Achtung", "Dieser Artikel wurde gerade von einem anderen ort aus geändert", parent=None)
     else:

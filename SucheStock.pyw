@@ -62,7 +62,7 @@ appSuche.addLabelEntry("Suche")
 appSuche.addLabelEntry("Ort")
 appSuche.addLabelEntry("Lieferant")
 ListBoxSuche = appSuche.addListBox("Suche")
-ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc("ÄNDER"))# if List Item double click then change
+ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc("ÄNDERN"))# if List Item double click then change
 
 def tbFunc(btn):
 	global IDToChange
