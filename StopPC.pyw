@@ -30,7 +30,7 @@ while True:
 			if platform.system() == "Linux": os.system("systemctl poweroff")
 			if platform.system() == "Windows": os.system("shutdown -s")
 			break
-	StopCounter = StopCounter - 1
+		StopCounter = StopCounter - 1
 	
 
 
