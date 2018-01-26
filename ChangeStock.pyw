@@ -11,7 +11,7 @@ from libs.barcode import *
 import sys
 
 
-EntryList=["Barcode", "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
+EntryList=["Barcode", "Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 
 if len(sys.argv) == 1:
 	ID = StockSetBCode()
@@ -44,7 +44,7 @@ def VerifyInput(Entry):
 	print("VerifyInput")
 	Float = ["PreisEK", "PreisVKH", "PreisVK"]
 	Int = ["Barcode", "Anzahl"]
-	String = ["Artikel", "Lieferant", "Name", "Ort"]
+	String = ["Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort"]
 	print("Verify Entry " + str(Entry))
 	appChange.setEntry(Entry, appChange.getEntry(Entry).replace("?", ""))
 

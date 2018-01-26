@@ -22,3 +22,5 @@ INDEX:DATE:MODE:INFO
 21:25/01/17:FIX:"Kasse: kann jetzt wieder genutzt werden"
 22:25/01/17:FIX:Ubersetzungen wurden wieder entfernt
 23:25/01/17:INFO:"WIP: Kunden Suchen wird entwickelt…"
+24:26/01/17:FEATURE:Jeder Artikel kann jetzt bis zu 3 Artikelnummern besitzen, damit können jetzt die Barcodes der Lieferanten eingescant werden
+25:26/01/17:INFO:"WIP: Wechsel auf ein Qml und Qt GUI"

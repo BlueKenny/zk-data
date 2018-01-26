@@ -74,14 +74,13 @@ BlueMkDir(DIR + "Kunden")
 BlueMkDir(DIR + "Arbeiter")
 BlueMkDir(DIR + "Import")
 BlueMkDir(DIR + "Import/Preise")
-#BlueMkDir(DIR + "Import/Stock")
 BlueMkDir(DIR + "Import/Kunden")
 BlueMkDir(DIR + "DATA")
 
 
-#ArticleInfos = {"Creation": StockCreationList}
-
 PreiseArtikelList = {}
+PreiseArtikel2List = {}
+PreiseArtikel3List = {}
 PreiseLieferantList = {}
 PreiseNameList = {}
 PreisePreisEKList = {}
@@ -92,6 +91,8 @@ StockCreationList = {}
 StockLastChangeList = {}
 StockBarcodeList = {}
 StockArtikelList = {}
+StockArtikel2List = {}
+StockArtikel3List = {}
 StockLieferantList = {}
 StockNameList = {}
 StockOrtList = {}
@@ -179,6 +180,16 @@ for eachDir in os.listdir(DIR + "Stock/"):
 			if ArticleNumber == None: ArticleNumber = ""
 			else: ArticleNumber = ArticleNumber.lower()
 			StockArtikelList[eachFile] = str(ArticleNumber)
+			#	Article2
+			ArticleNumber = BlueLoad("Artikel2", datei)
+			if ArticleNumber == None: ArticleNumber = ""
+			else: ArticleNumber = ArticleNumber.lower()
+			StockArtikel2List[eachFile] = str(ArticleNumber)
+			#	Article3
+			ArticleNumber = BlueLoad("Artikel3", datei)
+			if ArticleNumber == None: ArticleNumber = ""
+			else: ArticleNumber = ArticleNumber.lower()
+			StockArtikel3List[eachFile] = str(ArticleNumber)
 			#	Supplier
 			ArticleSupplier = BlueLoad("Lieferant", datei).lower()
 			if ArticleSupplier == None or ArticleSupplier == "x":
@@ -288,11 +299,11 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 					Debug("IntArtikel " + str(IntArtikel))
 				if SearchArtikel2 == AlleTitel[x]:
 					IntArtikel2 = x
-					#OKArtikel2 = True
+					OKArtikel2 = True
 					Debug("IntArtikel2 " + str(IntArtikel2))
 				if SearchArtikel3 == AlleTitel[x]:
 					IntArtikel3 = x
-					#OKArtikel3 = True
+					OKArtikel3 = True
 					Debug("IntArtikel3 " + str(IntArtikel3))
 				if SearchPreisEK == AlleTitel[x]:
 					IntPreisEK = x
@@ -320,15 +331,15 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
 					if not SearchArtikel in eachLine:#try:
 						print("eachLine : " + str(eachLine))
 						StockArtikelAnzahl = StockArtikelAnzahl  + 1
-						if OKArtikel3:
-							PreiseArtikelList[PreiseID] = eachLine[IntArtikel] + " " + eachLine[IntArtikel2] + " " + eachLine[IntArtikel3]
-						else:
-							if OKArtikel2:	
-								PreiseArtikelList[PreiseID] = eachLine[IntArtikel] + " " + eachLine[IntArtikel2]
-								#PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel] + " " + eachLine[IntArtikel2])
-							else: 
-								PreiseArtikelList[PreiseID] = eachLine[IntArtikel]
-								#PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel])
+
+
+						PreiseArtikelList[PreiseID] = eachLine[IntArtikel]
+						if OKArtikel2: PreiseArtikel2List[PreiseID] = eachLine[IntArtikel2]
+						else: PreiseArtikel2List[PreiseID] = ""
+						if OKArtikel3: PreiseArtikel3List[PreiseID] = eachLine[IntArtikel3]
+						else: PreiseArtikel3List[PreiseID] = ""
+						PreiseArtikelList[PreiseID] = eachLine[IntArtikel]
+						#PreiseArtikelList.insert(PreiseID, eachLine[IntArtikel])
 						PreiseLieferantList[PreiseID] = datei.replace(".csv", "")
 						#PreiseLieferantList.insert(PreiseID, datei.replace(".csv", ""))
 						PreiseNameList[PreiseID] = eachLine[IntName]
@@ -468,6 +479,12 @@ while True:
 			if VarName == "Artikel": 
 				StockArtikelList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Artikel2":
+				StockArtikel2List[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+			if VarName == "Artikel3":
+				StockArtikel3List[ID]=str(Var)
+				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
 			if VarName == "Lieferant": 
 				StockLieferantList[ID]=str(Var)
 				BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
@@ -514,10 +531,6 @@ while True:
 			if VarName == "Ort":  
 				KundeOrtList[ID]=str(Var).upper()
 				BlueSave(str(VarName), str(Var).upper(), DIR + "Kunden/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-
-		if mode == "GetArticleInfo":
-			Debug("Mode : " + mode)
-			print(DATA.split("(zKz)")[1])
 			
 		if mode == "StockGetArtInfo":
 			Debug("Mode : " + mode)
@@ -534,6 +547,8 @@ while True:
 				for Var in Vars:
 					try:
 						if Var == "Artikel":  Antwort = Antwort + " | " + str(StockArtikelList[ID])
+						if Var == "Artikel2":  Antwort = Antwort + " | " + str(StockArtikel2List[ID])
+						if Var == "Artikel3":  Antwort = Antwort + " | " + str(StockArtikel3List[ID])
 						if Var == "Name":  Antwort = Antwort + " | " + str(StockNameList[ID])
 						if Var == "Ort":  Antwort = Antwort + " | " + str(StockOrtList[ID]).upper()
 						if Var == "PreisEK":  Antwort = Antwort + " | " + str(StockPreisEKList[ID])
@@ -551,6 +566,8 @@ while True:
 				for Var in Vars:
 					try:
 						if Var == "Artikel":  Antwort = Antwort + " | " + str(PreiseArtikelList[ID])
+						if Var == "Artikel2":  Antwort = Antwort + " | " + str(PreiseArtikel2List[ID])
+						if Var == "Artikel3":  Antwort = Antwort + " | " + str(PreiseArtikel3List[ID])
 						if Var == "Name":  Antwort = Antwort + " | " + str(PreiseNameList[ID])
 						if Var == "PreisEK":  Antwort = Antwort + " | " + str(PreisePreisEKList[ID])
 						if Var == "PreisVKH":  Antwort = Antwort + " | " + str(PreisePreisVKHList[ID])
@@ -647,8 +664,30 @@ while True:
 			if not ListOfArticles == None:
 				for ID in ListOfArticles:
 					if not ID in indices: indices.append(ID)
+			#	Article2		multiple choice possible
+			ListOfArticles = find_keys_dict(StockArtikel2List, str(SucheSuche))
+			if not ListOfArticles == None:
+				for ID in ListOfArticles:
+					if not ID in indices: indices.append(ID)
+			#	Article3		multiple choice possible
+			ListOfArticles = find_keys_dict(StockArtikel3List, str(SucheSuche))
+			if not ListOfArticles == None:
+				for ID in ListOfArticles:
+					if not ID in indices: indices.append(ID)
 			#	PArticle		multiple choice possible
 			ListOfArticles = find_keys_dict(PreiseArtikelList, str(SucheSuche))
+			if not ListOfArticles == None:
+				for ID in ListOfArticles:
+					ID = "P" + str(ID)
+					if not ID in indices: indices.append(ID)
+			#	PArticle2		multiple choice possible
+			ListOfArticles = find_keys_dict(PreiseArtikel2List, str(SucheSuche))
+			if not ListOfArticles == None:
+				for ID in ListOfArticles:
+					ID = "P" + str(ID)
+					if not ID in indices: indices.append(ID)
+			#	PArticle3		multiple choice possible
+			ListOfArticles = find_keys_dict(PreiseArtikel3List, str(SucheSuche))
 			if not ListOfArticles == None:
 				for ID in ListOfArticles:
 					ID = "P" + str(ID)
@@ -670,53 +709,6 @@ while True:
 					for ID in ListOfSupplier:
 						if ID in indices2: indices.append(ID)
 
-
-			indices = indices[:INDEXLIMIT]
-			if indices == []: indices = [0]
-		
-			try:
-				Antwort = " "
-				for eachDat in indices:
-					Antwort = Antwort.rstrip() + str(eachDat) + "<K>"
-
-			except: Debug("Nichts gefunden")
-
-		if mode == "SearchStockOld":
-			Debug("Mode : " + mode)
-			SucheSuche = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
-			Debug("SucheSuche : " + SucheSuche)
-			OrtSuche = DATA.split("(zKz)")[1].split("(zkz)")[1]
-			Debug("OrtSuche : " + OrtSuche)
-			LieferantSuche = DATA.split("(zKz)")[1].split("(zkz)")[2]
-			Debug("LieferantSuche : " + LieferantSuche)
-			
-			indices = []
-
-			# Suche Bcode
-			if len(SucheSuche) == 6 and SucheSuche.isdigit():# Bcode
-				Debug("Bcode")
-				indices.append(int(SucheSuche))
-			if len(SucheSuche) == 12 or  len(SucheSuche) == 13 and SucheSuche.isdigit():# Barcode
-				Debug("Barcode")
-				for counter, DATA in enumerate(StockBarcodeList):
-					if SucheSuche == str(DATA):
-						indices.append(counter)
-			# Artikel
-			for counter, DATA in enumerate(StockArtikelList):
-				if SucheSuche in str(DATA):
-					if len(str(counter)) == 6:indices.append(counter)
-			# Artikel PreisVorschlag
-			for counter, DATA in enumerate(PreiseArtikelList):
-				if SucheSuche in str(DATA):
-					indices.append("P" + str(counter))
-			
-			 # Ort
-			if not OrtSuche.rstrip() == "" and not indices == []:
-				indices = [counter for counter, DATA in enumerate(StockOrtList) if OrtSuche in DATA and counter in indices]; print("Rest nach Ort " + str(indices))
-
-			 # Lieferant
-			if not LieferantSuche.rstrip() == "" and not indices == []:
-				indices = [counter for counter, DATA in enumerate(StockLieferantList) if LieferantSuche.lower() in DATA.lower() and counter in indices]; print("Rest nach Lieferant " + str(indices))
 
 			indices = indices[:INDEXLIMIT]
 			if indices == []: indices = [0]

@@ -14,7 +14,7 @@ import csv
 
 from libs.CheckConf import *
 
-EntryList=["Barcode", "Artikel", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
+EntryList=["Barcode", "Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 appSuche = gui("Search Stock", "800x650") 
 appSuche.setBg("#ffffff")
 
@@ -104,58 +104,53 @@ def Delete(btn):
 	appSuche.setFocus("Suche")
 
 def Suche(btn):
-	Debug("Suche")
-	if len(btn) == 6:
-		try:
-			ID = int(btn)
-			appSuche.setEntry("Suche", str(ID))
-		except: True
+    Debug("Suche")
+    if len(btn) == 6:
+        try:
+            ID = int(btn)
+            appSuche.setEntry("Suche", str(ID))
+        except: True
 
-	appSuche.setMeter("status", 0, text="Suche wird gestartet")
-	
-	AntwortList=SendeSucheStock(appSuche.getEntry("Suche").replace(" ", ""), appSuche.getEntry("Ort").upper(), appSuche.getEntry("Lieferant").lower())
+    appSuche.setMeter("status", 0, text="Suche wird gestartet")
+
+    Suche = appSuche.getEntry("Suche").replace(" ", "")
+    Ort = appSuche.getEntry("Ort").upper()
+    Lieferant = appSuche.getEntry("Lieferant").lower()
+
+    if Suche == "" and Ort == "" and Lieferant == "":
+        NichtSuchen = True
+    else:
+        NichtSuchen = False
+
+    if not NichtSuchen:
+        AntwortList=SendeSucheStock(Suche, Ort, Lieferant)
 
 
-	appSuche.setMeter("status", 10, text="Warte auf daten")
-	appSuche.clearListBox("Suche")
+        appSuche.setMeter("status", 10, text="Warte auf daten")
+        appSuche.clearListBox("Suche")
 
-	if btn == "first":
-		AntwortList = AntwortList.split("<K>")[0]
-		Schritt = (100-10)/(1); print("Schritt " + str(Schritt))
-	else:
-		Schritt = (100-10)/(len(AntwortList.split("<K>"))-1); print("Schritt " + str(Schritt))
+        if btn == "first":
+            AntwortList = AntwortList.split("<K>")[0]
+            Schritt = (100-10)/(1); print("Schritt " + str(Schritt))
+        else:
+            Schritt = (100-10)/(len(AntwortList.split("<K>"))-1); print("Schritt " + str(Schritt))
 
-	for IDs in AntwortList.split("<K>"):
-		Debug("Get Info for ID " + str(IDs))
-		if not IDs == "" and not IDs == "0"and not IDs == None and not IDs == "None":
-			appSuche.setMeter("status", appSuche.getMeter("status")[0] * 100 + Schritt, text="Lade Daten")
-			print(" " + str(appSuche.getMeter("status")[0] + Schritt))
-			Linie = str(IDs).rstrip()
-			Linie = StockGetArtInfo(["Artikel", "Lieferant", "Name", "Ort", "PreisVK", "Anzahl"], IDs)
+        for IDs in AntwortList.split("<K>"):
+            Debug("Get Info for ID " + str(IDs))
+            if not IDs == "" and not IDs == "0"and not IDs == None and not IDs == "None":
+                appSuche.setMeter("status", appSuche.getMeter("status")[0] * 100 + Schritt, text="Lade Daten")
+                print(" " + str(appSuche.getMeter("status")[0] + Schritt))
+                Linie = str(IDs).rstrip()
+                Linie = StockGetArtInfo(["Artikel", "Lieferant", "Name", "Ort", "PreisVK", "Anzahl"], IDs)
 
-			appSuche.addListItem("Suche", Linie)
-			if "P" in IDs:
-				appSuche.setListItemBg("Suche", Linie, "#FFF68F")
-			else:
-				appSuche.setListItemBg("Suche", Linie, "#ffffff")
-	appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
-	appSuche.setLabel("infoAnzahl",  str(GetStockZahl() + " Artikel zu verfügung"))
-	appSuche.setMeter("status", 100, text="")
-
-def SaveIt():
-	Debug("SaveIt")
-	#PosInList = 0
-	#for each in appSuche.getOptionBox("Anzeigen"):
-	#	value = appSuche.getOptionBox("Anzeigen")[each]
-	#	if value:
-	#		print(each + " = " + str(PosInList) + " is True")
-	#		try: AnzeigenListe = AnzeigenListe + "/" + str(PosInList)
-	#		except: AnzeigenListe = str(PosInList)
-	#	PosInList = PosInList + 1
-	#try: BlueSave("Anzeigen-Stock", AnzeigenListe, "DATA/DATA")
-	#except: BlueSave("Anzeigen-Stock", "0/1/2", "DATA/DATA")
-
-	return True
+                appSuche.addListItem("Suche", Linie)
+                if "P" in IDs:
+                    appSuche.setListItemBg("Suche", Linie, "#FFF68F")
+                else:
+                    appSuche.setListItemBg("Suche", Linie, "#ffffff")
+        appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
+    appSuche.setLabel("infoAnzahl",  str(GetStockZahl() + " Artikel zu verfügung"))
+    appSuche.setMeter("status", 100, text="")
 
 def StockChange(btn):
 	Debug("StockChange")
@@ -206,6 +201,5 @@ appSuche.bindKey("<F4>", BtnStockGraph)
 appSuche.bindKey("<F11>", BtnPrintOrt)
 appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
-appSuche.setStopFunction(SaveIt)
 
 appSuche.go()
