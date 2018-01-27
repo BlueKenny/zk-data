@@ -147,8 +147,8 @@ else:
 	print("New")
 	DATA = StockGetArtInfo(EntryList, PID).split(" | ")
 	DATA.insert(1, IDToBarcode(ID))
-	DATA.insert(5, "")
-	DATA.insert(9, 0)
+	DATA.insert(7, "")
+	DATA.insert(11, 0)
 	DATA[0] = ID
 
 print("DATA " + str(DATA))

@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
-if not os.path.exists("/home"):
-	os.system("git pull")
+import platform
+if not os.path.exists("DATA/NOUPDATE"):
+	if platform.system() == "Linux":
+		os.system("git pull")
+	if platform.system() == "Windows":
+		os.system("./git pull")
 
 from libs.appjar0830 import gui  
 from libs.BlueFunc import *
 from libs.debug import Debug
-import platform
 from libs.send import *
 from libs.barcode import *
 import csv
