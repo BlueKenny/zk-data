@@ -7,7 +7,7 @@ from .BlueFunc import *
 # from libs.debug import *
 
 TCP_IP = BlueLoad("PrinterIP", "DATA/DATA")  # ZBR5581684 ##### ZBR7681522
-TCP_PORT = 1000
+TCP_PORT = 9100
 if TCP_IP == None or TCP_IP == "None":
     TCP_IP = "ZBR7681522"
     BlueSave("PrinterIP", TCP_IP, "DATA/DATA")
