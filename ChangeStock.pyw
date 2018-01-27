@@ -141,15 +141,19 @@ appChange.addLabel("Title", str(ID))
 
 StartInfo={}# App Started with these informations
 if not PID:
-	print("Exists")
-	DATA = StockGetArtInfo(EntryList, ID).split(" | ")
+    print("Exists")
+    while True:
+        try:
+            DATA = StockGetArtInfo(EntryList, ID).split(" | ")
+            break
+        except: True
 else:
-	print("New")
-	DATA = StockGetArtInfo(EntryList, PID).split(" | ")
-	DATA.insert(1, IDToBarcode(ID))
-	DATA.insert(7, "")
-	DATA.insert(11, 0)
-	DATA[0] = ID
+    print("New")
+    DATA = StockGetArtInfo(EntryList, PID).split(" | ")
+    DATA.insert(1, IDToBarcode(ID))
+    DATA.insert(7, "")
+    DATA.insert(11, 0)
+    DATA[0] = ID
 
 print("DATA " + str(DATA))
 for Entry in EntryList:
