@@ -131,7 +131,11 @@ def BtnStockGraph(btn):
 if "P" in ID:
 	print("P")
 	PID = ID
-	ID = StockSetBCode()
+	while True:
+		try:
+			ID = StockSetBCode()
+			break
+		except: True
 else: PID = False
 
 ID = int(ID)
@@ -141,19 +145,15 @@ appChange.addLabel("Title", str(ID))
 
 StartInfo={}# App Started with these informations
 if not PID:
-    print("Exists")
-    while True:
-        try:
-            DATA = StockGetArtInfo(EntryList, ID).split(" | ")
-            break
-        except: True
+	print("Exists")
+	DATA = StockGetArtInfo(EntryList, ID).split(" | ")
 else:
-    print("New")
-    DATA = StockGetArtInfo(EntryList, PID).split(" | ")
-    DATA.insert(1, IDToBarcode(ID))
-    DATA.insert(7, "")
-    DATA.insert(11, 0)
-    DATA[0] = ID
+	print("New")
+	DATA = StockGetArtInfo(EntryList, PID).split(" | ")
+	DATA.insert(1, IDToBarcode(ID))
+	DATA.insert(7, "")
+	DATA.insert(11, 0)
+	DATA[0] = ID
 
 print("DATA " + str(DATA))
 for Entry in EntryList:
