@@ -10,6 +10,9 @@ def Date():
 	zeit = str(now.strftime("%Y-%m-%d"))
 	return zeit
 
+def Timestamp():
+	return time.time()
+
 def BlueLenDatei(File):	#	Gibt die anzahl linie zuruck in einem dokument
 	if os.path.exists(File): 
 		Datei = open(File, "r")

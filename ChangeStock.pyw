@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
-import sys
 
-from libs.appjar0830 import gui
+from libs.appjar0900 import gui
 from libs.RoundUp import *
 from libs.debug import Debug
+from libs.BlueFunc import *
 from libs.send import *
 from libs.barcode import *
+import platform
 import sys
 
 
-EntryList=["Barcode", "Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
+EntryList=["Barcode", "Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK"]
 
 if len(sys.argv) == 1:
 	ID = StockSetBCode()
@@ -21,29 +22,31 @@ else:
 	IDExists = True
 
 def Save():
+    global Time
     print("Save")
-    ServerInfo = {}
+    print("Time " + str(Time))
     if not PID and IDExists:
-        ServerInfoList = StockGetArtInfo(EntryList, ID).split(" | ")
-        print("ServerInfoList " + str(ServerInfoList))
-        for each in EntryList:
-            ServerInfo[each] = ServerInfoList[EntryList.index(each) + 1]
-        #del ServerInfo[0]# Remove ID from List
-        print("ServerInfo " + str(ServerInfo))
-        print("StartInfo " + str(StartInfo))
-    if not ServerInfo == StartInfo and IDExists and not PID:
+        try: LastChange = float(StockGetArtInfo(["LastChange"], ID).split(" | ")[1])
+        except: LastChange = 0.00
+    else:
+        LastChange = 0.00
+    print("LastChange " + str(LastChange))
+    if LastChange > Time and IDExists and not PID:
         appChange.infoBox("Achtung", "Dieser Artikel wurde gerade von einem anderen ort aus geändert", parent=None)
     else:
         print("Send Data to Server")
         for Entry in EntryList:
             print("Save " + str(Entry))
             StockSetArtInfo(ID, Entry, appChange.getEntry(Entry))
+        try: Anzahl = StockGetArtInfo(["Anzahl"], ID).split(" | ")[1]
+        except: Anzahl = 0
+        StockSetArtInfo(ID, "Anzahl", Anzahl)
     return True
 
 def VerifyInput(Entry):
 	print("VerifyInput")
 	Float = ["PreisEK", "PreisVKH", "PreisVK"]
-	Int = ["Barcode", "Anzahl"]
+	Int = ["Barcode"]
 	String = ["Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort"]
 	print("Verify Entry " + str(Entry))
 	appChange.setEntry(Entry, appChange.getEntry(Entry).replace("?", ""))
@@ -101,12 +104,7 @@ def VerifyInput(Entry):
 
 def VerifyChanges():
 	print("VerifyChanges")
-	UserMadeChanges = False
-	for Entry in EntryList:
-		NewInfo = appChange.getEntry(Entry)
-		OldInfo = StartInfo[Entry]
-		if not NewInfo == OldInfo:
-			UserMadeChanges = True
+	UserMadeChanges = True
 	if UserMadeChanges:
 		if appChange.yesNoBox("Speichern", "Wollen sie speichern?", parent=None):
 			if Save():
@@ -143,13 +141,13 @@ appChange = gui("Stock ändern", "800x600", handleArgs=False)
 appChange.setBg("#ffffff")
 appChange.addLabel("Title", str(ID))
 
-StartInfo={}# App Started with these informations
+Time = Timestamp()
 if not PID:
 	print("Exists")
 	DATA = StockGetArtInfo(EntryList, ID).split(" | ")
 else:
 	print("New")
-	DATA = StockGetArtInfo(EntryList, PID).split(" | ")
+	DATA = PreisvorschlagGetArtInfo(EntryList, PID).split(" | ")
 	DATA.insert(1, IDToBarcode(ID))
 	DATA.insert(7, "")
 	DATA.insert(11, 0)
@@ -164,15 +162,9 @@ for Entry in EntryList:
 	
     if IDExists:
         appChange.setEntry(Entry, DATA[EntryList.index(Entry) + 1], callFunction=True)
-        StartInfo[Entry] = DATA[EntryList.index(Entry) + 1]
     else:
         appChange.setEntry(Entry, "", callFunction=True)
-        StartInfo[Entry] = ""
     if Entry == "Barcode": appChange.setEntryState(Entry, "disabled")
-    if Entry == "Anzahl": appChange.setEntryState(Entry, "disabled")
-    if Entry == "Lieferant":
-        if "_" in appChange.getEntry(Entry):
-            appChange.setEntry(Entry, appChange.getEntry(Entry).split("_")[0])
 
 def StopWindow(btn):
     Debug("StopWindow")
