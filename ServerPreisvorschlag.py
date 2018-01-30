@@ -222,7 +222,8 @@ while True:
             Debug("Mode : " + mode)
             print(DATA.split("(zKz)")[1])
             ID = DATA.split("(zKz)")[1].split("(zkz)")[0]
-            Vars = str(DATA.split(str(ID))[1]).split("(zkz)")
+            Vars = DATA.split("(zKz)")[1].split("(zkz)")
+
             Debug("ID :  " + str(ID))
             Debug("Vars :  " + str(Vars))
 

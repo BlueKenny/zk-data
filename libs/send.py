@@ -9,7 +9,7 @@ if BlueLoad("SERVER", "DATA/DATA") == None: BlueSave("SERVER", "127.0.0.1", "DAT
 if BlueLoad("SERVERSTOCK", "DATA/DATA") == None: BlueSave("SERVERSTOCK", "127.0.0.1", "DATA/DATA")
 if BlueLoad("SERVERPREISVORSCHLAG", "DATA/DATA") == None: BlueSave("SERVERPREISVORSCHLAG", "127.0.0.1", "DATA/DATA")
 
-SERVER_IP = (BlueLoad("SERVER", "DATA/DATA"), 10000)
+#SERVER_IP = ("10.0.0.1", 10000)#(BlueLoad("SERVER", "DATA/DATA"), 10000)
 SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", "DATA/DATA"), 10000)
 SERVERPREISVORSCHLAG_IP = (BlueLoad("SERVERPREISVORSCHLAG", "DATA/DATA"), 10001)
 
@@ -22,7 +22,7 @@ def GetStockZahl():
 
         Debug("Send " + str(data))
         data = data.encode()
-        sock.sendto(data, SERVER_IP)
+        sock.sendto(data, SERVERSTOCK_IP)
         data = sock.recv(2048)
         Debug("Get " + str(data.decode()))
         sock.close()
@@ -42,7 +42,7 @@ def SendeSucheStock(suche, ort, lieferant):
 
         Debug("Send " + str(data))
         data = data.encode()
-        sock.sendto(data, SERVER_IP)
+        sock.sendto(data, SERVERSTOCK_IP)
         data = sock.recv(2048)
         Debug("Get " + str(data.decode()))
         sock.close()
@@ -62,15 +62,71 @@ def StockGetArtInfo(Vars, IDToChange):
 
         Debug("Send " + str(data))
         data = data.encode()
-        sock.sendto(data, SERVER_IP)
+        sock.sendto(data, SERVERSTOCK_IP)
         data = sock.recv(2048)
         Debug("Get " + str(data.decode()))
         sock.close()
         return data.decode()
     except:
-        SendThis = IDToChange
-        for each in Vars: SendThis = IDToChange + " | "
+        SendThis = str(IDToChange)
+        for each in Vars:
+            SendThis = SendThis + " | "
         return SendThis
+
+def StockSetArtInfo(IDToChange, VarName, Var):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect(SERVERSTOCK_IP)
+    data = "StockSetArtInfo(zKz)" + str(IDToChange) + "(zkz)" + str(VarName) + "(zkz)" + str(Var)
+
+    Debug("Send " + str(data))
+    data = data.encode()
+    sock.sendto(data, SERVERSTOCK_IP)
+    data = sock.recv(2048)
+    Debug("Get " + str(data.decode()))
+    sock.close()
+    return data.decode()
+
+def StockGetBewegung(ID):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect(SERVERSTOCK_IP)
+    data = "StockGetBewegung(zKz)" + str(ID)
+
+    Debug("Send " + str(data))
+    data = data.encode()
+    sock.sendto(data, SERVERSTOCK_IP)
+    data = sock.recv(2048)
+    Debug("Get " + str(data.decode()))
+    sock.close()
+    return data.decode()
+
+def StockSetBCode():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect(SERVERSTOCK_IP)
+    data = "StockSetBCode(zKz)"
+
+    Debug("Send " + str(data))
+    data = data.encode()
+    sock.sendto(data, SERVERSTOCK_IP)
+    data = sock.recv(2048)
+    Debug("Get " + str(data.decode()))
+    sock.close()
+    return data.decode()
+
+def SendeChangeAnzahl(bcode, anzahl):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect(SERVERSTOCK_IP)
+    Debug("Bcode " + str(bcode))
+    Debug("Anzahl " + str(anzahl))
+
+    data = "ChangeStock(zKz)" + str(bcode) + "(zkz)" + str(anzahl)
+
+    Debug("Send " + str(data))
+    data = data.encode()
+    sock.sendto(data, SERVERSTOCK_IP)
+    data = sock.recv(2048)
+    Debug("Get " + str(data.decode()))
+    sock.close()
+    return data.decode()
 
 ##############          PREISVORSCHLAG
 def GetStockPreisvorschlagAnzahl():
@@ -81,7 +137,7 @@ def GetStockPreisvorschlagAnzahl():
 
         Debug("Send " + str(data))
         data = data.encode()
-        sock.sendto(data, SERVER_IP)
+        sock.sendto(data, SERVERPREISVORSCHLAG_IP)
         data = sock.recv(2048)
         Debug("Get " + str(data.decode()))
         sock.close()
@@ -100,7 +156,7 @@ def SendeSuchePreisvorschlag(suche, lieferant):
 
         Debug("Send " + str(data))
         data = data.encode()
-        sock.sendto(data, SERVER_IP)
+        sock.sendto(data, SERVERPREISVORSCHLAG_IP)
         data = sock.recv(2048)
         Debug("Get " + str(data.decode()))
         sock.close()
@@ -120,7 +176,7 @@ def PreisvorschlagGetArtInfo(Vars, IDToChange):
 
         Debug("Send " + str(data))
         data = data.encode()
-        sock.sendto(data, SERVER_IP)
+        sock.sendto(data, SERVERPREISVORSCHLAG_IP)
         data = sock.recv(2048)
         Debug("Get " + str(data.decode()))
         sock.close()
@@ -151,31 +207,6 @@ def PreisvorschlagGetArtInfo(Vars, IDToChange):
 #			sock.close()
 
 #### OLD    OLD             OLD
-def StockGetBewegung(ID):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect(SERVER_IP)
-    data = "StockGetBewegung(zKz)" + str(ID)
-
-    Debug("Send " + str(data))
-    data = data.encode()
-    sock.sendto(data, SERVER_IP)
-    data = sock.recv(2048)
-    Debug("Get " + str(data.decode()))
-    sock.close()
-    return data.decode()
-
-def StockSetBCode():
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect(SERVER_IP)
-    data = "StockSetBCode(zKz)"
-
-    Debug("Send " + str(data))
-    data = data.encode()
-    sock.sendto(data, SERVER_IP)
-    data = sock.recv(2048)
-    Debug("Get " + str(data.decode()))
-    sock.close()
-    return data.decode()
 
 def SendeSaveArbeiterLinie(Arbeiter, Linie, Text):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -242,19 +273,6 @@ def KundeGetInfo(Var, IDToChange):
     sock.close()
     return data.decode()
 
-def StockSetArtInfo(IDToChange, VarName, Var):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect(SERVER_IP)
-    data = "StockSetArtInfo(zKz)" + str(IDToChange) + "(zkz)" + str(VarName) + "(zkz)" + str(Var)
-
-    Debug("Send " + str(data))
-    data = data.encode()
-    sock.sendto(data, SERVER_IP)
-    data = sock.recv(2048)
-    Debug("Get " + str(data.decode()))
-    sock.close()
-    return data.decode()
-
 def KundeSetInfo(IDToChange, VarName, Var):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect(SERVER_IP)
@@ -272,24 +290,6 @@ def GetKundenZahl():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect(SERVER_IP)
     data = "GetKundenZahl"
-
-    Debug("Send " + str(data))
-    data = data.encode()
-    sock.sendto(data, SERVER_IP)
-    data = sock.recv(2048)
-    Debug("Get " + str(data.decode()))
-    sock.close()
-    return data.decode()
-
-
-
-def SendeChangeAnzahl(bcode, anzahl):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect(SERVER_IP)
-    Debug("Bcode " + str(bcode))
-    Debug("Anzahl " + str(anzahl))
-
-    data = "ChangeStock(zKz)" + str(bcode) + "(zkz)" + str(anzahl)
 
     Debug("Send " + str(data))
     data = data.encode()
