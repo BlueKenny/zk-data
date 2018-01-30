@@ -499,10 +499,13 @@ while True:
 
             #	Barcode		only 1 is possible
             if len(SucheSuche) == 13:# Only Barcodes with 13 integers
-                if True:
+                try: isInt = True
+                except: isInt = False
+
+                if isInt:
                     ID = find_key_dict(StockBarcodeList, int(SucheSuche))
                     if not ID in indices: indices.append(ID)
-                #except: Debug("Search is not a Barcode")
+                else: Debug("len 13 but not an Int")
             #	Article		multiple choice possible
             ListOfArticles = find_keys_dict(StockArtikelList, str(SucheSuche))
             if not ListOfArticles == None:
