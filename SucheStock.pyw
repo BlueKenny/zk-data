@@ -16,8 +16,6 @@ from libs.send import *
 from libs.barcode import *
 import csv
 
-from libs.CheckConf import *
-
 EntryList=["Barcode", "Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
 appSuche = gui("Search Stock", "800x650")
 appSuche.setBg("#ffffff")

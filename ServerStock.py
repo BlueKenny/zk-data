@@ -13,7 +13,12 @@ SERVER_PORT=10000
 
 
 from peewee import *
-local_db = MySQLDatabase('web', user='root', password='', host='10.0.0.16', port=3306)
+SERVER_SQL=BlueLoad("SERVERSQL", "DATA/DATA")
+if SERVER_SQL == "None":
+    SERVER_SQL = "127.0.0.1"
+    SERVER_SQL=BlueLoad("SERVERSQL", SERVER_SQL, "DATA/DATA")
+
+local_db = MySQLDatabase('web', user='root', password='', host=SERVER_SQL, port=3306)
 extern_db= MySQLDatabase('web', user='root', password='', host='192.168.188.24', port=3306)#192.168.188.24
 
 class Artikel(Model):
