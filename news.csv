@@ -29,3 +29,6 @@ INDEX:DATE:MODE:INFO
 28:29/01/17:FEATURE:Server speichert jetzt in eine MySQL datenbank, diese funktion ermöglich es das unser webseite auf unsere daten zugreifen kann
 29:29/01/17:FIX:Auch die preisvorschläge können jetzt durch den Lieferanten gefiltert werden
 30:29/01/17:FEATURE:Solte ein Server offline sein startet er automatisch neu, die Clients werden daduch nicht gestört und ihnen wird angezeigt welcher server gerade neustartet
+31:30/01/17:FEATURE:Die IP vom SQL server ist nun über die datei DATA einstelbar
+32:30/01/17:INFO:Kunden.pyw wurde entfernt
+33:30/01/17:INFO:"WIP: Neues Stock programm, in PyQt5 geschrieben, schneller und schöner als zuvor ;)"
