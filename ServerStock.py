@@ -16,7 +16,7 @@ from peewee import *
 SERVER_SQL=BlueLoad("SERVERSQL", "DATA/DATA")
 if SERVER_SQL == "None":
     SERVER_SQL = "127.0.0.1"
-    SERVER_SQL=BlueLoad("SERVERSQL", SERVER_SQL, "DATA/DATA")
+    SERVER_SQL=BlueSave("SERVERSQL", SERVER_SQL, "DATA/DATA")
 
 local_db = MySQLDatabase('web', user='root', password='', host=SERVER_SQL, port=3306)
 extern_db= MySQLDatabase('web', user='root', password='', host='192.168.188.24', port=3306)#192.168.188.24
@@ -472,6 +472,12 @@ while True:
             StockAnzahlList[BcodeSuche] = int(AltStock) + int(NewStock)
             BlueSave("Anzahl", StockAnzahlList[BcodeSuche], "Stock/" + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
 
+            query = Artikel.select().where(Artikel.identification == str(BcodeSuche))
+            if not query.exists():
+                ThisArtikel = Artikel.create(creation=str(Date()), identification=str(BcodeSuche))
+                ThisArtikel.save()
+            ThisArtikel = Artikel(anzahl=StockAnzahlList[BcodeSuche], identification=str(BcodeSuche))
+            ThisArtikel.save()
 
             BlueSave("LastChange", str(Date()), DIR + "Stock/" + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
             StockLastChangeList[BcodeSuche] = str(Date())
