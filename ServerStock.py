@@ -508,7 +508,7 @@ while True:
                         indices.append(int(SucheSuche))
                 except: Debug("Search is not an ID")
 
-            #	Barcode		only 1 is possible
+            #	Barcode		only 1 is possible but for the moment multiple
             if len(SucheSuche) == 13:# Only Barcodes with 13 integers
                 try:
                     int(SucheSuche)
@@ -517,8 +517,12 @@ while True:
                     isInt = False
 
                 if isInt:
-                    ID = find_key_dict(StockBarcodeList, int(SucheSuche))
-                    if not ID in indices: indices.append(ID)
+                    #ID = find_key_dict(StockBarcodeList, int(SucheSuche))
+                    #if not ID in indices: indices.append(ID)
+                    ListOfBarcodes = find_keys_dict(StockBarcodeList, int(SucheSuche))
+                    if not ListOfBarcodes == None:
+                        for ID in ListOfBarcodes:
+                            if not ID in indices: indices.append(ID)
                 else: Debug("len 13 but not an Int")
             #	Article		multiple choice possible
             ListOfArticles = find_keys_dict(StockArtikelList, str(SucheSuche))
