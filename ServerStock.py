@@ -18,41 +18,27 @@ if SERVER_SQL == "None":
     SERVER_SQL = "127.0.0.1"
     SERVER_SQL=BlueSave("SERVERSQL", SERVER_SQL, "DATA/DATA")
 
-local_db = MySQLDatabase('web', user='root', password='', host=SERVER_SQL, port=3306)
-extern_db= MySQLDatabase('web', user='root', password='', host='192.168.188.24', port=3306)#192.168.188.24
+local_db = SqliteDatabase("DATA/stock.db")
+#local_db = MySQLDatabase('web', user='root', password='', host=SERVER_SQL, port=3306)
+#extern_db= MySQLDatabase('web', user='root', password='', host='192.168.188.24', port=3306)#192.168.188.24
 
 class Artikel(Model):
     identification = CharField(primary_key = True)
-    name = CharField(null = False)
-    artikel = CharField(null = False)
+    name = CharField(null = True)
+    artikel = CharField(null = True)
     artikel2 = CharField(null = True)
     artikel3 = CharField(null = True)
-    barcode = IntegerField(null = False)
-    lieferant = CharField(null = False)
-    preisek = FloatField(null = False)
-    preisvkh = FloatField(null = False)
-    preisvk = FloatField(null = False)
-    anzahl = FloatField(null = False)
-    lastchange = CharField(null = False)
-    creation = CharField(null = False)
+    barcode = IntegerField(null = True)
+    lieferant = CharField(null = True)
+    preisek = FloatField(null = True)
+    preisvkh = FloatField(null = True)
+    preisvk = FloatField(null = True)
+    anzahl = FloatField(null = True)
+    lastchange = CharField(null = True)
+    creation = CharField(null = True)
 
     class Meta:
-        database = local_db  # this model uses the "people.db" database
-
-class ArtikelExtern(Model):
-    identification = CharField(primary_key = True)
-    name = CharField(null = False)
-    artikel = CharField(null = False)
-    artikel2 = CharField(null = True)
-    artikel3 = CharField(null = True)
-    lieferant = CharField(null = False)
-    preisvk = FloatField(null = False)
-    anzahl = FloatField(null = False)
-    lastchange = CharField(null = False)
-    creation = CharField(null = False)
-
-    class Meta:
-        database = extern_db  # this model uses the "people.db" database
+        database = local_db
 
 
 local_db.connect()
@@ -517,6 +503,7 @@ while True:
                     isInt = False
 
                 if isInt:
+                    Debug("Test if Search is Barcode")
                     #ID = find_key_dict(StockBarcodeList, int(SucheSuche))
                     #if not ID in indices: indices.append(ID)
                     ListOfBarcodes = find_keys_dict(StockBarcodeList, int(SucheSuche))
