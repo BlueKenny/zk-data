@@ -510,8 +510,11 @@ while True:
 
             #	Barcode		only 1 is possible
             if len(SucheSuche) == 13:# Only Barcodes with 13 integers
-                try: isInt = True
-                except: isInt = False
+                try:
+                    int(SucheSuche)
+                    isInt = True
+                except:
+                    isInt = False
 
                 if isInt:
                     ID = find_key_dict(StockBarcodeList, int(SucheSuche))
