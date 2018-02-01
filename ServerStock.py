@@ -357,7 +357,7 @@ while True:
                 StockIDList.append(ID)
 
             if VarName == "Barcode":
-                StockBarcodeList[ID]=str(Var)
+                StockBarcodeList[ID]=int(Var)
                 BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
                 ThisArtikel = Artikel(barcode=StockBarcodeList[ID], identification=ID)
                 ThisArtikel.save()
