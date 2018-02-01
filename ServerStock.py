@@ -34,6 +34,7 @@ class Artikel(Model):
     preisvkh = FloatField(null = True)
     preisvk = FloatField(null = True)
     anzahl = FloatField(null = True)
+    ort = CharField(null = True)
     lastchange = CharField(null = True)
     creation = CharField(null = True)
 
@@ -156,6 +157,12 @@ for eachDir in os.listdir(DIR + "Stock/"):
             eachFile = int(eachFile)
             #	ID
             StockIDList.append(eachFile)
+
+            query = Artikel.select().where(Artikel.identification == str(eachFile))
+            if not query.exists():
+                ThisArtikel = Artikel.create(creation=str(Date()), identification=str(eachFile))
+                ThisArtikel.save()
+
             #	Creation
             ArticleCreation = BlueLoad("Creation", datei)
             if ArticleCreation == None or ArticleCreation == "x":
@@ -229,7 +236,7 @@ for eachDir in os.listdir(DIR + "Stock/"):
             if ArticleQuantity == None or ArticleQuantity == "None" or ArticleQuantity == "x" or ArticleQuantity == "":
                 ArticleQuantity = 0
                 BlueSave("Anzahl", ArticleQuantity, datei)
-            StockAnzahlList[eachFile]=int(ArticleQuantity)
+            StockAnzahlList[eachFile]=float(ArticleQuantity)
 
             StockArtikelAnzahl = StockArtikelAnzahl  + 1
             if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
@@ -390,7 +397,7 @@ while True:
             if VarName == "Ort":
                 StockOrtList[ID]=str(Var).upper()
                 BlueSave(str(VarName), str(Var).upper(), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(lastchange=StockOrtList[ID], identification=ID)
+                ThisArtikel = Artikel(ort=StockOrtList[ID], identification=ID)
                 ThisArtikel.save()
             if VarName == "PreisEK":
                 StockPreisEKList[ID]=str(Var)
@@ -412,6 +419,28 @@ while True:
                 BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
                 ThisArtikel = Artikel(anzahl=StockAnzahlList[ID], identification=ID)
                 ThisArtikel.save()
+
+        if mode == "GetArt":
+            Debug("Mode : " + mode)
+            print(DATA.split("(zKz)")[1])
+            ID = DATA.split("(zKz)")[1].split("(zkz)")[0]
+            Debug("ID :  " + str(ID))
+
+            ID = int(ID)
+
+            Antwort = "Name&zKz&" + str(StockNameList[ID])
+            Antwort = Antwort + "|Artikel&zKz&" + str(StockArtikelList[ID])
+            Antwort = Antwort + "|Artikel2&zKz&" + str(StockArtikel2List[ID])
+            Antwort = Antwort + "|Artikel3&zKz&" + str(StockArtikel3List[ID])
+            Antwort = Antwort + "|Barcode&zKz&" + str(StockBarcodeList[ID])
+            Antwort = Antwort + "|Lieferant&zKz&" + str(StockLieferantList[ID])
+            Antwort = Antwort + "|PreisEK&zKz&" + str(StockPreisEKList[ID])
+            Antwort = Antwort + "|PreisVKH&zKz&" + str(StockPreisVKHList[ID])
+            Antwort = Antwort + "|PreisVK&zKz&" + str(StockPreisVKList[ID])
+            Antwort = Antwort + "|Anzahl&zKz&" + str(StockAnzahlList[ID])
+            Antwort = Antwort + "|Ort&zKz&" + str(StockOrtList[ID])
+            Antwort = Antwort + "|LastChange&zKz&" + str(StockLastChangeList[ID])
+            Antwort = Antwort + "|Creation&zKz&" + str(StockCreationList[ID])
 
         if mode == "GetArtInfo":
             Debug("Mode : " + mode)
