@@ -10,6 +10,34 @@ from PyQt5.QtWidgets import *
 if os.path.exists("/home/phablet"): import send
 else: import libs.send
 
+from peewee import *
+local_db = SqliteDatabase("DATA/stock.db")
+
+class Artikel(Model):
+    identification = CharField(primary_key = True)
+    name = CharField(null = True)
+    artikel = CharField(null = True)
+    artikel2 = CharField(null = True)
+    artikel3 = CharField(null = True)
+    barcode = IntegerField(null = True)
+    lieferant = CharField(null = True)
+    preisek = FloatField(null = True)
+    preisvkh = FloatField(null = True)
+    preisvk = FloatField(null = True)
+    anzahl = FloatField(null = True)
+    lastchange = CharField(null = True)
+    creation = CharField(null = True)
+
+    class Meta:
+        database = local_db
+
+
+local_db.connect()
+try: local_db.create_tables([Artikel])
+except: print("Artikel table exists")
+local_db.close()
+
+
 class Stock(QWidget):
 
     def __init__(self):
@@ -55,28 +83,38 @@ class Stock(QWidget):
         if not text_suche == "":
             print("text_suche: " + text_suche)
 
-            IDsInStock = libs.send.SucheStock(text_suche, "", "")[:-3].split("<K>")
-            if "0" in IDsInStock: del IDsInStock[IDsInStock.index("0")]
+            IDsAndTime = libs.send.SucheStock(text_suche, "", "")[:-3].split("<K>")
+            #if "0" in IDsInStock: del IDsInStock[IDsInStock.index("0")]
 
-            print("IDsInStock: " + str(IDsInStock))
+            print("IDsAndTime: " + str(IDsAndTime))
 
             for x in sorted(range(0, 50), reverse=True):
                 self.model.removeRow(x)
 
-            for id in IDsInStock:
-                TimeStamp = id.split("|")[1]
-                id = id.split("|")[0]
+            IDs = []
+            for IDAndTime in IDsAndTime:
+                id = IDAndTime.split("|")[0]
+                TimeStamp = IDAndTime.split("|")[1]
 
                 # If ID is key in Daten
+                query = Artikel.select().where(Artikel.identification == str(id))
+                if query.exists():
+                    #ThisArtikel = Artikel.create(creation=str(Date()), identification=ID)
+                    #ThisArtikel.save()
+                    localTime = Artikel.get(Artikel.identification == str(id))
+                    print("localTime " + str(localTime))
                 # Test TimeStamp with Server
 
+                ThisArtikel = Artikel.create(lastchange=str(str(TimeStamp)), identification=id)
+                ThisArtikel.save()
+
                 data = libs.send.StockGetArtInfo(["Name", "Artikel", "Lieferant", "Ort", "PreisVK", "Anzahl"], id).split(" | ")
-                Name = data[1]
-                Artikel = data[2].upper()
-                Lieferant = data[3].title()
-                Ort = data[4].upper()
-                PreisVK = data[5]
-                Anzahl = data[6]
+                #Name = data[1]
+                #Artikel = data[2].upper()
+                #Lieferant = data[3].title()
+                #Ort = data[4].upper()
+                #PreisVK = data[5]
+                #Anzahl = data[6]
 
 
                 #ListItem = QListWidgetItem(self.Suche_List)
@@ -107,7 +145,7 @@ class Stock(QWidget):
                 #        BildPfad = "DATA/Bilder/Stock/NoImage.Stock.jpg"
                 #    ListItem.setIcon(QIcon(BildPfad))
                 self.model.appendRow(Items)
-            self.model.setVerticalHeaderLabels(IDsInStock)
+            self.model.setVerticalHeaderLabels(IDs)
             header = self.Suche_Table.horizontalHeader()
             header.setSectionResizeMode(0, QHeaderView.Stretch)
             header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
@@ -123,7 +161,6 @@ class Stock(QWidget):
 
 
 if __name__ == '__main__':
-    Daten = {}
     app = QApplication(sys.argv)
     ex = Stock()
     sys.exit(app.exec_())
