@@ -1,35 +1,37 @@
 INDEX:DATE:MODE:INFO
-1:19/01/17:FEATURE:Aktualisierungen beim öffnen
-2:20/01/17:FIX:Die console startet nun nicht mehr unter Windows
-3:20/01/17:FEATURE:"""Stock Change"" kann jetzt uber F5 geschlossen werden"
-4:21/01/17:FEATURE:Beim Starten vom server macht er die Inventur und speichert sie im Data ordner
-5:22/01/17:FIX:"Barcode und Anzahl kann nicht mehr bei ""Change Stock"" geändert werden"
-6:22/01/17:FEATURE:Neues programm zeigt sofort ob etwas auf lager ist und wo es sich befindet
-7:22/01/17:FEATURE:Beim öffnen werden jetzt nur noch neue NEWS angezeigt
-8:22/01/17:INFO:ZK-DATA besteht  aus 17 945 linien, und wurde am 9/07/17 auf Github.com veröffendlicht
-9:22/01/17:FEATURE:Die suche zeigt nun immer die aktuellen informationen an wenn etwas geändert wurde
-10:22/01/17:INFO:Sprach dateien sind nun in einem anderen format (.ini)
-11:22/01/17:FIX:Ort kann nun wieder gedruckt werden
-12:23/01/17:FEATURE:Beim drucken wird jetzt nach der Anzahl gefragt
-13:23/01/17:FIX:Clipboard Startet jetzt auch unter Windows
-14:23/01/17:INFO:"Preislisten: CubCadet_2017, MotorSnelco_2018, MTD_2017, Stihl_2017, Stihl_2018, Stihl_Machines_2018, Unimet_2017, Unimet_2018"
-15:23/01/17:FIX:Eine bewegen kann nicht mehr von einem preisvorschlag gemacht werden
-16:23/01/17:FEATURE:"Suche: mit der DEL taste kann sofort ein neue scan gestartet werden"
-17:23/01/17:FEATURE:Beim öffnen eines Preisvorschlag wird das datum vom Lieferanten entfernt
-18:23/01/17:FIX:"Stock Change: jedes ? Wird jetzt automatich entfernt"
-19:23/01/17:FIX:"Stock Search: ID wird jetzt nach jeder änderung angezeigt"
-20:24/01/17:FIX:Das Clipboard fenster wird jetzt auch unter windows immer im vordergrund angzeigt
-21:25/01/17:FIX:"Kasse: kann jetzt wieder genutzt werden"
-22:25/01/17:FIX:Ubersetzungen wurden wieder entfernt
-23:25/01/17:INFO:"WIP: Kunden Suchen wird entwickelt…"
-24:26/01/17:FEATURE:Jeder Artikel kann jetzt bis zu 3 Artikelnummern besitzen, damit können jetzt die Barcodes der Lieferanten eingescant werden
-25:26/01/17:INFO:"WIP: Wechsel auf ein Qml und Qt GUI"
-26:29/01/17:FEATURE:"WIP: Es gibt jetzt mehr als ein Server (Stock, Preisvorschläge, Kunden) Jeder server hat seinen eigenen bereich, somit gibt es keine störung des gesamten systems wenn ein teil neustarten muss"
-27:29/01/17:FEATURE:Optimirung in der Suche
-28:29/01/17:FEATURE:Server speichert jetzt in eine MySQL datenbank, diese funktion ermöglich es das unser webseite auf unsere daten zugreifen kann
-29:29/01/17:FIX:Auch die preisvorschläge können jetzt durch den Lieferanten gefiltert werden
-30:29/01/17:FEATURE:Solte ein Server offline sein startet er automatisch neu, die Clients werden daduch nicht gestört und ihnen wird angezeigt welcher server gerade neustartet
-31:30/01/17:FEATURE:Die IP vom SQL server ist nun über die datei DATA einstelbar
-32:30/01/17:INFO:Kunden.pyw wurde entfernt
-33:30/01/17:INFO:"WIP: Neues Stock programm, in PyQt5 geschrieben, schneller und schöner als zuvor ;)"
-34:31/01/17:INFO:"WIP: Stock"
+1:19/01/18:FEATURE:Aktualisierungen beim öffnen
+2:20/01/18:FIX:Die console startet nun nicht mehr unter Windows
+3:20/01/18:FEATURE:"""Stock Change"" kann jetzt uber F5 geschlossen werden"
+4:21/01/18:FEATURE:Beim Starten vom server macht er die Inventur und speichert sie im Data ordner
+5:22/01/18:FIX:"Barcode und Anzahl kann nicht mehr bei ""Change Stock"" geändert werden"
+6:22/01/18:FEATURE:Neues programm zeigt sofort ob etwas auf lager ist und wo es sich befindet
+7:22/01/18:FEATURE:Beim öffnen werden jetzt nur noch neue NEWS angezeigt
+8:22/01/18:INFO:ZK-DATA besteht  aus 17 945 linien, und wurde am 9/07/17 auf Github.com veröffendlicht
+9:22/01/18:FEATURE:Die suche zeigt nun immer die aktuellen informationen an wenn etwas geändert wurde
+10:22/01/18:INFO:Sprach dateien sind nun in einem anderen format (.ini)
+11:22/01/18:FIX:Ort kann nun wieder gedruckt werden
+12:23/01/18:FEATURE:Beim drucken wird jetzt nach der Anzahl gefragt
+13:23/01/18:FIX:Clipboard Startet jetzt auch unter Windows
+14:23/01/18:INFO:"Preislisten: CubCadet_2017, MotorSnelco_2018, MTD_2017, Stihl_2017, Stihl_2018, Stihl_Machines_2018, Unimet_2017, Unimet_2018"
+15:23/01/18:FIX:Eine bewegen kann nicht mehr von einem preisvorschlag gemacht werden
+16:23/01/18:FEATURE:"Suche: mit der DEL taste kann sofort ein neue scan gestartet werden"
+17:23/01/18:FEATURE:Beim öffnen eines Preisvorschlag wird das datum vom Lieferanten entfernt
+18:23/01/18:FIX:"Stock Change: jedes ? Wird jetzt automatich entfernt"
+19:23/01/18:FIX:"Stock Search: ID wird jetzt nach jeder änderung angezeigt"
+20:24/01/18:FIX:Das Clipboard fenster wird jetzt auch unter windows immer im vordergrund angzeigt
+21:25/01/18:FIX:"Kasse: kann jetzt wieder genutzt werden"
+22:25/01/18:FIX:Ubersetzungen wurden wieder entfernt
+23:25/01/18:INFO:"WIP: Kunden Suchen wird entwickelt…"
+24:26/01/18:FEATURE:Jeder Artikel kann jetzt bis zu 3 Artikelnummern besitzen, damit können jetzt die Barcodes der Lieferanten eingescant werden
+25:26/01/18:INFO:"WIP: Wechsel auf ein Qml und Qt GUI"
+26:29/01/18:FEATURE:"WIP: Es gibt jetzt mehr als ein Server (Stock, Preisvorschläge, Kunden) Jeder server hat seinen eigenen bereich, somit gibt es keine störung des gesamten systems wenn ein teil neustarten muss"
+27:29/01/18:FEATURE:Optimirung in der Suche
+28:29/01/18:FEATURE:Server speichert jetzt in eine MySQL datenbank, diese funktion ermöglich es das unser webseite auf unsere daten zugreifen kann
+29:29/01/18:FIX:Auch die preisvorschläge können jetzt durch den Lieferanten gefiltert werden
+30:29/01/18:FEATURE:Solte ein Server offline sein startet er automatisch neu, die Clients werden daduch nicht gestört und ihnen wird angezeigt welcher server gerade neustartet
+31:30/01/18:FEATURE:Die IP vom SQL server ist nun über die datei DATA einstelbar
+32:30/01/18:INFO:Kunden.pyw wurde entfernt
+33:30/01/18:INFO:"WIP: Neues Stock programm, in PyQt5 geschrieben, schneller und schöner als zuvor ;)"
+34:31/01/18:INFO:"WIP: Stock"
+35:01/02/18:INFO:"WIP: Stock speichert jetzt alle informationen local ab und fragt sie nur erneut solten sie nicht mehr gultig sein"
+36:01/02/18:INFO:"WIP: Stock, neues icon + Doppel click ruft informationen über ein artikel ab"
