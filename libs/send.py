@@ -2,16 +2,22 @@
 # -*- coding: utf-8 -*-
 import sys
 import socket
-from libs.BlueFunc import *
-from libs.debug import *
+import os
+from BlueFunc import *
+from debug import *
 
-if BlueLoad("SERVER", "DATA/DATA") == None: BlueSave("SERVER", "127.0.0.1", "DATA/DATA")
-if BlueLoad("SERVERSTOCK", "DATA/DATA") == None: BlueSave("SERVERSTOCK", "127.0.0.1", "DATA/DATA")
-if BlueLoad("SERVERPREISVORSCHLAG", "DATA/DATA") == None: BlueSave("SERVERPREISVORSCHLAG", "127.0.0.1", "DATA/DATA")
+if os.path.exists("/home/phablet"):
+	DIR = "/home/phablet/.local/share/zk-data.stock/"
+else: DIR = ""
+
+BlueMkDir(DIR + "DATA")
+
+if BlueLoad("SERVERSTOCK", DIR + "DATA/DATA") == None: BlueSave("SERVERSTOCK", "127.0.0.1", DIR + "DATA/DATA")
+if BlueLoad("SERVERPREISVORSCHLAG", DIR + "DATA/DATA") == None: BlueSave("SERVERPREISVORSCHLAG", "127.0.0.1", DIR + "DATA/DATA")
 
 #SERVER_IP = ("10.0.0.1", 10000)#(BlueLoad("SERVER", "DATA/DATA"), 10000)
-SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", "DATA/DATA"), 10000)
-SERVERPREISVORSCHLAG_IP = (BlueLoad("SERVERPREISVORSCHLAG", "DATA/DATA"), 10001)
+SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 10000)
+SERVERPREISVORSCHLAG_IP = (BlueLoad("SERVERPREISVORSCHLAG", DIR + "DATA/DATA"), 10001)
 
 ##############          STOCK
 def GetStockZahl():

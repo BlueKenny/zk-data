@@ -6,7 +6,9 @@ import os
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-import libs.send
+
+if os.path.exists("/home/phablet"): import send
+else: import libs.send
 
 
 class Stock(QWidget):
