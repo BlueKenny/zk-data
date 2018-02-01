@@ -10,7 +10,6 @@ from PyQt5.QtWidgets import *
 if os.path.exists("/home/phablet"): import send
 else: import libs.send
 
-
 class Stock(QWidget):
 
     def __init__(self):
@@ -56,7 +55,7 @@ class Stock(QWidget):
         if not text_suche == "":
             print("text_suche: " + text_suche)
 
-            IDsInStock = libs.send.SendeSucheStock(text_suche, "", "")[:-3].split("<K>")
+            IDsInStock = libs.send.SucheStock(text_suche, "", "")[:-3].split("<K>")
             if "0" in IDsInStock: del IDsInStock[IDsInStock.index("0")]
 
             print("IDsInStock: " + str(IDsInStock))
@@ -65,13 +64,19 @@ class Stock(QWidget):
                 self.model.removeRow(x)
 
             for id in IDsInStock:
-                data = libs.send.StockGetArtInfo(["Anzahl", "Lieferant", "Name", "Artikel", "Ort", "PreisVK"], id).split(" | ")
-                Anzahl = data[1]
-                Lieferant = data[2].title()
-                Name = data[3]
-                Artikel = data[4].upper()
-                Ort = data[5].upper()
-                PreisVK = data[6]
+                TimeStamp = id.split("|")[1]
+                id = id.split("|")[0]
+
+                # If ID is key in Daten
+                # Test TimeStamp with Server
+
+                data = libs.send.StockGetArtInfo(["Name", "Artikel", "Lieferant", "Ort", "PreisVK", "Anzahl"], id).split(" | ")
+                Name = data[1]
+                Artikel = data[2].upper()
+                Lieferant = data[3].title()
+                Ort = data[4].upper()
+                PreisVK = data[5]
+                Anzahl = data[6]
 
 
                 #ListItem = QListWidgetItem(self.Suche_List)
@@ -79,9 +84,10 @@ class Stock(QWidget):
 
                 Items = []
                 for each in data:
-                    thisItem = QStandardItem(str(each))
-                    #thisItem.setFlags(Qt.ItemIsEnabled)
-                    Items.append(thisItem)
+                    if not str(each) == str(id):
+                        thisItem = QStandardItem(str(each))
+                        #thisItem.setFlags(Qt.ItemIsEnabled)
+                        Items.append(thisItem)
 
                 #Items.append(QStandardItem(str(Name)))
                 #Items.append(QStandardItem(str(Artikel)))
@@ -106,6 +112,7 @@ class Stock(QWidget):
             header.setSectionResizeMode(0, QHeaderView.Stretch)
             header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
             header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
             header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
             header.setSectionResizeMode(5, QHeaderView.Stretch)
 
@@ -116,6 +123,7 @@ class Stock(QWidget):
 
 
 if __name__ == '__main__':
+    Daten = {}
     app = QApplication(sys.argv)
     ex = Stock()
     sys.exit(app.exec_())

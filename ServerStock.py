@@ -474,6 +474,90 @@ while True:
             if not os.path.exists(DateiStockBewegung): open(DateiStockBewegung, "a").write("ID:QUANTITY FROM:QUANTITY TO:COST:PRICE VAT INCL.:PRICE VAT EXCL.:MODE:USER\n")
             open(DateiStockBewegung, "a").write(str(BcodeSuche) + ":" + str(AltStock) + ":" + str(StockAnzahlList[BcodeSuche]) + ":" + str(StockPreisEKList[BcodeSuche]) + ":" + str(StockPreisVKHList[BcodeSuche]) + ":" + str(StockPreisVKList[BcodeSuche]) + ":MISC:" + str(ipname[0]) + "\n")
 
+        if mode == "SucheStock":
+            Debug("Mode : " + mode)
+            SucheSuche = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
+            SucheSuche = SucheSuche.upper()
+            Debug("SucheSuche : " + SucheSuche)
+            OrtSuche = DATA.split("(zKz)")[1].split("(zkz)")[1]
+            OrtSuche = OrtSuche.upper()
+            Debug("OrtSuche : " + OrtSuche)
+            LieferantSuche = DATA.split("(zKz)")[1].split("(zkz)")[2]
+            LieferantSuche = LieferantSuche.upper()
+            Debug("LieferantSuche : " + LieferantSuche)
+
+            indices = []
+            #	ID		only 1 is possible
+            if len(SucheSuche) == 6:
+                try:
+                    if int(SucheSuche) in StockIDList:
+                        indices.append(int(SucheSuche))
+                except: Debug("Search is not an ID")
+
+            #	Barcode		only 1 is possible but for the moment multiple
+            if len(SucheSuche) == 13:# Only Barcodes with 13 integers
+                try:
+                    int(SucheSuche)
+                    isInt = True
+                except:
+                    isInt = False
+
+                if isInt:
+                    Debug("Test if Search is Barcode")
+                    #ID = find_key_dict(StockBarcodeList, int(SucheSuche))
+                    #if not ID in indices: indices.append(ID)
+                    ListOfBarcodes = find_keys_dict(StockBarcodeList, int(SucheSuche))
+                    if not ListOfBarcodes == None:
+                        for ID in ListOfBarcodes:
+                            if not ID in indices: indices.append(ID)
+                else: Debug("len 13 but not an Int")
+            #	Article		multiple choice possible
+            ListOfArticles = find_keys_dict(StockArtikelList, str(SucheSuche))
+            if not ListOfArticles == None:
+                for ID in ListOfArticles:
+                    if not ID in indices: indices.append(ID)
+            #	Article2		multiple choice possible
+            ListOfArticles = find_keys_dict(StockArtikel2List, str(SucheSuche))
+            if not ListOfArticles == None:
+                for ID in ListOfArticles:
+                    if not ID in indices: indices.append(ID)
+            #	Article3		multiple choice possible
+            ListOfArticles = find_keys_dict(StockArtikel3List, str(SucheSuche))
+            if not ListOfArticles == None:
+                for ID in ListOfArticles:
+                    if not ID in indices: indices.append(ID)
+            #	Location		multiple choice possible
+            if not OrtSuche == "":
+                indices2 = indices;
+                indices = []
+                for ID in indices2:
+                    if StockOrtList[ID] == str(OrtSuche):
+                        indices.append(ID)
+
+            #	Supplier		multiple choice possible
+            if not LieferantSuche == "":
+            #    indices2 = indices
+            #    indices = []
+            #    ListOfSupplier = find_keys_dict(StockLieferantList, str(LieferantSuche))
+            #    if not ListOfSupplier == None:
+            #        for ID in ListOfSupplier:
+            #            if ID in indices2: indices.append(ID)
+                indices2 = indices; indices = []
+                for ID in indices2:
+                    if StockLieferantList[ID] == str(LieferantSuche):
+                        indices.append(ID)
+
+            indices = indices[:INDEXLIMIT]
+            if indices == []: indices = [0]
+
+            try:
+                Antwort = " "
+                for eachDat in indices:
+                    Antwort = Antwort.rstrip() + str(eachDat) + "|" + str(StockLastChangeList[eachDat]) + "<K>"
+
+            except:
+                Debug("Nichts gefunden")
+
         if mode == "SearchStock":
             Debug("Mode : " + mode)
             SucheSuche = str(DATA.split("(zKz)")[1].split("(zkz)")[0])

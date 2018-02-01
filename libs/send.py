@@ -59,6 +59,26 @@ def SendeSucheStock(suche, ort, lieferant):
     except:
         return "0<K>"
 
+def SucheStock(suche, ort, lieferant):
+    if True:#try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect(SERVERSTOCK_IP)
+        Debug("Suche " + str(suche))
+        Debug("Ort " + str(ort))
+        Debug("Lieferant " + str(lieferant))
+
+        data = "SucheStock(zKz)" + str(suche) + "(zkz)" + str(ort) + "(zkz)" + str(lieferant)
+
+        Debug("Send " + str(data))
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        Debug("Get " + str(data.decode()))
+        sock.close()
+        return data.decode()
+    #except:
+    #    return "0<K>"
+
 
 def StockGetArtInfo(Vars, IDToChange):
     try:
