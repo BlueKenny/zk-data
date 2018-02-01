@@ -3,12 +3,15 @@
 import sys
 import socket
 import os
-from BlueFunc import *
-from debug import *
 
 if os.path.exists("/home/phablet"):
 	DIR = "/home/phablet/.local/share/zk-data.stock/"
-else: DIR = ""
+	from BlueFunc import *
+	from debug import *
+else:
+	DIR = ""
+	from .BlueFunc import *
+	from .debug import *
 
 BlueMkDir(DIR + "DATA")
 

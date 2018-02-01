@@ -29,6 +29,7 @@ class Stock(QWidget):
 
         #self.Suche_List = QListWidget(self)
         self.Suche_Table = QTableView(self)
+        self.Suche_Table.setSelectionBehavior(QTableView.SelectRows)
         self.model = QStandardItemModel(self)  # SELECTING THE MODEL - FRAMEWORK THAT HANDLES QUERIES AND EDITS
         self.model.setHorizontalHeaderLabels(['Name', 'Artikel', 'Lieferant', "Ort", "Preis", "Anzahl"])
         self.Suche_Table.setModel(self.model)  # SETTING THE MODEL
@@ -77,12 +78,17 @@ class Stock(QWidget):
                 #ListItem.setText(str(id))
 
                 Items = []
-                Items.append(QStandardItem(str(Name)))
-                Items.append(QStandardItem(str(Artikel)))
-                Items.append(QStandardItem(str(Lieferant)))
-                Items.append(QStandardItem(str(Ort)))
-                Items.append(QStandardItem(str(PreisVK)))
-                Items.append(QStandardItem(str(Anzahl)))
+                for each in data:
+                    thisItem = QStandardItem(str(each))
+                    #thisItem.setFlags(Qt.ItemIsEnabled)
+                    Items.append(thisItem)
+
+                #Items.append(QStandardItem(str(Name)))
+                #Items.append(QStandardItem(str(Artikel)))
+                #Items.append(QStandardItem(str(Lieferant)))
+                #Items.append(QStandardItem(str(Ort)))
+                #Items.append(QStandardItem(str(PreisVK)))
+                #Items.append(QStandardItem(str(Anzahl)))
 
                 #if Anzahl == 0:
                 #    BildPfad = "DATA/Bilder/Stock/" + Lieferant + ".0.jpg"

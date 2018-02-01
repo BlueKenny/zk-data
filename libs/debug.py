@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-from BlueFunc import *
-
 
 if os.path.exists("/home/phablet"):
 	DIR = "/home/phablet/.local/share/zk-data.stock/"
-else: DIR = ""
+	from BlueFunc import *
+else:
+	DIR = ""
+	from .BlueFunc import *
 
 BlueMkDir(DIR + "DEBUG")
 
