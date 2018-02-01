@@ -109,7 +109,7 @@ def PrintBarcode(IP, ID, Barcode, Name, Price):
     else:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((TCP_IP, TCP_PORT))
-        s.send(bytes(zpl, "utf-8"))
+        s.send(bytes(zpl, "utf-16"))
         s.close()
 
 
@@ -133,7 +133,7 @@ def PrintLocation(Location):
     else:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((TCP_IP, TCP_PORT))
-        s.send(bytes(zpl, "utf-8"))
+        s.send(bytes(zpl, "utf-16"))
         s.close()
 
 
