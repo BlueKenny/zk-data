@@ -4,10 +4,7 @@ import os
 import platform
 if not os.path.exists("DATA/NOUPDATE"):
     print("Update")
-    if platform.system() == "Linux":
-        os.system("git pull")
-    if platform.system() == "Windows":
-        os.system("./git pull")
+    os.system("git pull")
 
 from libs.appjar0900 import gui
 from libs.BlueFunc import *
