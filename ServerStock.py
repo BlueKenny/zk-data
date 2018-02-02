@@ -478,14 +478,14 @@ while True:
 
         if mode == "ChangeStock":
             Debug("Mode : " + mode)
-            BcodeSuche = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
+            BcodeSuche = float(DATA.split("(zKz)")[1].split("(zkz)")[0])
             Debug("BcodeSuche : " + str(BcodeSuche))
             NewStock = DATA.split("(zKz)")[1].split("(zkz)")[1]
             Debug("NewStock : " + NewStock)
             AltStock = str(StockAnzahlList[BcodeSuche])
             Debug("AltStock : " + AltStock )
-            StockAnzahlList[BcodeSuche] = int(AltStock) + int(NewStock)
-            BlueSave("Anzahl", StockAnzahlList[BcodeSuche], "Stock/" + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
+            StockAnzahlList[BcodeSuche] = float(AltStock) + float(NewStock)
+            BlueSave("Anzahl", str(StockAnzahlList[BcodeSuche]), "Stock/" + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
 
             query = Artikel.select().where(Artikel.identification == str(BcodeSuche))
             if not query.exists():
