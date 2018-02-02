@@ -400,22 +400,22 @@ while True:
                 ThisArtikel = Artikel(ort=StockOrtList[ID], identification=ID)
                 ThisArtikel.save()
             if VarName == "PreisEK":
-                StockPreisEKList[ID]=str(Var)
+                StockPreisEKList[ID]=float(Var)
                 BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
                 ThisArtikel = Artikel(preisek=StockPreisEKList[ID], identification=ID)
                 ThisArtikel.save()
             if VarName == "PreisVKH":
-                StockPreisVKHList[ID]=str(Var)
+                StockPreisVKHList[ID]=float(Var)
                 BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
                 ThisArtikel = Artikel(preisvkh=StockPreisVKHList[ID], identification=ID)
                 ThisArtikel.save()
             if VarName == "PreisVK":
-                StockPreisVKList[ID]=str(Var)
+                StockPreisVKList[ID]=float(Var)
                 BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
                 ThisArtikel = Artikel(preisvk=StockPreisVKList[ID], identification=ID)
                 ThisArtikel.save()
             if VarName == "Anzahl":
-                StockAnzahlList[ID]=str(Var)
+                StockAnzahlList[ID]=float(Var)
                 BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
                 ThisArtikel = Artikel(anzahl=StockAnzahlList[ID], identification=ID)
                 ThisArtikel.save()
@@ -478,7 +478,7 @@ while True:
 
         if mode == "ChangeStock":
             Debug("Mode : " + mode)
-            BcodeSuche = float(DATA.split("(zKz)")[1].split("(zkz)")[0])
+            BcodeSuche = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
             Debug("BcodeSuche : " + str(BcodeSuche))
             NewStock = DATA.split("(zKz)")[1].split("(zkz)")[1]
             Debug("NewStock : " + NewStock)
