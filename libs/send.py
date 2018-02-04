@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+import platform
 import socket
 import os
 
@@ -16,7 +17,11 @@ else:
 BlueMkDir(DIR + "DATA")
 import json
 
-from peewee import *
+try: from peewee import *
+except:
+    if platform.system() == "Linux":
+        os.system("pip3 install peewee")
+        
 local_db = SqliteDatabase("DATA/cache.db")
 
 

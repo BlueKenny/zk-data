@@ -71,14 +71,13 @@ def BtnPrintOrt(btn):
     if not "P" in ID:
         PrintLocation(StockGetArtInfo(["Ort"], ID).split(" | ")[1])
 
-
-appSuche.addLabelEntry("Suche")
-appSuche.addLabelEntry("Ort")
-appSuche.addLabelEntry("Lieferant")
-appSuche.addGrid("Suche", [["Identification", "Artikel", "Lieferant", "Name", "Ort", "Preis", "Anzahl"]])
-appSuche.setGridHeight("Suche", 500)
-#ListBoxSuche = appSuche.addListBox("Suche")
-#ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc("ÄNDERN"))# if List Item double click then change
+def ArtikelAnzeigen(linie):
+    Debug("linie : " + str(linie))
+    ID = appSuche.getGridRow("Suche", linie)[0]
+    if platform.system() == "Linux": COMMAND = "./ChangeStock.pyw"
+    if platform.system() == "Windows":  COMMAND = "ChangeStock.pyw"
+    application = os.popen(COMMAND + " " + ID).readlines()
+    Suche(BlueLoad("LastID", "DATA/DATA"))
 
 def tbFunc(btn):
     global IDToChange
@@ -100,6 +99,17 @@ def tbFunc(btn):
 
 tools = ["NEU", "ÄNDERN"]
 appSuche.addToolbar(tools, tbFunc, findIcon=False)
+
+appSuche.addLabelEntry("Suche")
+appSuche.addLabelEntry("Ort")
+appSuche.addLabelEntry("Lieferant")
+GridSuche = appSuche.addGrid("Suche", [["Identification", "Artikel", "Lieferant", "Name", "Ort", "Preis", "Anzahl"]],
+                             action=ArtikelAnzeigen,
+                             actionHeading="Informationen",
+                             actionButton="Anzeigen")
+appSuche.setGridHeight("Suche", 500)
+#ListBoxSuche = appSuche.addListBox("Suche")
+#ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc("ÄNDERN"))# if List Item double click then change
 
 def Delete(btn):
     Debug("Delete")
