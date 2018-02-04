@@ -8,113 +8,9 @@ from libs.RoundUp import *
 import datetime
 import time
 from libs.barcode import *
+import json
 
 SERVER_PORT=10000
-
-
-from peewee import *
-SERVER_SQL=BlueLoad("SERVERSQL", "DATA/DATA")
-if SERVER_SQL == "None":
-    SERVER_SQL = "127.0.0.1"
-    SERVER_SQL=BlueSave("SERVERSQL", SERVER_SQL, "DATA/DATA")
-
-local_db = SqliteDatabase("DATA/stock.db")
-#local_db = MySQLDatabase('web', user='root', password='', host=SERVER_SQL, port=3306)
-#extern_db= MySQLDatabase('web', user='root', password='', host='192.168.188.24', port=3306)#192.168.188.24
-
-class Artikel(Model):
-    identification = CharField(primary_key = True)
-    name = CharField(null = True)
-    artikel = CharField(null = True)
-    artikel2 = CharField(null = True)
-    artikel3 = CharField(null = True)
-    barcode = IntegerField(null = True)
-    lieferant = CharField(null = True)
-    preisek = FloatField(null = True)
-    preisvkh = FloatField(null = True)
-    preisvk = FloatField(null = True)
-    anzahl = FloatField(null = True)
-    ort = CharField(null = True)
-    lastchange = CharField(null = True)
-    creation = CharField(null = True)
-
-    class Meta:
-        database = local_db
-
-
-local_db.connect()
-try: local_db.create_tables([Artikel])
-except: print("Artikel table exists")
-local_db.close()
-
-#extern_db.connect()
-#try: extern_db.create_tables([ArtikelExtern])
-#except: print("ArtikelExtern table exists")
-#extern_db.close()
-
-
-
-def find_keys_dict(dic, val):
-    """return the keys of dictionary dic given the value"""
-    dic2 = dic.copy()
-    keys=[]
-    while True:
-        if val in dic2.values():
-            #for key in list(dic2.keys()):
-            #	for eachpart in dic2[key].split(" "):
-            #		if val == eachpart and not key in keys:
-            #			keys.append(key)
-            key = list(dic2.keys())[list(dic2.values()).index(val)]
-            keys.append(key)
-            del dic2[key]
-        else: break
-    if len(keys) == 0: return None
-    else: return keys
-
-def find_key_dict(dic, val):
-    """return the key of dictionary dic given the value"""
-    if val in dic.values():
-        return list(dic.keys())[list(dic.values()).index(val)]
-    else: return None
-
-def find_value_dict(dic, key):
-    """return the value of dictionary dic given the key"""
-    if key in dic:
-        return dic[key]
-    else: return None
-
-def StockInventar():
-    DateiName = "DATA/Inventur.csv"
-    if os.path.exists(DateiName): os.remove(DateiName)
-    Datei = open(DateiName, "a")
-
-    Datei.write("ID:DESCRIPTION:QUANTITY:PRICE:TOTAL:" + Date() + "\n")
-    TOTAL_END = 0.00
-    for ID in StockIDList:
-        ID = str(ID)
-        DESCRIPTION = str(find_value_dict(StockNameList, int(ID))).replace(":", "")
-        QUANTITY = str(find_value_dict(StockAnzahlList, int(ID)))
-        PRICE = str(find_value_dict(StockPreisEKList, int(ID)))
-        try: TOTAL = str(RoundUp0000(float(QUANTITY) * float(PRICE)))
-        except: TOTAL = "0.00"
-        TOTAL_END = TOTAL_END + float(TOTAL)
-
-        PRICE = PRICE.replace(".", ",")# Show better in LibreOffice :)
-        TOTAL = TOTAL.replace(".", ",")
-
-        try:
-            if not QUANTITY == "0":
-                Datei.write(ID + ":" + DESCRIPTION + ":" + QUANTITY + ":" + PRICE + ":" + TOTAL + "\n")
-        except: True
-
-    Datei.write(":::TOTAL:" + str(RoundUp0000(TOTAL_END)).replace(".", ",") + "\n")
-
-# Ordner
-DIR = ""
-BlueMkDir(DIR + "Stock")
-BlueMkDir(DIR + "StockBewegung")
-BlueMkDir(DIR + "Arbeiter")
-BlueMkDir(DIR + "DATA")
 
 
 StockCreationList = {}
@@ -131,131 +27,199 @@ StockPreisVKHList = {}
 StockPreisVKList = {}
 StockAnzahlList = {}
 
-StockIDList = []
-ListeDerLieferanten = []
-ArbeiterListe = []
-BlockedIDList= []
+
+from peewee import *
+SERVER_SQL=BlueLoad("SERVERSQL", "DATA/DATA")
+if SERVER_SQL == "None":
+    SERVER_SQL = "127.0.0.1"
+    SERVER_SQL=BlueSave("SERVERSQL", SERVER_SQL, "DATA/DATA")
+
+local_db = SqliteDatabase("DATA/stock.db")
+memory_db = SqliteDatabase(":memory:")
+#local_db = MySQLDatabase('web', user='root', password='', host=SERVER_SQL, port=3306)
+#extern_db= MySQLDatabase('web', user='root', password='', host='192.168.188.24', port=3306)#192.168.188.24
+
+class Artikel(Model):# All Str are upper()
+    identification = CharField(primary_key = True)
+    name = CharField(null = True)
+    artikel = CharField(null = True)
+    artikel2 = CharField(null = True)
+    artikel3 = CharField(null = True)
+    artikel4 = CharField(null = True)
+    barcode = IntegerField(null = True)
+    lieferant = CharField(null = True)
+    preisek = FloatField(null = True)
+    preisvkh = FloatField(null = True)
+    preisvk = FloatField(null = True)
+    anzahl = FloatField(null = True)
+    ort = CharField(null = True)
+    lastchange = CharField(null = True)
+    creation = CharField(null = True)
+    minimum = FloatField(null = True)
+
+    class Meta:
+        database = local_db
+
+class ArtikelMemory(Model):# All Str are upper()
+    identification = CharField(primary_key = True)
+    name = CharField(null = True)
+    artikel = CharField(null = True)
+    artikel2 = CharField(null = True)
+    artikel3 = CharField(null = True)
+    artikel4 = CharField(null = True)
+    barcode = IntegerField(null = True)
+    lieferant = CharField(null = True)
+    preisek = FloatField(null = True)
+    preisvkh = FloatField(null = True)
+    preisvk = FloatField(null = True)
+    anzahl = FloatField(null = True)
+    ort = CharField(null = True)
+    lastchange = CharField(null = True)
+    creation = CharField(null = True)
+    minimum = FloatField(null = True)
+
+    class Meta:
+        database = memory_db
+
+
+local_db.connect()
+try:
+    local_db.create_tables([Artikel])
+except:
+    print("Artikel table exists in local_db")
+local_db.close()
+
+memory_db.connect()
+try:
+    memory_db.create_tables([ArtikelMemory])
+except:
+    print("Artikel table exists in memory_db")
+#memory_db.close()
+
+#extern_db.connect()
+#try: extern_db.create_tables([ArtikelExtern])
+#except: print("ArtikelExtern table exists")
+#extern_db.close()
+
+# Ordner
+DIR = ""
+BlueMkDir(DIR + "StockBewegung")
+BlueMkDir(DIR + "DATA")
 
 try:
     INDEXLIMIT = int(BlueLoad("IndexLimit", DIR + "DATA/DATA"))
 except:
-    INDEXLIMIT = 20
-    BlueSave("IndexLimit", "20", DIR + "DATA/DATA")
+    INDEXLIMIT = 50
+    BlueSave("IndexLimit", "50", DIR + "DATA/DATA")
 
+# Old Load
+LoadOld = False
+if LoadOld:
+    for eachDir in sorted(os.listdir(DIR + "Stock/")):
+        print(str(eachDir) + "%")
+        for eachFile in sorted(os.listdir(DIR + "Stock/" + eachDir)):
+            if True:#try:
+                #Debug("Load Stock file " + str(eachFile))
+                datei = DIR + "Stock/" + eachDir + "/" + eachFile
+                eachFile = int(eachFile)
+
+                #	Creation
+                ArticleCreation = BlueLoad("Creation", datei)
+                if ArticleCreation == None or ArticleCreation == "x":
+                    ArticleCreation="2000-01-01"
+                    BlueSave("Creation", ArticleCreation, datei)
+                StockCreationList[eachFile] = str(ArticleCreation)
+                #	Last Change
+                ArticleLastChange = BlueLoad("LastChange", datei)
+                if ArticleLastChange == None or ArticleLastChange == "x":
+                    ArticleLastChange="0.00"
+                    BlueSave("LastChange", ArticleLastChange, datei)
+                StockLastChangeList[eachFile] = str(ArticleLastChange)
+                #	Barcode
+                ArticleBarcode = str(BlueLoad("Barcode", datei))
+                if ArticleBarcode == None or ArticleBarcode == "None" or ArticleBarcode == "x" or ArticleBarcode == "":
+                    ArticleBarcode = IDToBarcode(eachFile)
+                    BlueSave("Barcode", ArticleBarcode, datei)
+                StockBarcodeList[eachFile] = int(ArticleBarcode)
+                #	Article
+                ArticleNumber = BlueLoad("Artikel", datei)
+                if ArticleNumber == None: ArticleNumber = ""
+                else: ArticleNumber = ArticleNumber.lower()
+                StockArtikelList[eachFile] = str(ArticleNumber).upper()
+                #	Article2
+                ArticleNumber = BlueLoad("Artikel2", datei)
+                if ArticleNumber == None: ArticleNumber = ""
+                else: ArticleNumber = ArticleNumber.lower()
+                StockArtikel2List[eachFile] = str(ArticleNumber).upper()
+                #	Article3
+                ArticleNumber = BlueLoad("Artikel3", datei)
+                if ArticleNumber == None: ArticleNumber = ""
+                else: ArticleNumber = ArticleNumber.lower()
+                StockArtikel3List[eachFile] = str(ArticleNumber).upper()
+                #	Supplier
+                ArticleSupplier = BlueLoad("Lieferant", datei).lower()
+                if ArticleSupplier == None or ArticleSupplier == "x":
+                    ArticleSupplier = ""
+                    BlueSave("Lieferant", ArticleSupplier, datei)
+                StockLieferantList[eachFile] = str(ArticleSupplier).upper()
+                #	Name
+                ArticleName = BlueLoad("Name", datei)
+                StockNameList[eachFile] = str(ArticleName)
+                #	Location
+                ArticleLocation = BlueLoad("Ort", datei)
+                if ArticleLocation == None or ArticleLocation == "x":
+                    ArticleLocation = ""
+                    BlueSave("Ort", ArticleLocation, datei)
+                StockOrtList[eachFile] = str(ArticleLocation).upper()
+                #	Cost and Prices
+                ArticleCost = str(BlueLoad("PreisEK", datei))
+                if ArticleCost == "x" or ArticleCost == "None" or ArticleCost == "": ArticleCost = "0.00"
+                ArticleCost=RoundUp0000(str(ArticleCost).replace(",", "."))
+                ArticlePriceVatIncl = str(BlueLoad("PreisVK", datei))
+                if ArticlePriceVatIncl == "x" or ArticlePriceVatIncl == "None" or ArticlePriceVatIncl == "": ArticlePriceVatIncl = "0.00"
+                ArticlePriceVatIncl=RoundUp05(str(ArticlePriceVatIncl).replace(",", "."))
+                ArticlePriceVatExcl = str(BlueLoad("PreisVKH", datei))
+                ArticlePriceVatExcl=RoundUp0000(float(ArticlePriceVatIncl)/1.21)
+                StockPreisEKList[eachFile] = float(ArticleCost)
+                StockPreisVKHList[eachFile] = float(ArticlePriceVatExcl)
+                StockPreisVKList[eachFile] = float(ArticlePriceVatIncl)
+
+                #	Quantity
+                ArticleQuantity = str(BlueLoad("Anzahl", datei))
+                if ArticleQuantity == None or ArticleQuantity == "None" or ArticleQuantity == "x" or ArticleQuantity == "":
+                    ArticleQuantity = 0
+                    BlueSave("Anzahl", ArticleQuantity, datei)
+                StockAnzahlList[eachFile]=float(ArticleQuantity)
+
+                local_db.connect()
+                query = Artikel.select().where(Artikel.identification == str(eachFile))
+                if not query.exists():
+                    print("Erstelle Artikel " + str(eachFile))
+                    ThisArtikel = Artikel.create(creation=StockCreationList[eachFile],
+                                                 lastchange=StockLastChangeList[eachFile],
+                                                 barcode=StockBarcodeList[eachFile],
+                                                 artikel=StockArtikelList[eachFile],
+                                                 artikel2=StockArtikel2List[eachFile],
+                                                 artikel3=StockArtikel3List[eachFile],
+                                                 artikel4="",
+                                                 lieferant=StockLieferantList[eachFile],
+                                                 name=StockNameList[eachFile],
+                                                 ort=StockOrtList[eachFile],
+                                                 preisek=StockPreisEKList[eachFile],
+                                                 preisvkh=StockPreisVKHList[eachFile],
+                                                 preisvk=StockPreisVKList[eachFile],
+                                                 anzahl=StockAnzahlList[eachFile],
+                                                 minimum=0.0,
+                                                 identification=str(eachFile))
+                    ThisArtikel.save()
+                local_db.close()
+    #except: Debug("Failed to load")
 
 # LOAD
 print("LOAD DATAbase Stock") 
 StockArtikelAnzahl = 0
-KundenAnzahl = 0
-NeueKundenID = 10
-
-for eachDir in os.listdir(DIR + "Stock/"):
-    for eachFile in os.listdir(DIR + "Stock/" + eachDir):
-        if True:#try:
-            #Debug("Load Stock file " + str(eachFile))
-            datei = DIR + "Stock/" + eachDir + "/" + eachFile
-            eachFile = int(eachFile)
-            #	ID
-            StockIDList.append(eachFile)
-
-            query = Artikel.select().where(Artikel.identification == str(eachFile))
-            if not query.exists():
-                ThisArtikel = Artikel.create(creation=str(Date()), identification=str(eachFile))
-                ThisArtikel.save()
-
-            #	Creation
-            ArticleCreation = BlueLoad("Creation", datei)
-            if ArticleCreation == None or ArticleCreation == "x":
-                ArticleCreation="2000-01-01"
-                BlueSave("Creation", ArticleCreation, datei)
-            StockCreationList[eachFile] = str(ArticleCreation)
-            #	Last Change
-            ArticleLastChange = BlueLoad("LastChange", datei)
-            if ArticleLastChange == None or ArticleLastChange == "x":
-                ArticleLastChange="0.00"
-                BlueSave("LastChange", ArticleLastChange, datei)
-            StockLastChangeList[eachFile] = str(ArticleLastChange)
-            #	Barcode
-            ArticleBarcode = str(BlueLoad("Barcode", datei))
-            if ArticleBarcode == None or ArticleBarcode == "None" or ArticleBarcode == "x" or ArticleBarcode == "":
-                ArticleBarcode = IDToBarcode(eachFile)
-                BlueSave("Barcode", ArticleBarcode, datei)
-            StockBarcodeList[eachFile] = int(ArticleBarcode)
-            #	Article
-            ArticleNumber = BlueLoad("Artikel", datei)
-            if ArticleNumber == None: ArticleNumber = ""
-            else: ArticleNumber = ArticleNumber.lower()
-            StockArtikelList[eachFile] = str(ArticleNumber).upper()
-            #	Article2
-            ArticleNumber = BlueLoad("Artikel2", datei)
-            if ArticleNumber == None: ArticleNumber = ""
-            else: ArticleNumber = ArticleNumber.lower()
-            StockArtikel2List[eachFile] = str(ArticleNumber).upper()
-            #	Article3
-            ArticleNumber = BlueLoad("Artikel3", datei)
-            if ArticleNumber == None: ArticleNumber = ""
-            else: ArticleNumber = ArticleNumber.lower()
-            StockArtikel3List[eachFile] = str(ArticleNumber).upper()
-            #	Supplier
-            ArticleSupplier = BlueLoad("Lieferant", datei).lower()
-            if ArticleSupplier == None or ArticleSupplier == "x":
-                ArticleSupplier = ""
-                BlueSave("Lieferant", ArticleSupplier, datei)
-            StockLieferantList[eachFile] = str(ArticleSupplier).upper()
-            #	Name
-            ArticleName = BlueLoad("Name", datei)
-            StockNameList[eachFile] = str(ArticleName)
-            #	Location
-            ArticleLocation = BlueLoad("Ort", datei)
-            if ArticleLocation == None or ArticleLocation == "x":
-                ArticleLocation = ""
-                BlueSave("Ort", ArticleLocation, datei)
-            StockOrtList[eachFile] = str(ArticleLocation).upper()
-            #	Cost and Prices
-            ArticleCost = str(BlueLoad("PreisEK", datei))
-            if ArticleCost == "x" or ArticleCost == "None" or ArticleCost == "": ArticleCost = "0.00"
-            ArticleCost=RoundUp0000(str(ArticleCost).replace(",", "."))
-            ArticlePriceVatIncl = str(BlueLoad("PreisVK", datei))
-            if ArticlePriceVatIncl == "x" or ArticlePriceVatIncl == "None" or ArticlePriceVatIncl == "": ArticlePriceVatIncl = "0.00"
-            ArticlePriceVatIncl=RoundUp05(str(ArticlePriceVatIncl).replace(",", "."))
-            ArticlePriceVatExcl = str(BlueLoad("PreisVKH", datei))
-            ArticlePriceVatExcl=RoundUp0000(float(ArticlePriceVatIncl)/1.21)
-            StockPreisEKList[eachFile] = float(ArticleCost)
-            StockPreisVKHList[eachFile] = float(ArticlePriceVatExcl)
-            StockPreisVKList[eachFile] = float(ArticlePriceVatIncl)
-
-            #try: StockPreisEKList[eachFile]=RoundUp0000(str(BlueLoad("PreisEK", datei)).replace(",", "."))
-            #except: StockPreisEKList[eachFile] = "x"
-            #try: StockPreisVKHList[eachFile]=RoundUp0000(str(BlueLoad("PreisVKH", datei)).replace(",", "."))
-            #except: StockPreisVKHList[eachFile] = "x"
-            #try: StockPreisVKList[eachFile]=RoundUp0000(str(BlueLoad("PreisVK", datei)).replace(",", "."))
-            #except: StockPreisVKList[eachFile] = "x"
-
-            #	Quantity
-            ArticleQuantity = str(BlueLoad("Anzahl", datei))
-            if ArticleQuantity == None or ArticleQuantity == "None" or ArticleQuantity == "x" or ArticleQuantity == "":
-                ArticleQuantity = 0
-                BlueSave("Anzahl", ArticleQuantity, datei)
-            StockAnzahlList[eachFile]=float(ArticleQuantity)
-
-            StockArtikelAnzahl = StockArtikelAnzahl  + 1
-            if not StockLieferantList[eachFile] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[eachFile])
-
-            #ThisArtikel = Artikel.create(artikel=StockArtikelList[eachFile], name=StockNameList[eachFile], identification=eachFile)
-            #ThisArtikel.save()
-        #except: Debug("Failed to load")
-
-
-for Arbeiter in os.listdir(DIR + "Arbeiter"):
-    ArbeiterListe.append(Arbeiter)
-if len(ArbeiterListe) == 0: ArbeiterListe.append("Arbeiter1")
 
 print("StockArtikelAnzahl : " + str(StockArtikelAnzahl))
-print("ListeDerLieferanten : " + str(ListeDerLieferanten))
-print("KundenAnzahl : " + str(KundenAnzahl))
-print("NeueKundenID : " + str(NeueKundenID))
-
-StockInventar()
 
 SERVER_IP = ("", SERVER_PORT)
 s = socket.socket()
@@ -284,193 +248,122 @@ while True:
             Debug("Client sendet nicht mehr")
             break
         DATA = DATA.decode()
-        Debug("DATA : " + DATA)
+        DATA = json.loads(DATA)  # data loaded
 
-        mode = DATA.split("(zKz)")[0]
+        Debug("DATA : " + str(DATA))
+
+        #data_string = json.dumps(data)  # data serialized
+        #data_loaded = json.loads(data)  # data loaded
+
+        mode = DATA["mode"]
+        print("mode: " + str(mode))
+
+        del DATA["mode"]
 
         Antwort = "x"
 
-        if mode == "StockGetBewegung":
+        if mode == "SearchArt":#return List of IDs
+            print("SearchArt")
+            for key, var in DATA.items():
+                print(str(key) + ": " + str(var))
+
+            local_db.connect()
+            query = Artikel.select().where(Artikel.identification == str(DATA["suche"]) or
+                                           Artikel.artikel == str(DATA["suche"]) or
+                                           Artikel.artikel2 == str(DATA["suche"]) or
+                                           Artikel.artikel3 == str(DATA["suche"]) or
+                                           Artikel.artikel4 == str(DATA["suche"]))
+            Antwort = {}
+            for ID in query:
+                Antwort[ID.identification]=ID.lastchange
+            local_db.close()
+
+        if mode == "GetArt":#return Dict
+            print("GetArt")
+            id = str(DATA["identification"])
+            print("id: " + str(id))
+
+
+            local_db.connect()
+            query = Artikel.select().where(Artikel.identification == id)
+            if query.exists():
+                object = Artikel.get(Artikel.identification == id)
+                Antwort = {}
+                Antwort["creation"] = object.creation
+                Antwort["lastchange"] = object.lastchange
+                Antwort["barcode"] = object.barcode
+                Antwort["artikel"] = object.artikel
+                Antwort["artikel2"] = object.artikel2
+                Antwort["artikel3"] = object.artikel3
+                Antwort["artikel4"] = object.artikel4
+                Antwort["lieferant"] = object.lieferant
+                Antwort["name"] = object.name
+                Antwort["ort"] = object.ort
+                Antwort["preisek"] = object.preisek
+                Antwort["preisvkh"] = object.preisvkh
+                Antwort["preisvk"] = object.preisvk
+                Antwort["anzahl"] = object.anzahl
+                Antwort["minimum"] = object.minimum
+                Antwort["identification"] = object.identification
+            else:
+                Antwort = {}
+                Antwort["creation"] = ""
+                Antwort["lastchange"] = ""
+                Antwort["barcode"] = 0
+                Antwort["artikel"] = ""
+                Antwort["artikel2"] = ""
+                Antwort["artikel3"] = ""
+                Antwort["artikel4"] = ""
+                Antwort["lieferant"] = ""
+                Antwort["name"] = ""
+                Antwort["ort"] = ""
+                Antwort["preisek"] = 0.0
+                Antwort["preisvkh"] = 0.0
+                Antwort["preisvk"] = 0.0
+                Antwort["anzahl"] = 0.0
+                Antwort["minimum"] = 0.0
+                Antwort["identification"] = id
+
+            local_db.close()
+
+        if mode == "SetArt":
             Debug("Mode : " + mode)
             ID = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
-            Debug("ID : " + str(ID))
+            Dict = {}
+            Vars = DATA.split("(zKz)")[1].split("(zkz)")[1].split("|")
+            for each in Vars:
+                Dict[each.split("&zKz&")[0]] = each.split("&zKz&")[0]
 
-            DATA = []
-            for Jahr in sorted(os.listdir("StockBewegung/")):
-                for Monat in sorted(os.listdir("StockBewegung/" + str(Jahr))):
-                    for Dateiname in sorted(os.listdir("StockBewegung/" + str(Jahr) + "/" + str(Monat))):
-                        Datei = "StockBewegung/" + str(Jahr) + "/" + str(Monat) + "/" + Dateiname
-                        FirstLine = open(Datei, "r").readlines()[0]
-                        for eachLine in open(Datei, "r").readlines():
-                            if not eachLine == FirstLine and eachLine.split(":")[0] == str(ID):
-                                DATA.append(Jahr + Monat + Dateiname.replace(".csv", "") + "|" + eachLine.split(":")[2])
-            Antwort=str(DATA)
-
-
-        if mode == "StockSetBCode":
-            Debug("Mode : " + mode)
-            ID = 100000
-            while True:
-                if not ID in StockIDList and not ID in BlockedIDList:
-                    BlockedIDList.append(ID)
-                    break
-                else: ID = ID + 1
-            Antwort = str(ID)
-
-        if mode == "SaveArbeiterLinie":
-            Debug("Mode : " + mode)
-            Arbeiter = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
-            Linie = str(DATA.split("(zKz)")[1].split("(zkz)")[1])
-            Text = str(DATA.split("(zKz)")[1].split("(zkz)")[2])
-            BlueSave(Linie, Text, "Arbeiter/" + Arbeiter)
-        if mode == "GetArbeiterLinie":
-            Debug("Mode : " + mode)
-            Arbeiter = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
-            Linie = str(DATA.split("(zKz)")[1].split("(zkz)")[1])
-            Antwort = str(BlueLoad(Linie, "Arbeiter/" + Arbeiter))
-
-
-        if mode == "ListeDerArbeiter":
-            Debug("Mode : " + mode)
-            AntwortArbeiterListe = ""
-            for each in ArbeiterListe: AntwortArbeiterListe = AntwortArbeiterListe + "|" + each
-            Antwort = AntwortArbeiterListe
-
-
-        if mode == "StockSetArtInfo":
-            Debug("Mode : " + mode)
-            ID = int(DATA.split("(zKz)")[1].split("(zkz)")[0])
-            VarName = str(DATA.split("(zKz)")[1].split("(zkz)")[1])
-            Var = str(DATA.split("(zKz)")[1].split("(zkz)")[2])
-            Debug("ID :  " + str(ID))
-            Debug("VarName :  " + str(VarName))
-            Debug("Var :  " + str(Var))
             BlueMkDir(DIR + "Stock/" + str(ID)[-2] + str(ID)[-1])
+            File = DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID)
 
             query = Artikel.select().where(Artikel.identification == str(ID))
             if not query.exists():
                 ThisArtikel = Artikel.create(creation=str(Date()), identification=ID)
                 ThisArtikel.save()
 
-            BlueSave("LastChange", str(Timestamp()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-            StockLastChangeList[ID] = str(Timestamp())
-            ThisArtikel = Artikel(lastchange=StockLastChangeList[ID], identification=ID)
-            ThisArtikel.save()
-
             if not ID in StockIDList:
                 StockArtikelAnzahl = StockArtikelAnzahl  + 1 # Neuer Artikel
-                BlueSave("Creation", str(Date()), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
+                BlueSave("Creation", str(Date()), File)
                 StockCreationList[ID] = str(Date())
                 StockIDList.append(ID)
 
-            if VarName == "Barcode":
-                StockBarcodeList[ID]=int(Var)
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(barcode=StockBarcodeList[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "Artikel":
-                StockArtikelList[ID]=str(Var).upper()
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(artikel=StockArtikelList[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "Artikel2":
-                StockArtikel2List[ID]=str(Var).upper()
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(artikel2=StockArtikel2List[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "Artikel3":
-                StockArtikel3List[ID]=str(Var).upper()
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(artikel3=StockArtikel3List[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "Lieferant":
-                StockLieferantList[ID]=str(Var).upper()
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                if not StockLieferantList[ID] in ListeDerLieferanten: ListeDerLieferanten.append(StockLieferantList[ID]) # Neuer Artikel
-                ThisArtikel = Artikel(lieferant=StockLieferantList[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "Name":
-                StockNameList[ID]=str(Var)
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(name=StockNameList[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "Ort":
-                StockOrtList[ID]=str(Var).upper()
-                BlueSave(str(VarName), str(Var).upper(), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(ort=StockOrtList[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "PreisEK":
-                StockPreisEKList[ID]=float(Var)
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(preisek=StockPreisEKList[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "PreisVKH":
-                StockPreisVKHList[ID]=float(Var)
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(preisvkh=StockPreisVKHList[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "PreisVK":
-                StockPreisVKList[ID]=float(Var)
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(preisvk=StockPreisVKList[ID], identification=ID)
-                ThisArtikel.save()
-            if VarName == "Anzahl":
-                StockAnzahlList[ID]=float(Var)
-                BlueSave(str(VarName), str(Var), DIR + "Stock/" + str(ID)[-2] + str(ID)[-1] + "/" + str(ID))
-                ThisArtikel = Artikel(anzahl=StockAnzahlList[ID], identification=ID)
-                ThisArtikel.save()
 
-        if mode == "GetArt":
-            Debug("Mode : " + mode)
-            print(DATA.split("(zKz)")[1])
-            ID = DATA.split("(zKz)")[1].split("(zkz)")[0]
-            Debug("ID :  " + str(ID))
-
-            ID = int(ID)
-
-            Antwort = "Name&zKz&" + str(StockNameList[ID])
-            Antwort = Antwort + "|Artikel&zKz&" + str(StockArtikelList[ID])
-            Antwort = Antwort + "|Artikel2&zKz&" + str(StockArtikel2List[ID])
-            Antwort = Antwort + "|Artikel3&zKz&" + str(StockArtikel3List[ID])
-            Antwort = Antwort + "|Barcode&zKz&" + str(StockBarcodeList[ID])
-            Antwort = Antwort + "|Lieferant&zKz&" + str(StockLieferantList[ID])
-            Antwort = Antwort + "|PreisEK&zKz&" + str(StockPreisEKList[ID])
-            Antwort = Antwort + "|PreisVKH&zKz&" + str(StockPreisVKHList[ID])
-            Antwort = Antwort + "|PreisVK&zKz&" + str(StockPreisVKList[ID])
-            Antwort = Antwort + "|Anzahl&zKz&" + str(StockAnzahlList[ID])
-            Antwort = Antwort + "|Ort&zKz&" + str(StockOrtList[ID])
-            Antwort = Antwort + "|LastChange&zKz&" + str(StockLastChangeList[ID])
-            Antwort = Antwort + "|Creation&zKz&" + str(StockCreationList[ID])
-
-        if mode == "GetArtInfo":
-            Debug("Mode : " + mode)
-            print(DATA.split("(zKz)")[1])
-            ID = DATA.split("(zKz)")[1].split("(zkz)")[0]
-            Vars = str(DATA.split(str(ID))[1]).split("(zkz)")
-            Debug("ID :  " + str(ID))
-            Debug("Vars :  " + str(Vars))
-
-            Antwort = str(ID)
-
-
-            ID = int(ID)
-            for Var in Vars:
-                try:
-                    if Var == "Artikel":  Antwort = Antwort + " | " + str(StockArtikelList[ID])
-                    if Var == "Artikel2":  Antwort = Antwort + " | " + str(StockArtikel2List[ID])
-                    if Var == "Artikel3":  Antwort = Antwort + " | " + str(StockArtikel3List[ID])
-                    if Var == "Name":  Antwort = Antwort + " | " + str(StockNameList[ID])
-                    if Var == "Ort":  Antwort = Antwort + " | " + str(StockOrtList[ID]).upper()
-                    if Var == "PreisEK":  Antwort = Antwort + " | " + str(StockPreisEKList[ID])
-                    if Var == "PreisVKH":  Antwort = Antwort + " | " + str(StockPreisVKHList[ID])
-                    if Var == "PreisVK":  Antwort = Antwort + " | " + str(StockPreisVKList[ID])
-                    if Var == "Anzahl":  Antwort = Antwort + " | " + str(StockAnzahlList[ID])
-                    if Var == "Barcode":  Antwort = Antwort + " | " + str(StockBarcodeList[ID])
-                    if Var == "LastChange":  Antwort = Antwort + " | " + str(StockLastChangeList[ID])
-                    if Var == "Creation":  Antwort = Antwort + " | " + str(StockCreationList[ID])
-                    if Var == "Lieferant":  Antwort = Antwort + " | " + str(StockLieferantList[ID])
-                except:
-                    Antwort = Antwort + "None"
+            identification = CharField(primary_key=True)
+            name = CharField(null=True)
+            artikel = CharField(null=True)
+            artikel2 = CharField(null=True)
+            artikel3 = CharField(null=True)
+            barcode = IntegerField(null=True)
+            lieferant = CharField(null=True)
+            preisek = FloatField(null=True)
+            preisvkh = FloatField(null=True)
+            preisvk = FloatField(null=True)
+            anzahl = FloatField(null=True)
+            ort = CharField(null=True)
+            lastchange = CharField(null=True)
+            creation = CharField(null=True)
+            minimum = FloatField(null=True)
 
         if mode == "GetStockZahl":
             Debug("Mode : " + mode)
@@ -495,7 +388,7 @@ while True:
             ThisArtikel.save()
 
             BlueSave("LastChange", str(Date()), DIR + "Stock/" + str(BcodeSuche)[-2] + str(BcodeSuche)[-1] + "/" + str(BcodeSuche))
-            StockLastChangeList[BcodeSuche] = str(Date())
+            StockLastChangeList[BcodeSuche] = str(Timestamp())
 
             BlueMkDir(DIR + "StockBewegung/" + str(Date()).split("-")[0])
             BlueMkDir(DIR + "StockBewegung/" + str(Date()).split("-")[0] + "/" + str(Date()).split("-")[1])
@@ -580,11 +473,15 @@ while True:
             if indices == []: indices = [0]
 
             try:
-                Antwort = " "
+                Antwort = ""
                 for eachDat in indices:
-                    Antwort = Antwort.rstrip() + str(eachDat) + "|" + str(StockLastChangeList[eachDat]) + "<K>"
+                    if Antwort == "":
+                        Antwort = str(eachDat) + "|" + str(StockLastChangeList[eachDat])
+                    else:
+                        Antwort = Antwort + "<K>" + str(eachDat) + "|" + str(StockLastChangeList[eachDat])
 
             except:
+                if Antwort == "": Antwort = "|"
                 Debug("Nichts gefunden")
 
         if mode == "SearchStock":
@@ -672,6 +569,7 @@ while True:
 
 
         Debug("Sende : " + str(Antwort))
+        Antwort = json.dumps(Antwort)  # data serialized
         Antwort = Antwort.encode()
         c.send(Antwort)
 c.close()

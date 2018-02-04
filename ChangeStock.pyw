@@ -25,22 +25,11 @@ def Save():
     global Time
     print("Save")
     print("Time " + str(Time))
-    if not PID and IDExists:
-        try: LastChange = float(StockGetArtInfo(["LastChange"], ID).split(" | ")[1])
-        except: LastChange = 0.00
-    else:
-        LastChange = 0.00
-    print("LastChange " + str(LastChange))
-    if LastChange > Time and IDExists and not PID:
+    if not GetArt(ID)["LastChange"] == DATA_LOCAL["LastChange"]:
         appChange.infoBox("Achtung", "Dieser Artikel wurde gerade von einem anderen ort aus geändert", parent=None)
     else:
         print("Send Data to Server")
-        for Entry in EntryList:
-            print("Save " + str(Entry))
-            StockSetArtInfo(ID, Entry, appChange.getEntry(Entry))
-        try: Anzahl = StockGetArtInfo(["Anzahl"], ID).split(" | ")[1]
-        except: Anzahl = 0
-        StockSetArtInfo(ID, "Anzahl", Anzahl)
+        SetArt(ID)
     return True
 
 def VerifyInput(Entry):
@@ -92,19 +81,17 @@ def VerifyInput(Entry):
 				appChange.setEntry("PreisVKH", RoundUp0000(myFloat/1.2100), callFunction=False)
 				myFloat = RoundUp05(float(appChange.getEntry("PreisVKH"))*1.21)
 				appChange.setEntry(Entry, float(myFloat))
-
-			
-			
 		except:
 			appChange.setEntry(Entry, "")
-				
+	DATA_LOCAL[Entry] = appChange.getEntry(Entry)
 			
 			
 	
 
 def VerifyChanges():
 	print("VerifyChanges")
-	UserMadeChanges = True
+	if not DATA == DATA_LOCAL: UserMadeChanges= True
+    else: UserMadeChanges = False
 	if UserMadeChanges:
 		if appChange.yesNoBox("Speichern", "Wollen sie speichern?", parent=None):
 			if Save():
@@ -126,6 +113,9 @@ def BtnStockGraph(btn):
 	if platform.system() == "Windows": COMMAND = "ArtGraph.py "
 	os.system(COMMAND + str(ID))
 
+DATA = GetArt(ID)
+DATA_LOCAL = DATA.copy()
+
 if "P" in ID:
 	print("P")
 	PID = ID
@@ -142,28 +132,14 @@ appChange.setBg("#ffffff")
 appChange.addLabel("Title", str(ID))
 
 Time = Timestamp()
-if not PID:
-	print("Exists")
-	DATA = StockGetArtInfo(EntryList, ID).split(" | ")
-else:
-	print("New")
-	DATA = PreisvorschlagGetArtInfo(EntryList, PID).split(" | ")
-	DATA.insert(1, IDToBarcode(ID))
-	DATA.insert(7, "")
-	DATA.insert(11, 0)
-	DATA[0] = ID
 
 print("DATA " + str(DATA))
 for Entry in EntryList:
     print("Entry " + str(Entry))
     appChange.addLabelEntry(Entry)
     appChange.setEntryChangeFunction(Entry, VerifyInput)
-	
-	
-    if IDExists:
-        appChange.setEntry(Entry, DATA[EntryList.index(Entry) + 1], callFunction=True)
-    else:
-        appChange.setEntry(Entry, "", callFunction=True)
+    appChange.setEntry(Entry, DATA[Entry])
+
     if Entry == "Barcode": appChange.setEntryState(Entry, "disabled")
 
 def StopWindow(btn):

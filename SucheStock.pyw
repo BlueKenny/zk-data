@@ -5,6 +5,8 @@ import platform
 if not os.path.exists("DATA/NOUPDATE"):
     print("Update")
     os.system("git pull")
+else:
+    print("No Update")
 
 from libs.appjar0900 import gui
 from libs.BlueFunc import *
@@ -18,9 +20,13 @@ appSuche = gui("Search Stock", "800x650")
 appSuche.setBg("#ffffff")
 
 IDToChange = 0
+ServerStockIsOn = True
+ServerPreiscorschlagIsOn = True
 
-appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
-appSuche.setMeter("status", 100, text="")
+AutoCacheID = 100000
+AutoCacheSlowDown = False
+#appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
+#appSuche.setMeter("status", 100, text="")
 
 #NEWS
 NEWS_INDEX = BlueLoad("NEWS_INDEX", "DATA/DATA")
@@ -98,108 +104,195 @@ def Delete(btn):
     appSuche.setEntry("Lieferant", "")
     appSuche.setFocus("Suche")
 
-def Suche(btn):
-    Debug("Suche")
-    if len(btn) == 6:
-        try:
-            ID = int(btn)
-            appSuche.setEntry("Suche", str(ID))
-        except: True
 
-    appSuche.setMeter("status", 0, text="Suche wird gestartet")
+def Suche():
+    appSuche.thread(SucheProcess)
+
+def SucheProcess():
+    global AutoCacheSlowDown
+    Debug("Suche")
+    appSuche.clearListBox("Suche")
+    AutoCacheSlowDown = True
+
+    #appSuche.setMeter("status", 0, text="Suche wird gestartet")
 
     Suche = appSuche.getEntry("Suche").replace(" ", "").upper()
     Ort = appSuche.getEntry("Ort").upper()
     Lieferant = appSuche.getEntry("Lieferant").upper()
 
-    if Suche == "" and Ort == "" and Lieferant == "":
+    if Suche == "":
         NichtSuchen = True
     else:
         NichtSuchen = False
 
     if not NichtSuchen:
-        AntwortListStock=SendeSucheStock(Suche, Ort, Lieferant).split("<K>")
-        print("AntwortListStock " + str(AntwortListStock))
-        AntwortListPreisvorschlag=SendeSuchePreisvorschlag(Suche, Lieferant).split("<K>")
-        print("AntwortListPreisvorschlag " + str(AntwortListPreisvorschlag))
+        #AntwortListStock=SendeSucheStock(Suche, Ort, Lieferant).split("<K>")
+        #print("AntwortListStock " + str(AntwortListStock))
 
-        AntwortList=[]
-        for each in AntwortListStock:
-            if not each == "": AntwortList.append(each)
-        for each in AntwortListPreisvorschlag:
-            if not each == "": AntwortList.append(each)
+        if ServerStockIsOn:
+            AntwortDict=SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
+            #print("AntwortDict " + str(AntwortDict))
+        else: AntwortList=[]
 
-        appSuche.setMeter("status", 10, text="Warte auf daten")
-        appSuche.clearListBox("Suche")
+        #if ServerPreiscorschlagIsOn:
+        #    for ID, Time in SuchePreisvorschlag(Suche, Lieferant).items():
+        #        AntwortDict[ID]=str(Time)
+        #AntwortListPreisvorschlag=SendeSuchePreisvorschlag(Suche, Lieferant).split("<K>")
+        #print("AntwortListPreisvorschlag " + str(AntwortListPreisvorschlag))
 
-        if btn == "first":
-            AntwortList = [AntwortList[0]]
-            Schritt = (100-10)/(1); print("Schritt " + str(Schritt))
-        else:
-            Schritt = (100-10)/(len(AntwortList)-1); print("Schritt " + str(Schritt))
+        print("AntwortDict: " + str(AntwortDict))
+        for ID, Time in AntwortDict.items():
+            if not ID == "":
+                print("ID: " + str(ID))
+                print(" Time: " + str(Time))
 
-        print("AntwortList " + str(AntwortList))
-        for IDs in AntwortList:
-            Debug("Get Info for ID " + str(IDs))
-            if not IDs == "" and not IDs == "0"and not IDs == None and not IDs == "None" and not IDs == "P0":
-                appSuche.setMeter("status", appSuche.getMeter("status")[0] * 100 + Schritt, text="Lade Daten")
-                print(" " + str(appSuche.getMeter("status")[0] + Schritt))
-                Linie = str(IDs).rstrip()
-                if "P" in IDs:
-                    Linie = "P" + PreisvorschlagGetArtInfo(["Artikel", "LieferantMitDatum", "Name", "PreisVK"], IDs)
+                ArtLocal = GetArtLocal(ID)
+                if str(ArtLocal.lastchange) == str(Time):
+                    Art = ArtLocal
+                    print(" GetArtLocal")
                 else:
-                    Linie = StockGetArtInfo(["Artikel", "Lieferant", "Name", "Ort", "PreisVK", "Anzahl"], IDs)
+                    Art = GetArt(ID)
+                    print(" GetArtServer")
 
+                Linie = str(ID)
+                Linie = Linie + " | " + str(Art.artikel)
+                Linie = Linie + " | " + str(Art.lieferant)
+                Linie = Linie + " | " + str(Art.name)
+                Linie = Linie + " | " + str(Art.ort)
+                Linie = Linie + " | " + str(Art.preisvk)
+                Linie = Linie + " | " + str(Art.anzahl)
                 appSuche.addListItem("Suche", Linie)
-                if "P" in IDs:
-                    appSuche.setListItemBg("Suche", Linie, "#FFF68F")
-                else:
-                    appSuche.setListItemBg("Suche", Linie, "#ffffff")
-        appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
+                appSuche.setListItemBg("Suche", Linie, "#ffffff")
+
+    #    AntwortList=[]
+    #    for each in AntwortListStock:
+    #        if not each == "": AntwortList.append(each)
+    #    for each in AntwortListPreisvorschlag:
+    #        if not each == "": AntwortList.append(each)
+
+    #    appSuche.setMeter("status", 10, text="Warte auf daten")
+    #    appSuche.clearListBox("Suche")
+
+    #    if btn == "first":
+    #        AntwortList = [AntwortList[0]]
+    #        Schritt = (100-10)/(1); print("Schritt " + str(Schritt))
+    #    else:
+    #        Schritt = (100-10)/(len(AntwortList)-1); print("Schritt " + str(Schritt))
+
+    #    print("AntwortList " + str(AntwortList))
+    #    for IDs in AntwortList:
+    #        Debug("Get Info for ID " + str(IDs))
+    #        if not IDs == "" and not IDs == "0"and not IDs == None and not IDs == "None" and not IDs == "P0":
+    #            appSuche.setMeter("status", appSuche.getMeter("status")[0] * 100 + Schritt, text="Lade Daten")
+    #            print(" " + str(appSuche.getMeter("status")[0] + Schritt))
+    #            Linie = str(IDs).rstrip()
+    #            if "P" in IDs:
+    #                Linie = "P" + PreisvorschlagGetArtInfo(["Artikel", "LieferantMitDatum", "Name", "PreisVK"], IDs)
+    #            else:
+    #                Linie = StockGetArtInfo(["Artikel", "Lieferant", "Name", "Ort", "PreisVK", "Anzahl"], IDs)
+
+    #            appSuche.addListItem("Suche", Linie)
+    #            if "P" in IDs:
+    #                appSuche.setListItemBg("Suche", Linie, "#FFF68F")
+    #            else:
+    #                appSuche.setListItemBg("Suche", Linie, "#ffffff")
+    #    appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
 
 
-    StockAnzahl = int(GetStockZahl())
-    appSuche.setLabel("infoAnzahlStock",  str(GetStockZahl()) + " Artikel zu verfügung")
-    if StockAnzahl == 0:
-        appSuche.setLabelFg("infoAnzahlStock", "red")
-    else:
-        appSuche.setLabelFg("infoAnzahlStock", "green")
+    #StockAnzahl = int(GetStockZahl())
+    #appSuche.setLabel("infoAnzahlStock",  str(GetStockZahl()) + " Artikel zu verfügung")
+    #if StockAnzahl == 0:
+    #    appSuche.setLabelFg("infoAnzahlStock", "red")
+    #else:
+    #    appSuche.setLabelFg("infoAnzahlStock", "green")
 
-    PreisvorschlagAnzahl = int(GetStockPreisvorschlagAnzahl())
-    appSuche.setLabel("infoAnzahlPreisvorschlag",  str(GetStockPreisvorschlagAnzahl()) + " Preisvorschläge")
-    if PreisvorschlagAnzahl == 0:
-        appSuche.setLabelFg("infoAnzahlPreisvorschlag", "red")
-    else:
-        appSuche.setLabelFg("infoAnzahlPreisvorschlag", "green")
+    #PreisvorschlagAnzahl = int(GetStockPreisvorschlagAnzahl())
+    #appSuche.setLabel("infoAnzahlPreisvorschlag",  str(GetStockPreisvorschlagAnzahl()) + " Preisvorschläge")
+    #if PreisvorschlagAnzahl == 0:
+    #    appSuche.setLabelFg("infoAnzahlPreisvorschlag", "red")
+    #else:
+    #    appSuche.setLabelFg("infoAnzahlPreisvorschlag", "green")
 
-    appSuche.setMeter("status", 100, text="")
+    #appSuche.setMeter("status", 100, text="")
 
 def StockChange(btn):
     Debug("StockChange")
-    IDToChange = appSuche.getListBox("Suche")[0].split(" | ")[0].rstrip()
+    try: IDToChange = appSuche.getListBox("Suche")[0].split(" | ")[0].rstrip()
+    except: appSuche.errorBox("Fehler", "Bitte wählen sie zuerst einen Artikel aus")
     if not "P" in IDToChange:
         Name = "[ " + StockGetArtInfo(["Name"], str(IDToChange)) + " ]"
         if btn == "<F1>": # MINUS
             Anzahl = appSuche.numberBox("Entfernen", "Wie viele wolen sie ENTFERNEN ?")
-            try:
-                SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
-                Debug(IDToChange)
-                appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
-                appSuche.setEntry("Suche", IDToChange)
-                Suche("first")
-            except: appSuche.infoBox("Fehler", "Fehler")
+            if Anzahl == None:
+                appSuche.errorBox("Fehler", "Abgebrochen")
+            else:
+                try:
+                    SendeChangeAnzahl(IDToChange, "-" + str(int(Anzahl)))
+                    Debug(IDToChange)
+                    appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
+                    appSuche.setEntry("Suche", IDToChange)
+                    #Suche("first")
+                except: appSuche.infoBox("Fehler", "Fehler")
         if btn == "<F2>": # PLUS
             Anzahl = appSuche.numberBox("Hinzufügen", "Wie viele wollen sie HINZUFUGEN ?")
-            try:
-                SendeChangeAnzahl(IDToChange, int(Anzahl))
-                Debug(IDToChange)
-                appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
-                appSuche.setEntry("Suche", IDToChange)
-                Suche("first")
-            except: appSuche.infoBox("Fehler", "Fehler")
+            if Anzahl == None:
+                appSuche.errorBox("Fehler", "Abgebrochen")
+            else:
+                try:
+                    SendeChangeAnzahl(IDToChange, int(Anzahl))
+                    Debug(IDToChange)
+                    appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
+                    appSuche.setEntry("Suche", IDToChange)
+                    #Suche("first")
+                except: appSuche.infoBox("Fehler", "Fehler")
+
+def AutoMakeCacheProcess():
+    global AutoCacheID
+    global AutoCacheSlowDown
+
+    GetArt(AutoCacheID)
+    AutoCacheID = AutoCacheID + 1
+
+    if not AutoCacheID == 1000000:
+        if AutoCacheSlowDown:
+            appSuche.after(10000, AutoMakeCache)
+            AutoCacheSlowDown = False
+        else:
+            appSuche.after(100, AutoMakeCache)
+
+def AutoMakeCache():
+    appSuche.thread(AutoMakeCacheProcess)
+
+def CheckAnzahl():
+    global ServerStockIsOn
+    global ServerPreiscorschlagIsOn
+
+    StockAnzahl = int(GetStockZahl())
+    PreisvorschlagAnzahl = int(GetStockPreisvorschlagAnzahl())
+    appSuche.setLabel("infoAnzahlStock", str(StockAnzahl) + " Artikel zu verfügung")
+    appSuche.setLabel("infoAnzahlPreisvorschlag", str(PreisvorschlagAnzahl) + " Preisvorschläge")
+
+    if StockAnzahl == 0:
+        appSuche.setLabelFg("infoAnzahlStock", "red")
+        ServerStockIsOn = False
+    else:
+        appSuche.setLabelFg("infoAnzahlStock", "green")
+        ServerStockIsOn = True
+
+    if PreisvorschlagAnzahl == 0:
+        appSuche.setLabelFg("infoAnzahlPreisvorschlag", "red")
+        ServerPreiscorschlagIsOn = False
+    else:
+        appSuche.setLabelFg("infoAnzahlPreisvorschlag", "green")
+        ServerPreiscorschlagIsOn = True
+    if not ServerStockIsOn or not ServerPreiscorschlagIsOn:
+        appSuche.after(1000, CheckAnzahl)
+    else:
+        appSuche.after(10000, CheckAnzahl)
+
 
 appSuche.setFocus("Suche")
-appSuche.addLabel("KeyEnter", "Enter = Suchen")
+#appSuche.addLabel("KeyEnter", "Enter = Suchen")
 appSuche.addLabel("KeyDelete", "Entfernen = Alle fehler leeren")
 appSuche.addLabel("space0", "")
 appSuche.addLabel("KeyF1", "F1 = Artikel entfernen")
@@ -208,24 +301,20 @@ appSuche.addLabel("KeyF11", "F11 = Ort drucken")
 appSuche.addLabel("KeyF12", "F12 = Drucken")
 appSuche.addLabel("space1", "")
 
-StockAnzahl = int(GetStockZahl())
-appSuche.addLabel("infoAnzahlStock",  str(StockAnzahl) + " Artikel zu verfügung")
-if StockAnzahl == 0: appSuche.setLabelFg("infoAnzahlStock", "red")
-else: appSuche.setLabelFg("infoAnzahlStock", "green")
-
-PreisvorschlagAnzahl = int(GetStockPreisvorschlagAnzahl())
-appSuche.addLabel("infoAnzahlPreisvorschlag",  str(PreisvorschlagAnzahl) + " Preisvorschläge")
-if PreisvorschlagAnzahl == 0: appSuche.setLabelFg("infoAnzahlPreisvorschlag", "red")
-else: appSuche.setLabelFg("infoAnzahlPreisvorschlag", "green")
+appSuche.addLabel("infoAnzahlStock",  "")
+appSuche.addLabel("infoAnzahlPreisvorschlag",  "")
 
 appSuche.addLabel("space2", "")
 
-appSuche.bindKey("<Return>", Suche)
+#appSuche.bindKey("<Return>", Suche)
+appSuche.setEntryChangeFunction("Suche", Suche)
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
 appSuche.bindKey("<F4>", BtnStockGraph)
 appSuche.bindKey("<F11>", BtnPrintOrt)
 appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
+appSuche.after(10000, AutoMakeCache)
 
+#appSuche.after(500, CheckAnzahl)
 appSuche.go()
