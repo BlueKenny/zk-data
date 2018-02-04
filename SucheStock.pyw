@@ -16,14 +16,16 @@ from libs.barcode import *
 import csv
 
 EntryList=["Barcode", "Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
-appSuche = gui("Search Stock", "800x650")
+appSuche = gui("Search Stock", "1000x1000")
 appSuche.setBg("#ffffff")
 
 IDToChange = 0
 ServerStockIsOn = True
 ServerPreiscorschlagIsOn = True
 
-AutoCacheID = 100000
+if BlueLoad("AutoCacheID", "DATA/DATA") == None: AutoCacheID = 100000
+else: AutoCacheID = int(BlueLoad("AutoCacheID", "DATA/DATA"))
+
 AutoCacheSlowDown = False
 #appSuche.addMeter("status"); appSuche.setMeterFill("status", "blue")
 #appSuche.setMeter("status", 100, text="")
@@ -73,8 +75,10 @@ def BtnPrintOrt(btn):
 appSuche.addLabelEntry("Suche")
 appSuche.addLabelEntry("Ort")
 appSuche.addLabelEntry("Lieferant")
-ListBoxSuche = appSuche.addListBox("Suche")
-ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc("ÄNDERN"))# if List Item double click then change
+appSuche.addGrid("Suche", [["Identification", "Artikel", "Lieferant", "Name", "Ort", "Preis", "Anzahl"]])
+appSuche.setGridHeight("Suche", 500)
+#ListBoxSuche = appSuche.addListBox("Suche")
+#ListBoxSuche.bind("<Double-1>", lambda *args: tbFunc("ÄNDERN"))# if List Item double click then change
 
 def tbFunc(btn):
     global IDToChange
@@ -111,7 +115,9 @@ def Suche():
 def SucheProcess():
     global AutoCacheSlowDown
     Debug("Suche")
-    appSuche.clearListBox("Suche")
+    appSuche.deleteAllGridRows("Suche")
+    #appSuche.addGridRows("Suche", [["Identification", "Artikel", "Lieferant", "Name", "Ort", "Preis", "Anzahl"]])
+    #appSuche.clearListBox("Suche")
     AutoCacheSlowDown = True
 
     #appSuche.setMeter("status", 0, text="Suche wird gestartet")
@@ -154,15 +160,22 @@ def SucheProcess():
                     Art = GetArt(ID)
                     print(" GetArtServer")
 
-                Linie = str(ID)
-                Linie = Linie + " | " + str(Art.artikel)
-                Linie = Linie + " | " + str(Art.lieferant)
-                Linie = Linie + " | " + str(Art.name)
-                Linie = Linie + " | " + str(Art.ort)
-                Linie = Linie + " | " + str(Art.preisvk)
-                Linie = Linie + " | " + str(Art.anzahl)
-                appSuche.addListItem("Suche", Linie)
-                appSuche.setListItemBg("Suche", Linie, "#ffffff")
+                appSuche.addGridRows("Suche", [[str(ID),
+                                               str(Art.artikel),
+                                               str(Art.lieferant),
+                                               str(Art.name),
+                                               str(Art.ort),
+                                               str(Art.preisvk),
+                                               str(Art.anzahl)]])
+                #Linie = str(ID)
+                #Linie = Linie + " | " + str(Art.artikel)
+                #Linie = Linie + " | " + str(Art.lieferant)
+                #Linie = Linie + " | " + str(Art.name)
+                #Linie = Linie + " | " + str(Art.ort)
+                #Linie = Linie + " | " + str(Art.preisvk)
+                #Linie = Linie + " | " + str(Art.anzahl)
+                #appSuche.addListItem("Suche", Linie)
+                #appSuche.setListItemBg("Suche", Linie, "#ffffff")
 
     #    AntwortList=[]
     #    for each in AntwortListStock:
@@ -250,15 +263,16 @@ def AutoMakeCacheProcess():
     global AutoCacheID
     global AutoCacheSlowDown
 
+    BlueSave("AutoCacheID", AutoCacheID, "DATA/DATA")
     GetArt(AutoCacheID)
     AutoCacheID = AutoCacheID + 1
 
-    if not AutoCacheID == 1000000:
+    if AutoCacheID < 1000000:
         if AutoCacheSlowDown:
             appSuche.after(10000, AutoMakeCache)
             AutoCacheSlowDown = False
         else:
-            appSuche.after(100, AutoMakeCache)
+            appSuche.after(1000, AutoMakeCache)
 
 def AutoMakeCache():
     appSuche.thread(AutoMakeCacheProcess)
@@ -314,7 +328,7 @@ appSuche.bindKey("<F4>", BtnStockGraph)
 appSuche.bindKey("<F11>", BtnPrintOrt)
 appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
-appSuche.after(10000, AutoMakeCache)
 
+#appSuche.after(1000, AutoMakeCache)
 #appSuche.after(500, CheckAnzahl)
 appSuche.go()

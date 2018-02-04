@@ -83,7 +83,7 @@ def GetArtLocal(ID):# return object
 ##############          STOCK
 
 def GetArt(ID):#return object
-    if True:#try:
+    try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         Dict = {"mode":"GetArt"}
         ID = str(ID)
@@ -144,11 +144,11 @@ def GetArt(ID):#return object
         ThisArtikel.save()
         local_db.close()
         return ThisArtikel
-    #except:
-    #    return {}
+    except:
+        return {}
 
 def SearchArt(Dict):# Give Dict with search return Dict
-    if True:#try:
+    try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect(SERVERSTOCK_IP)
 
@@ -164,8 +164,8 @@ def SearchArt(Dict):# Give Dict with search return Dict
         sock.close()
         Debug("Get " + str(data))
         return data
-    #except:
-    #    return {}
+    except:
+        return {}
 
 def GetStockZahl():
     try:

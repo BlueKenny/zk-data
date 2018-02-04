@@ -35,3 +35,4 @@ INDEX:DATE:MODE:INFO
 34:31/01/18:INFO:"WIP: Stock"
 35:01/02/18:INFO:"WIP: Stock speichert jetzt alle informationen local ab und fragt sie nur erneut solten sie nicht mehr gultig sein"
 36:01/02/18:INFO:"WIP: Stock, neues icon + Doppel click ruft informationen über ein artikel ab"
+36:04/02/18:FEATURE:Jeder PC speichern nun alle daten in einen local datenbank und kann darauf zugreifen solten diese noch gultig sein, alle suchanfragen werden immernoch vom Server gemacht

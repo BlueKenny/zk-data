@@ -35,7 +35,7 @@ if SERVER_SQL == "None":
     SERVER_SQL=BlueSave("SERVERSQL", SERVER_SQL, "DATA/DATA")
 
 local_db = SqliteDatabase("DATA/stock.db")
-memory_db = SqliteDatabase(":memory:")
+#memory_db = SqliteDatabase(":memory:")
 #local_db = MySQLDatabase('web', user='root', password='', host=SERVER_SQL, port=3306)
 #extern_db= MySQLDatabase('web', user='root', password='', host='192.168.188.24', port=3306)#192.168.188.24
 
@@ -60,27 +60,6 @@ class Artikel(Model):# All Str are upper()
     class Meta:
         database = local_db
 
-class ArtikelMemory(Model):# All Str are upper()
-    identification = CharField(primary_key = True)
-    name = CharField(null = True)
-    artikel = CharField(null = True)
-    artikel2 = CharField(null = True)
-    artikel3 = CharField(null = True)
-    artikel4 = CharField(null = True)
-    barcode = IntegerField(null = True)
-    lieferant = CharField(null = True)
-    preisek = FloatField(null = True)
-    preisvkh = FloatField(null = True)
-    preisvk = FloatField(null = True)
-    anzahl = FloatField(null = True)
-    ort = CharField(null = True)
-    lastchange = CharField(null = True)
-    creation = CharField(null = True)
-    minimum = FloatField(null = True)
-
-    class Meta:
-        database = memory_db
-
 
 local_db.connect()
 try:
@@ -88,13 +67,6 @@ try:
 except:
     print("Artikel table exists in local_db")
 local_db.close()
-
-memory_db.connect()
-try:
-    memory_db.create_tables([ArtikelMemory])
-except:
-    print("Artikel table exists in memory_db")
-#memory_db.close()
 
 #extern_db.connect()
 #try: extern_db.create_tables([ArtikelExtern])
@@ -109,8 +81,8 @@ BlueMkDir(DIR + "DATA")
 try:
     INDEXLIMIT = int(BlueLoad("IndexLimit", DIR + "DATA/DATA"))
 except:
-    INDEXLIMIT = 50
-    BlueSave("IndexLimit", "50", DIR + "DATA/DATA")
+    INDEXLIMIT = 100
+    BlueSave("IndexLimit", "100", DIR + "DATA/DATA")
 
 # Old Load
 LoadOld = False
@@ -268,11 +240,11 @@ while True:
                 print(str(key) + ": " + str(var))
 
             local_db.connect()
-            query = Artikel.select().where(Artikel.identification == str(DATA["suche"]) or
-                                           Artikel.artikel == str(DATA["suche"]) or
-                                           Artikel.artikel2 == str(DATA["suche"]) or
-                                           Artikel.artikel3 == str(DATA["suche"]) or
-                                           Artikel.artikel4 == str(DATA["suche"]))
+            query = Artikel.select().where((Artikel.identification == str(DATA["suche"])) |
+                                           (Artikel.artikel == str(DATA["suche"])) |
+                                           (Artikel.artikel2 == str(DATA["suche"])) |
+                                           (Artikel.artikel3 == str(DATA["suche"])) |
+                                           (Artikel.artikel4 == str(DATA["suche"])))
             Antwort = {}
             for ID in query:
                 Antwort[ID.identification]=ID.lastchange
@@ -307,22 +279,22 @@ while True:
                 Antwort["identification"] = object.identification
             else:
                 Antwort = {}
-                Antwort["creation"] = ""
-                Antwort["lastchange"] = ""
-                Antwort["barcode"] = 0
-                Antwort["artikel"] = ""
-                Antwort["artikel2"] = ""
-                Antwort["artikel3"] = ""
-                Antwort["artikel4"] = ""
-                Antwort["lieferant"] = ""
-                Antwort["name"] = ""
-                Antwort["ort"] = ""
-                Antwort["preisek"] = 0.0
-                Antwort["preisvkh"] = 0.0
-                Antwort["preisvk"] = 0.0
-                Antwort["anzahl"] = 0.0
-                Antwort["minimum"] = 0.0
-                Antwort["identification"] = id
+                #Antwort["creation"] = ""
+                #Antwort["lastchange"] = ""
+                #Antwort["barcode"] = 0
+                #Antwort["artikel"] = ""
+                #Antwort["artikel2"] = ""
+                #Antwort["artikel3"] = ""
+                #Antwort["artikel4"] = ""
+                #Antwort["lieferant"] = ""
+                #Antwort["name"] = ""
+                #Antwort["ort"] = ""
+                #Antwort["preisek"] = 0.0
+                #Antwort["preisvkh"] = 0.0
+                #Antwort["preisvk"] = 0.0
+                #Antwort["anzahl"] = 0.0
+                #Antwort["minimum"] = 0.0
+                #Antwort["identification"] = id
 
             local_db.close()
 
