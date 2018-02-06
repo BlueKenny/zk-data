@@ -9,6 +9,7 @@ from libs.RoundUp import *
 import datetime
 import time
 import csv
+from libs.barcode import *
 
 SERVER_PORT=10001
 
@@ -57,7 +58,6 @@ PreiseNameList = {}
 PreisePreisEKList = {}
 PreisePreisVKHList = {}
 PreisePreisVKList = {}
-PreiseLastChangeList = {}
 
 
 ListeDerLieferanten = []
@@ -71,14 +71,6 @@ except:
 # LOAD
 print("Lade Preisvorschläge")
 StockArtikelAnzahl = 0
-
-
-def Date():
-    now = datetime.datetime.now()
-    return now.strftime("%Y-%m-%d")
-
-def Timestamp():
-    return time.time()
 
 PreiseID = 0
 for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
@@ -188,8 +180,6 @@ for datei in sorted(os.listdir("Import/Preise/"), reverse=True):
                         PreisePreisVKList[PreiseID] = RoundUp05(PreisePreisVKList[PreiseID])
                         PreisePreisVKHList[PreiseID] = RoundUp0000(float(PreisePreisVKList[PreiseID])/1.21)
 
-                        PreiseLastChangeList[PreiseID] = str(Timestamp())
-
                         PreiseID = PreiseID + 1
                     #except: Debug("Linie ist ungültig \n" + str(eachLine))
 
@@ -205,6 +195,10 @@ s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 try: s.bind(SERVER_IP)
 except: print("Server Port schon gebunden")
 s.listen(1)
+
+def Date():
+    now = datetime.datetime.now()
+    return now.strftime("%Y-%m-%d")
 
 while True:
     Debug("Warte auf befehl...")
@@ -224,34 +218,37 @@ while True:
 
         Antwort = "x"
 
-        if mode == "GetArt":
+        if mode == "GetArtInfo":
             Debug("Mode : " + mode)
             print(DATA.split("(zKz)")[1])
             ID = DATA.split("(zKz)")[1].split("(zkz)")[0]
+            Vars = DATA.split("(zKz)")[1].split("(zkz)")
+
             Debug("ID :  " + str(ID))
+            Debug("Vars :  " + str(Vars))
 
-            ID = int(ID)
+            Antwort = str(ID)
 
-            Antwort = "Name&zKz&" + str(PreiseNameList[ID])
-            Antwort = Antwort + "|Artikel&zKz&" + str(PreiseArtikelList[ID])
-            Antwort = Antwort + "|Artikel2&zKz&" + str(PreiseArtikel2List[ID])
-            Antwort = Antwort + "|Artikel3&zKz&" + str(PreiseArtikel3List[ID])
-            Antwort = Antwort + "|Barcode&zKz&0"
-            Antwort = Antwort + "|Lieferant&zKz&" + str(PreiseLieferantList[ID])
-            Antwort = Antwort + "|PreisEK&zKz&" + str(PreisePreisEKList[ID])
-            Antwort = Antwort + "|PreisVKH&zKz&" + str(PreisePreisVKHList[ID])
-            Antwort = Antwort + "|PreisVK&zKz&" + str(PreisePreisVKList[ID])
-            Antwort = Antwort + "|Anzahl&zKz&0.0"
-            Antwort = Antwort + "|Minimum&zKz&0.0"
-            Antwort = Antwort + "|Ort&zKz&"
-            Antwort = Antwort + "|LastChange&zKz&" + str(PreiseLastChangeList[ID])
-            Antwort = Antwort + "|Creation&zKz&"
+            ID = int(ID.replace("P", ""))
+            for Var in Vars:
+                try:
+                    if Var == "Artikel":  Antwort = Antwort + " | " + str(PreiseArtikelList[ID])
+                    if Var == "Artikel2":  Antwort = Antwort + " | " + str(PreiseArtikel2List[ID])
+                    if Var == "Artikel3":  Antwort = Antwort + " | " + str(PreiseArtikel3List[ID])
+                    if Var == "Name":  Antwort = Antwort + " | " + str(PreiseNameList[ID])
+                    if Var == "PreisEK":  Antwort = Antwort + " | " + str(PreisePreisEKList[ID])
+                    if Var == "PreisVKH":  Antwort = Antwort + " | " + str(PreisePreisVKHList[ID])
+                    if Var == "PreisVK":  Antwort = Antwort + " | " + str(PreisePreisVKList[ID])
+                    if Var == "Lieferant":  Antwort = Antwort + " | " + str(PreiseLieferantList[ID])
+                    if Var == "LieferantMitDatum":  Antwort = Antwort + " | " + str(PreiseLieferantMitDatumList[ID])
+                except:
+                    Antwort = Antwort + "None"
 
         if mode == "GetStockZahl":
             Debug("Mode : " + mode)
             Antwort = str(StockArtikelAnzahl)
 
-        if mode == "SuchePreisvorschlag":
+        if mode == "SearchStock":
             Debug("Mode : " + mode)
             SucheSuche = str(DATA.split("(zKz)")[1].split("(zkz)")[0])
             SucheSuche = SucheSuche.upper()
@@ -300,17 +297,11 @@ while True:
             if indices == []: indices = [0]
 
             try:
-                Antwort = ""
+                Antwort = " "
                 for eachDat in indices:
-                    if Antwort == "":
-                        Antwort = str(eachDat) + "|" + str(PreiseLastChangeList[int(str(eachDat)[1:])])
-                    else:
-                        Antwort = Antwort + "<K>" + str(eachDat) + "|" + str(PreiseLastChangeList[int(str(eachDat)[1:])])
+                    Antwort = Antwort.rstrip() + str(eachDat) + "<K>"
 
-            except:
-                if Antwort == "": Antwort = "|"
-                Debug("Nichts gefunden")
-
+            except: Debug("Nichts gefunden")
 
         Debug("Sende : " + str(Antwort))
         Antwort = Antwort.encode()
