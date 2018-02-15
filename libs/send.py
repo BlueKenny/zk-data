@@ -96,9 +96,18 @@ def GetArtLocal(ID):# return object
     local_db.close()
     return object
 
+def GetBewegungTagLocal():# return Dict of object
+    Tag = str(Date())
+    local_db.connect()
+    query = Bewegung.select().where(Bewegung.datum == str(Tag))
+    Dict = {}
+    for ID in query:
+        Dict[ID.identification] = ID
+    return Dict
+
 def GetBewegungLocal(ID):# return object
     local_db.connect()
-    query = Bewegung.select().where(Bewegung.identification == str(str(ID)))
+    query = Bewegung.select().where(Bewegung.identification == str(ID))
     if not query.exists():
         Bewegung.create(identification=str(ID))
     object = Bewegung.get(Bewegung.identification == str(ID))

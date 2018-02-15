@@ -102,7 +102,7 @@ local_db.close()
 
 # Ordner
 DIR = ""
-BlueMkDir(DIR + "StockBewegung")
+#BlueMkDir(DIR + "StockBewegung")
 BlueMkDir(DIR + "DATA")
 
 local_db.connect()

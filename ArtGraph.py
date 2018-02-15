@@ -5,6 +5,9 @@ from libs.appjar0830 import gui
 import random
 from libs.send import *
 import sys
+try: import matplotlib
+except:
+    if platform.system() == "Linux": os.system("pip3 install --user matplotlib")
 
 if len(sys.argv) == 2:
     ID = sys.argv[1]

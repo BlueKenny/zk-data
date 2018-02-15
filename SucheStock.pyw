@@ -24,8 +24,6 @@ appSuche.setBg("#ffffff")
 #appSuche.setIcon("DATA/stock.jpg")
 
 IDToChange = 0
-ServerStockIsOn = True
-ServerPreiscorschlagIsOn = True
 
 try: AutoCacheID = int(BlueLoad("AutoCacheID", "DATA/DATA"))
 except: AutoCacheID = 1
@@ -104,22 +102,29 @@ tools = ["NEU", "", "F1 -", "F2 +", " ", "F11 Ort", "F12 Barcode"]
 appSuche.addToolbar(tools, tbFunc, findIcon=False)
 
 appSuche.addLabelEntry("Suche", 0, 0, 1, 0)
-appSuche.addLabelEntry("Ort", 0, 1, 1, 0)
-appSuche.addLabelEntry("Lieferant", 0, 2, 1, 0)
+#appSuche.addLabelEntry("Ort", 0, 1, 1, 0)
+#appSuche.addLabelEntry("Lieferant", 0, 2, 1, 0)
+
 #GridSuche = appSuche.addGrid("Suche", [["Identification", "Artikel", "Lieferant", "Name", "Ort", "Preis", "Anzahl"]],
 #                             action=ArtikelAnzeigen,
 #                             actionHeading="Informationen",
 #                             actionButton="Anzeigen",
 #                             showMenu=False)
 #appSuche.setGridHeight("Suche", 500)
+
 ListBoxSuche = appSuche.addListBox("Suche", [], 1, 0, 3, 8)
+#ListBoxSuche = appSuche.addListBox("Suche", [], 1, 0, 3, 8)
 ListBoxSuche.bind("<Double-1>", lambda *args: ArtikelAnzeigen())# if List Item double click then change
+
+appSuche.addDualMeter("progress")
+appSuche.setMeterFill("progress", ["red", "green"])
+appSuche.setMeter("progress", [0, 0])
 
 def Delete(btn):
     Debug("Delete")
     appSuche.setEntry("Suche", "")
-    appSuche.setEntry("Ort", "")
-    appSuche.setEntry("Lieferant", "")
+    #appSuche.setEntry("Ort", "")
+    #appSuche.setEntry("Lieferant", "")
     appSuche.setFocus("Suche")
 
 
@@ -144,21 +149,23 @@ def SucheProcess():
     Suche = EndString.upper()
     appSuche.setEntry("Suche", Suche, callFunction=False)
 
-    Ort = appSuche.getEntry("Ort")
-    EndString = ""
-    for character in Ort:
-        if character.isalpha() or character.isdigit():
-            EndString = EndString + str(character)
-        Ort = EndString.upper()
-    appSuche.setEntry("Ort", Ort, callFunction=False)
+    Ort = ""
+    #Ort = appSuche.getEntry("Ort")
+    #EndString = ""
+    #for character in Ort:
+    #    if character.isalpha() or character.isdigit():
+    #        EndString = EndString + str(character)
+    #    Ort = EndString.upper()
+    #appSuche.setEntry("Ort", Ort, callFunction=False)
 
-    Lieferant = appSuche.getEntry("Lieferant")
-    EndString = ""
-    for character in Lieferant:
-        if character.isalpha() or character.isdigit():
-            EndString = EndString + str(character)
-        Lieferant = EndString.upper()
-    appSuche.setEntry("Lieferant", Lieferant, callFunction=False)
+    Lieferant = ""
+    #Lieferant = appSuche.getEntry("Lieferant")
+    #EndString = ""
+    #for character in Lieferant:
+    #    if character.isalpha() or character.isdigit():
+    #        EndString = EndString + str(character)
+    #    Lieferant = EndString.upper()
+    #appSuche.setEntry("Lieferant", Lieferant, callFunction=False)
 
     if Suche == "":
         NichtSuchen = True
@@ -169,10 +176,7 @@ def SucheProcess():
         #AntwortListStock=SendeSucheStock(Suche, Ort, Lieferant).split("<K>")
         #print("AntwortListStock " + str(AntwortListStock))
 
-        if ServerStockIsOn:
-            AntwortDict=SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
-            #print("AntwortDict " + str(AntwortDict))
-        else: AntwortList=[]
+        AntwortDict=SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
 
         #if ServerPreiscorschlagIsOn:
         #    for ID, Time in SuchePreisvorschlag(Suche, Lieferant).items():
@@ -269,48 +273,39 @@ def AutoMakeCacheProcess():
 def AutoMakeCache():
     appSuche.thread(AutoMakeCacheProcess)
 
-def CheckAnzahl():
-    global ServerStockIsOn
-    global ServerPreiscorschlagIsOn
+def AutoProgressBarProcess():
+    print("\nProcess")
+    Dict = GetBewegungTagLocal()
+    Ausgaben = 0.0
+    Einnahmen = 0.0
+    for ID, object in Dict.items():
+        #print("ID:" + str(ID))
+        Benef = float(object.preisvkh) - float(object.preisek)
+        Anzahl = float(object.end) - float(object.start)
+        Sum = Benef * Anzahl
+        print("Sum: " + str(Sum))
+        if Sum < 0.0:
+            Einnahmen = Einnahmen - Sum
+        else:
+            Ausgaben = Ausgaben + Sum
+    while True:
+        if Einnahmen > 100 or Ausgaben > 100:
+            Einnahmen = Einnahmen / 10
+            Ausgaben = Ausgaben / 10
+        else: break
+    print("Ausgaben: " + str(Ausgaben) + "  Einnahmen: " + str(Einnahmen) + "\n")
+    appSuche.setMeter("progress", [Ausgaben, Einnahmen])
+    appSuche.after(5000, AutoProgressBar)
 
-    StockAnzahl = int(GetStockZahl())
-    PreisvorschlagAnzahl = int(GetStockPreisvorschlagAnzahl())
-    appSuche.setLabel("infoAnzahlStock", str(StockAnzahl) + " Artikel zu verfügung")
-    appSuche.setLabel("infoAnzahlPreisvorschlag", str(PreisvorschlagAnzahl) + " Preisvorschläge")
+def AutoProgressBar():
+    appSuche.thread(AutoProgressBarProcess)
 
-    if StockAnzahl == 0:
-        appSuche.setLabelFg("infoAnzahlStock", "red")
-        ServerStockIsOn = False
-    else:
-        appSuche.setLabelFg("infoAnzahlStock", "green")
-        ServerStockIsOn = True
-
-    if PreisvorschlagAnzahl == 0:
-        appSuche.setLabelFg("infoAnzahlPreisvorschlag", "red")
-        ServerPreiscorschlagIsOn = False
-    else:
-        appSuche.setLabelFg("infoAnzahlPreisvorschlag", "green")
-        ServerPreiscorschlagIsOn = True
-    if not ServerStockIsOn or not ServerPreiscorschlagIsOn:
-        appSuche.after(1000, CheckAnzahl)
-    else:
-        appSuche.after(10000, CheckAnzahl)
 
 appSuche.setFocus("Suche")
-#appSuche.addLabel("Keys", "Entfernen = Alle fehler leeren\n" +
-#                  "F1 = Artikel entfernen\n" +
-#                  "F2 = Artikel hinzufügen\n" +
-#                  "F11 = Ort drucken\n" +
-#                  "F12 = Drucken",
-#                  15, 0, 3, 3)
 
-#appSuche.addLabel("infoAnzahlStock",  "")
-#appSuche.addLabel("infoAnzahlPreisvorschlag",  "")
-
-#appSuche.bindKey("<Return>", Suche)
 appSuche.setEntryChangeFunction("Suche", Suche)
-appSuche.setEntryChangeFunction("Ort", Suche)
-appSuche.setEntryChangeFunction("Lieferant", Suche)
+#appSuche.setEntryChangeFunction("Ort", Suche)
+#appSuche.setEntryChangeFunction("Lieferant", Suche)
 
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
@@ -320,5 +315,6 @@ appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 
 appSuche.after(1000, AutoMakeCache)
-#appSuche.after(500, CheckAnzahl)
+appSuche.after(1000, AutoProgressBar)
+
 appSuche.go()
