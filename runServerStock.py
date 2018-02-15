@@ -6,6 +6,6 @@ import os
 while True:
     #os.system("git pull origin master")
     time.sleep(1)
-    if platform.system() == "Linux": os.system("python3 ./ServerStock.py")
-    if platform.system() == "Windows": os.system("ServerStock.py")
+    if platform.system() == "Linux": os.system("python3 ./Server.py")
+    if platform.system() == "Windows": os.system("Server.py")
     time.sleep(3)
