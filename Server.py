@@ -342,6 +342,7 @@ def SearchArt(Dict):
     local_db.connect()
     if not DATA["suche"] == "":
         query = Artikel.select().where((Artikel.identification == str(DATA["suche"])) |
+                                       (Artikel.barcode == str(DATA["suche"])) |
                                        (Artikel.artikel == str(DATA["suche"])) |
                                        (Artikel.artikel2 == str(DATA["suche"])) |
                                        (Artikel.artikel3 == str(DATA["suche"])) |
