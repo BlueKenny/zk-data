@@ -11,7 +11,7 @@ if os.path.exists("/home/phablet"): import send
 else: import libs.send
 
 
-ThingsToShowInTable = ['Name', 'Artikel', 'Lieferant', "Ort", "PreisVK", "Anzahl"]
+ThingsToShowInTable = ['name', 'artikel', 'lieferant', "ort", "preisvk", "anzahl"]
 ThingsToShowAsHeader = ['Name', 'Artikel', 'Lieferant', "Ort", "Preis", "Anzahl"]
 
 class Info(QWidget):
@@ -43,13 +43,11 @@ class Stock(QWidget):#QWidget
         self.initUI()
 
     def initUI(self):
-        #global ThingsToShowAsHeader
         self.center()
         self.setWindowTitle('Stock')
         self.setWindowIcon(QIcon("DATA/icon.jpeg"))
 
         self.stacked_layout = QStackedWidget()
-        #self.stacked_layout.addWidget(Stock())
         self.stacked_layout.addWidget(Info())
 
         grid = QGridLayout()
@@ -58,7 +56,6 @@ class Stock(QWidget):#QWidget
         self.Suche_Entry = QLineEdit(self)
         self.Suche_Entry.textChanged.connect(self.startSuche)
 
-        #self.Suche_List = QListWidget(self)
         self.Suche_Table = QTableView(self)
         self.Suche_Table.setSelectionBehavior(QTableView.SelectRows)
         self.model = QStandardItemModel(self)  # SELECTING THE MODEL - FRAMEWORK THAT HANDLES QUERIES AND EDITS
@@ -91,8 +88,8 @@ class Stock(QWidget):#QWidget
         if not text_suche == "":
             print("text_suche: " + text_suche)
 
-            IDsAndTime = libs.send.SucheStock(text_suche, "", "")[:-3].split("<K>")
-            if IDsAndTime == [""]: del IDsAndTime[0]
+            IDsAndTime = libs.send.SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
+            #if IDsAndTime == [""]: del IDsAndTime[0]
 
             print("IDsAndTime: " + str(IDsAndTime))
 

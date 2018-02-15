@@ -18,7 +18,7 @@ def Debug(text):
 	for x in sorted(range(2, 4), reverse=True):
 		directory = directory  + DATE.split("-")[-x] + "/"
 		BlueMkDir(directory)
-	file = open(directory + DATE[-1] + "-DEBUG", "a")
+	file = open(directory + DATE.split("-")[-1] + "-DEBUG", "a")
 	print("Debug -> " + str(text))
 	file.write("\n" + str(text))
 	file.close
