@@ -336,17 +336,16 @@ def GetBewegung(Dict):
 
 def SearchArt(Dict):
     print("SearchArt")
-    for key, var in DATA.items():
+    for key, var in Dict.items():
         print(str(key) + ": " + str(var))
 
     local_db.connect()
-    if not DATA["suche"] == "":
-        query = Artikel.select().where((Artikel.identification == str(DATA["suche"])) |
-                                       (Artikel.barcode == str(DATA["suche"])) |
-                                       (Artikel.artikel == str(DATA["suche"])) |
-                                       (Artikel.artikel2 == str(DATA["suche"])) |
-                                       (Artikel.artikel3 == str(DATA["suche"])) |
-                                       (Artikel.artikel4 == str(DATA["suche"])))
+    if not Dict["suche"] == "":
+        if Dict["suche"].isdigit():
+            query = Artikel.select().where((Artikel.identification == str(Dict["suche"])) | (Artikel.barcode == str(Dict["suche"])) | (Artikel.artikel == str(Dict["suche"])) | (Artikel.artikel2 == str(Dict["suche"])) | (Artikel.artikel3 == str(Dict["suche"])) | (Artikel.artikel4 == str(Dict["suche"])))
+        else:
+            query = Artikel.select().where((Artikel.identification == str(Dict["suche"])) | (Artikel.artikel == str(Dict["suche"])) | (Artikel.artikel2 == str(Dict["suche"])) | (Artikel.artikel3 == str(Dict["suche"])) | (Artikel.artikel4 == str(Dict["suche"])))
+        
 
     Antwort = {}
     while True:
