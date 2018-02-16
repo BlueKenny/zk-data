@@ -104,6 +104,8 @@ local_db.close()
 DIR = ""
 #BlueMkDir(DIR + "StockBewegung")
 BlueMkDir(DIR + "DATA")
+BlueMkDir(DIR + "Import")
+BlueMkDir(DIR + "Import/Preise")
 
 local_db.connect()
 BeID = 1

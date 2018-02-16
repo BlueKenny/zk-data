@@ -20,28 +20,13 @@ appSuche = gui("Search Stock", "800x800")
 #appSuche.setSticky("news")
 #appSuche.setExpand("both")
 #appSuche.setFont(12)
-#appSuche.setBg("#4C20")
+appSuche.setBg("#3399ff")
 #appSuche.setIcon("DATA/stock.jpg")
 
 IDToChange = 0
 AlteSuche = ""
 
-try: AutoCacheID = int(BlueLoad("AutoCacheID", "DATA/DATA"))
-except: AutoCacheID = 1
 AutoCacheSlowDown = False
-
-#NEWS
-#NEWS_INDEX = BlueLoad("NEWS_INDEX", "DATA/DATA")
-#if NEWS_INDEX == None: NEWS_INDEX = 40
-#NEWS_INDEX = int(NEWS_INDEX)
-#with codecs.open("news.csv", "r", "utf-8") as csvfile:
-#    reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
-#    for eachLine in reader:
-#       if not "INDEX" in eachLine and NEWS_INDEX < int(eachLine[0]):
-#            print(eachLine)
-#            NEWS_INDEX = int(eachLine[0])
-#            appSuche.infoBox("Update " + eachLine[0], eachLine[1] + "\n\n" + eachLine[3], parent=None)
-#BlueSave("NEWS_INDEX", NEWS_INDEX, "DATA/DATA")
 
 def BtnStockGraph(btn):
     ID = appSuche.getListBox("Suche")[0].split(" | ")[0]
@@ -78,8 +63,9 @@ def ArtikelAnzeigen():
     if platform.system() == "Linux": COMMAND = "./ChangeStock.pyw"
     if platform.system() == "Windows":  COMMAND = "ChangeStock.pyw"
     application = os.popen(COMMAND + " " + ID).readlines()
-    appSuche.setEntry("Suche", BlueLoad("LastID", "DATA/DATA"))
-    AlteSuche = ""
+    if not str(BlueLoad("LastID", "DATA/DATA")) == "None":
+        appSuche.setEntry("Suche", BlueLoad("LastID", "DATA/DATA"))
+        AlteSuche = ""
 
 def tbFunc(btn):
     global IDToChange
@@ -103,9 +89,14 @@ def tbFunc(btn):
 tools = ["NEU", "", "F1 -", "F2 +", " ", "F11 Ort", "F12 Barcode"]
 appSuche.addToolbar(tools, tbFunc, findIcon=False)
 
-appSuche.addLabelEntry("Suche", 0, 0, 1, 0)
-#appSuche.addLabelEntry("Ort", 0, 1, 1, 0)
-#appSuche.addLabelEntry("Lieferant", 0, 2, 1, 0)
+
+appSuche.addDualMeter("progress", 0, 0)
+appSuche.setMeterFill("progress", ["red", "green"])
+appSuche.setMeter("progress", [0, 0])
+
+appSuche.addLabelEntry("Suche", 1, 0, 1, 0)
+#appSuche.addLabelEntry("Ort", 1, 1, 1, 0)
+#appSuche.addLabelEntry("Lieferant", 1, 2, 1, 0)
 
 #GridSuche = appSuche.addGrid("Suche", [["Identification", "Artikel", "Lieferant", "Name", "Ort", "Preis", "Anzahl"]],
 #                             action=ArtikelAnzeigen,
@@ -114,13 +105,10 @@ appSuche.addLabelEntry("Suche", 0, 0, 1, 0)
 #                             showMenu=False)
 #appSuche.setGridHeight("Suche", 500)
 
-ListBoxSuche = appSuche.addListBox("Suche", [], 1, 0, 3, 8)
-#ListBoxSuche = appSuche.addListBox("Suche", [], 1, 0, 3, 8)
+ListBoxSuche = appSuche.addListBox("Suche", [], 2, 0, 3, 2)
+appSuche.setListBoxHeight("Suche", 30)
 ListBoxSuche.bind("<Double-1>", lambda *args: ArtikelAnzeigen())# if List Item double click then change
 
-appSuche.addDualMeter("progress")
-appSuche.setMeterFill("progress", ["red", "green"])
-appSuche.setMeter("progress", [0, 0])
 
 def Delete(btn):
     Debug("Delete")
@@ -262,22 +250,19 @@ def StockChange(btn):
                     else:
                         appSuche.infoBox("Fehler", "Anzahl wurde nicht geändert")
                 except: appSuche.infoBox("Fehler", "Fehler")
-    BlueSave("LastID", IDToChange, "DATA/DATA")
     AlteSuche = ""
 
 def AutoMakeCacheProcess():
-    global AutoCacheID
     global AutoCacheSlowDown
-
-    if not AutoCacheID == GetBewegungIndex():
-        GetBewegung(AutoCacheID)
-        AutoCacheID = AutoCacheID + 1
+    BewegungLocalIndex = GetBewegungIndexLocal()
+    BewegungServerIndex = GetBewegungIndex()
+    if BewegungLocalIndex < BewegungServerIndex or BewegungLocalIndex == BewegungServerIndex:
+        GetBewegung(BewegungLocalIndex)
         if AutoCacheSlowDown:
             appSuche.after(10000, AutoMakeCache)
             AutoCacheSlowDown = False
         else:
             appSuche.after(10, AutoMakeCache)
-        BlueSave("AutoCacheID", AutoCacheID, "DATA/DATA")
     else:
         appSuche.after(60000, AutoMakeCache)
 

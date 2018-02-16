@@ -69,7 +69,6 @@ class Artikel(Model):# All Str are upper()
     class Meta:
         database = local_db
 
-
 local_db.connect()
 try: local_db.create_tables([Artikel])
 except: print("Artikel table exists")
@@ -81,10 +80,8 @@ except: print("Bewegung table exists in local_db")
 local_db.close()
 
 if BlueLoad("SERVERSTOCK", DIR + "DATA/DATA") == None: BlueSave("SERVERSTOCK", "127.0.0.1", DIR + "DATA/DATA")
-if BlueLoad("SERVERPREISVORSCHLAG", DIR + "DATA/DATA") == None: BlueSave("SERVERPREISVORSCHLAG", "127.0.0.1", DIR + "DATA/DATA")
 
 SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 10000)
-SERVERPREISVORSCHLAG_IP = (BlueLoad("SERVERPREISVORSCHLAG", DIR + "DATA/DATA"), 10001)
 
 ##############          LOCAL
 def GetArtLocal(ID):# return object
@@ -94,6 +91,7 @@ def GetArtLocal(ID):# return object
         Artikel.create(identification=str(ID))
     object = Artikel.get(Artikel.identification == str(ID))
     local_db.close()
+    print("GetArtLocal(" + str(ID) + ") = " + str(object))
     return object
 
 def GetBewegungTagLocal():# return Dict of object
@@ -103,6 +101,7 @@ def GetBewegungTagLocal():# return Dict of object
     Dict = {}
     for ID in query:
         Dict[ID.identification] = ID
+    print("GetBewegungTagLocal() = " + str(Dict))
     return Dict
 
 def GetBewegungLocal(ID):# return object
@@ -112,17 +111,30 @@ def GetBewegungLocal(ID):# return object
         Bewegung.create(identification=str(ID))
     object = Bewegung.get(Bewegung.identification == str(ID))
     local_db.close()
+    print("GetBewegungLocal(" + str(ID) + ") = " + str(object))
     return object
+
+def GetBewegungIndexLocal(): #return Int
+    local_db.connect()
+    FreeID = 1
+    while True:
+        query = Bewegung.select().where(Bewegung.identification == str(FreeID))
+        if not query.exists():
+            break
+        FreeID = FreeID + 1
+    local_db.close()
+    print("GetBewegungIndexLocal() = " + str(FreeID))
+    return FreeID
 
 ##############          STOCK
 def GetBewegung(ID): # return object
-    try:
+    if True:#try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         Dict = {"mode":"GetBewegung"}
         sock.connect(SERVERSTOCK_IP)
         Dict["identification"] = str(ID)
 
-        Debug("Send " + str(Dict))
+        #Debug("Send " + str(Dict))
         data = json.dumps(Dict)  # data serialized
         data = data.encode()
         sock.sendto(data, SERVERSTOCK_IP)
@@ -130,7 +142,7 @@ def GetBewegung(ID): # return object
         data = data.decode()
         data = json.loads(data)
         sock.close()
-        Debug("Get " + str(data))
+        #Debug("Get " + str(data))
 
         local_db.connect()
         query = Bewegung.select().where(Bewegung.identification == str(data["identification"]))
@@ -140,9 +152,11 @@ def GetBewegung(ID): # return object
             ThisArtikel = dict_to_model(Bewegung, data)
         ThisArtikel.save()
         local_db.close()
+        print("GetBewegung(" + str(ID) + ") = " + str(ThisArtikel))
         return ThisArtikel
-    except:
-        return {}
+    #except:
+    #    print("GetBewegung(" + str(ID) + ") = ERROR")
+    #    return {}
 
 
 def GetBewegungIndex(): #return Int
@@ -150,7 +164,7 @@ def GetBewegungIndex(): #return Int
     Dict = {"mode": "GetBewegungIndex"}
     sock.connect(SERVERSTOCK_IP)
 
-    Debug("Send " + str(Dict))
+    #Debug("Send " + str(Dict))
     data = json.dumps(Dict)  # data serialized
     data = data.encode()
     sock.sendto(data, SERVERSTOCK_IP)
@@ -158,7 +172,8 @@ def GetBewegungIndex(): #return Int
     data = data.decode()
     data = json.loads(data)
     sock.close()
-    Debug("Get " + str(data))
+    #Debug("Get " + str(data))
+    print("GetBewegungIndex() = " + str(data))
     return int(data)
 
 def GetArt(ID):#return object
@@ -169,7 +184,7 @@ def GetArt(ID):#return object
         sock.connect(SERVERSTOCK_IP)
         Dict["identification"] = str(ID)
 
-        Debug("Send " + str(Dict))
+        #Debug("Send " + str(Dict))
         data = json.dumps(Dict)  # data serialized
         data = data.encode()
         sock.sendto(data, SERVERSTOCK_IP)
@@ -177,7 +192,7 @@ def GetArt(ID):#return object
         data = data.decode()
         data = json.loads(data)
         sock.close()
-        Debug("Get " + str(data))
+        #Debug("Get " + str(data))
 
         local_db.connect()
         query = Artikel.select().where(Artikel.identification == str(data["identification"]))
@@ -187,8 +202,10 @@ def GetArt(ID):#return object
             ThisArtikel = dict_to_model(Artikel, data)
         ThisArtikel.save()
         local_db.close()
+        print("GetArt(" + str(ID) + ") = " + str(ThisArtikel))
         return ThisArtikel
     except:
+        print("GetArt(" + str(ID) + ") = ERROR")
         return {}
 
 
@@ -200,18 +217,19 @@ def SetArt(Dict):#return string
         sock.connect(SERVERSTOCK_IP)
         Dict["identification"] = str(ID)
 
-        Debug("Send " + str(Dict))
+        #Debug("Send " + str(Dict))
         data = json.dumps(Dict)  # data serialized
         data = data.encode()
-        if "P" in ID: sock.sendto(data, SERVERPREISVORSCHLAG_IP)
-        else: sock.sendto(data, SERVERSTOCK_IP)
+        sock.sendto(data, SERVERSTOCK_IP)
         data = sock.recv(2048)
         data = data.decode()
         data = json.loads(data)
         sock.close()
-        Debug("Get " + str(data))
+        #Debug("Get " + str(data))
+        print("SetArt(" + str(Dict) + ") = " + str(data))
         return data
     except:
+        print("SetArt(" + str(Dict) + ") = False")
         return False
 
 
@@ -222,7 +240,7 @@ def GetID():#return object
         Dict = {"mode":"GetID"}
         sock.connect(SERVERSTOCK_IP)
 
-        Debug("Send " + str(Dict))
+        #Debug("Send " + str(Dict))
         data = json.dumps(Dict)  # data serialized
         data = data.encode()
         sock.sendto(data, SERVERSTOCK_IP)
@@ -230,7 +248,7 @@ def GetID():#return object
         data = data.decode()
         data = json.loads(data)
         sock.close()
-        Debug("Get " + str(data))
+        #Debug("Get " + str(data))
 
         local_db.connect()
         query = Artikel.select().where(Artikel.identification == str(data["identification"]))
@@ -240,8 +258,10 @@ def GetID():#return object
             ThisArtikel = dict_to_model(Artikel, data)
         ThisArtikel.save()
         local_db.close()
+        print("GetID() = " + str(ThisArtikel))
         return ThisArtikel
     except:
+        print("GetID() = ERROR")
         return {}
 
 def AddArt(ID, Anzahl):#return object
@@ -252,7 +272,7 @@ def AddArt(ID, Anzahl):#return object
         Dict["add"] = str(Anzahl)
         sock.connect(SERVERSTOCK_IP)
 
-        Debug("Send " + str(Dict))
+        #Debug("Send " + str(Dict))
         data = json.dumps(Dict)  # data serialized
         data = data.encode()
         sock.sendto(data, SERVERSTOCK_IP)
@@ -260,7 +280,7 @@ def AddArt(ID, Anzahl):#return object
         data = data.decode()
         data = json.loads(data)
         sock.close()
-        Debug("Get " + str(data))
+        #Debug("Get " + str(data))
 
         local_db.connect()
         query = Artikel.select().where(Artikel.identification == str(data["identification"]))
@@ -270,11 +290,13 @@ def AddArt(ID, Anzahl):#return object
             ThisArtikel = dict_to_model(Artikel, data)
         ThisArtikel.save()
         local_db.close()
+        print("AddArt(" + str(ID) + ", " + str(Anzahl) + ") = " + str(ThisArtikel))
         return ThisArtikel
     except:
+        print("AddArt(" + str(ID) + ", " + str(Anzahl) + ") = ERROR")
         return {}
 
-def SearchArt(Dict):# Give Dict with search return Dict
+def SearchArt(Dict):# Give Dict with search return Dict(ID:Time)
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect(SERVERSTOCK_IP)
@@ -282,14 +304,16 @@ def SearchArt(Dict):# Give Dict with search return Dict
         Dict["mode"]="SearchArt"
         data = json.dumps(Dict)
 
-        Debug("Send " + str(data))
+        #Debug("Send " + str(data))
         data = data.encode()
         sock.sendto(data, SERVERSTOCK_IP)
         data = sock.recv(2048)
         data = data.decode()
         data = json.loads(data)
         sock.close()
-        Debug("Get " + str(data))
+        #Debug("Get " + str(data))
+        print("SearchArt(" + str(Dict) + ") = " + str(data))
         return data
     except:
+        print("SearchArt(" + str(Dict) + ") = ERROR")
         return {}

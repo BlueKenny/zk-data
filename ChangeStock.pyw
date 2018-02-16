@@ -133,7 +133,7 @@ def VerifyChanges():
                 appChange.infoBox("Speichern", "änderungen wurden nicht gespeichert", parent=None)
                 return False
         else:
-            BlueSave("LastID", ID, "DATA/DATA")
+            BlueSave("LastID", "None", "DATA/DATA")
             return True
     else:
         BlueSave("LastID", ID, "DATA/DATA")
@@ -164,12 +164,19 @@ if platform.system() == "Windows": COMMAND = "ArtGraph.py "
 #os.system(COMMAND + str(ID))
 
 appChange = gui("Stock ändern", "800x600", handleArgs=False)
-appChange.setBg("#ffffff")
+appChange.setBg("#3399ff")
 appChange.addLabel("Title", str(DATA.identification), 0, 0, 5, 0)
 
 appChange.addLabelEntry("Name", 1, 0, 2, 0)
 appChange.setEntryChangeFunction("Name", VerifyInputChar)
 appChange.setEntry("Name", DATA.name_de)
+
+appChange.addLabelEntry("Lieferant", 1, 3, 2, 0)
+appChange.setEntryChangeFunction("Lieferant", VerifyInputChar)
+DATA.lieferant = DATA.lieferant.split("_")[0]
+appChange.setEntry("Lieferant", DATA.lieferant)
+
+appChange.addLabel("leer1", "", 2, 0, 2, 0)
 
 appChange.addLabelEntry("Artikel", 3, 0, 2, 0)
 appChange.setEntryChangeFunction("Artikel", VerifyInputChar)
@@ -187,33 +194,33 @@ appChange.addLabelEntry("Artikel4", 4, 3, 2, 0)
 appChange.setEntryChangeFunction("Artikel4", VerifyInputChar)
 appChange.setEntry("Artikel4", DATA.artikel4)
 
-appChange.addLabelEntry("Barcode", 6, 0, 2, 0)
+appChange.addLabel("leer2", "", 5, 0, 2, 0)
+
+appChange.addLabelEntry("Einkaufspreis", 6, 0, 2, 0)
+appChange.setEntryChangeFunction("Einkaufspreis", VerifyInputFloat)
+appChange.setEntry("Einkaufspreis", DATA.preisek)
+
+appChange.addLabelEntry("Verkaufspreis HTVA", 7, 0, 2, 0)
+appChange.setEntryChangeFunction("Verkaufspreis HTVA", VerifyInputFloat)
+appChange.setEntry("Verkaufspreis HTVA", DATA.preisvkh)
+
+appChange.addLabelEntry("Verkaufspreis TVAC", 7, 3, 2, 0)
+appChange.setEntryChangeFunction("Verkaufspreis TVAC", VerifyInputFloat)
+appChange.setEntry("Verkaufspreis TVAC", DATA.preisvk)
+
+
+appChange.addLabel("leer3", "", 8, 0, 2, 0)
+
+appChange.addLabelEntry("Barcode", 9, 0, 2, 0)
 appChange.setEntryChangeFunction("Barcode", VerifyInputInt)
 appChange.setEntry("Barcode", DATA.barcode)
 appChange.setEntryState("Barcode", "disabled")
 
-appChange.addLabelEntry("Lieferant", 1, 3, 2, 0)
-appChange.setEntryChangeFunction("Lieferant", VerifyInputChar)
-DATA.lieferant = DATA.lieferant.split("_")[0]
-appChange.setEntry("Lieferant", DATA.lieferant)
-
-appChange.addLabelEntry("Einkaufspreis", 8, 0, 2, 0)
-appChange.setEntryChangeFunction("Einkaufspreis", VerifyInputFloat)
-appChange.setEntry("Einkaufspreis", DATA.preisek)
-
-appChange.addLabelEntry("Verkaufspreis HTVA", 9, 0, 2, 0)
-appChange.setEntryChangeFunction("Verkaufspreis HTVA", VerifyInputFloat)
-appChange.setEntry("Verkaufspreis HTVA", DATA.preisvkh)
-
-appChange.addLabelEntry("Verkaufspreis TVAC", 9, 3, 2, 0)
-appChange.setEntryChangeFunction("Verkaufspreis TVAC", VerifyInputFloat)
-appChange.setEntry("Verkaufspreis TVAC", DATA.preisvk)
-
-appChange.addLabelEntry("Ort", 6, 3, 2, 0)
+appChange.addLabelEntry("Ort", 9, 3, 2, 0)
 appChange.setEntryChangeFunction("Ort", VerifyInputChar)
 appChange.setEntry("Ort", DATA.ort)
 
-appChange.addLabelEntry("Minimum", 11, 0, 2, 0)
+appChange.addLabelEntry("Minimum", 10, 0, 2, 0)
 appChange.setEntryChangeFunction("Minimum", VerifyInputFloat)
 appChange.setEntry("Minimum", DATA.minimum)
 
