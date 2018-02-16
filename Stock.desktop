@@ -1,7 +1,8 @@
 [Desktop Entry]
 Name=Stock
 Path=/home/phablet/zk-data/
-Exec=python3 /home/phablet/zk-data/Stock.pyw
+#Exec=python3 /home/phablet/zk-data/Stock.pyw
+Exec=qmlscene /home/phablet/zk-data/Stock.qml
 Terminal=false
 X-Ubuntu-Touch=true
 Type=Application

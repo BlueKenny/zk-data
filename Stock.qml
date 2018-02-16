@@ -1,6 +1,6 @@
-import QtQuick 2.2
-import QtQuick.Controls 1.1
-import QtQuick.Layouts 1.1
+//import QtQuick 2.2
+//import QtQuick.Controls 1.1
+//import QtQuick.Layouts 1.1
 
 import Ubuntu.Components 1.3
 import Ubuntu.Unity.Action 1.1 as UnityActions
@@ -15,12 +15,12 @@ ApplicationWindow{
     id:window
     title: "editor"
 
-    signal textUpdated(string text)
+    //signal textUpdated(string text)
 	Camera.CaptureStillImage
 
     TextArea{
         text:"hello"
-        onTextChanged: textUpdated(text);
+        //onTextChanged: textUpdated(text);
     }
 
 }
