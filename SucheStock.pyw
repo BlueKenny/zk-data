@@ -20,7 +20,7 @@ appSuche = gui("Search Stock", "800x800")
 #appSuche.setSticky("news")
 #appSuche.setExpand("both")
 #appSuche.setFont(12)
-appSuche.setBg("#ffffff")
+#appSuche.setBg("#4C20")
 #appSuche.setIcon("DATA/stock.jpg")
 
 IDToChange = 0
@@ -71,6 +71,7 @@ def BtnPrintOrt(btn):
         PrintLocation(Data.ort)
 
 def ArtikelAnzeigen():
+    global AlteSuche
     print("ArtikelAnzeigen")
     ID = str(appSuche.getListBox("Suche")[0].split(" | ")[0]).rstrip()
     print("ID:" + ID)
@@ -78,7 +79,7 @@ def ArtikelAnzeigen():
     if platform.system() == "Windows":  COMMAND = "ChangeStock.pyw"
     application = os.popen(COMMAND + " " + ID).readlines()
     appSuche.setEntry("Suche", BlueLoad("LastID", "DATA/DATA"))
-    Suche()
+    AlteSuche = ""
 
 def tbFunc(btn):
     global IDToChange
@@ -226,6 +227,7 @@ def SucheProcess():
     
 
 def StockChange(btn):
+    global AlteSuche
     Debug("StockChange")
     try: IDToChange = appSuche.getListBox("Suche")[0].split(" | ")[0].rstrip()
     except: appSuche.errorBox("Fehler", "Bitte wählen sie zuerst einen Artikel aus")
@@ -261,6 +263,7 @@ def StockChange(btn):
                         appSuche.infoBox("Fehler", "Anzahl wurde nicht geändert")
                 except: appSuche.infoBox("Fehler", "Fehler")
     BlueSave("LastID", IDToChange, "DATA/DATA")
+    AlteSuche = ""
 
 def AutoMakeCacheProcess():
     global AutoCacheID
