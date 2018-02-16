@@ -256,7 +256,7 @@ def AutoMakeCacheProcess():
     global AutoCacheSlowDown
     BewegungLocalIndex = GetBewegungIndexLocal()
     BewegungServerIndex = GetBewegungIndex()
-    if BewegungLocalIndex < BewegungServerIndex or BewegungLocalIndex == BewegungServerIndex:
+    if BewegungLocalIndex < BewegungServerIndex:
         GetBewegung(BewegungLocalIndex)
         if AutoCacheSlowDown:
             appSuche.after(10000, AutoMakeCache)
@@ -276,18 +276,18 @@ def AutoProgressBarProcess():
     Einnahmen = 0.0
     for ID, object in Dict.items():
         #print("ID:" + str(ID))
-        Benef = float(object.preisvkh) - float(object.preisek)
         Anzahl = float(object.end) - float(object.start)
-        Sum = Benef * Anzahl
-        print("Sum: " + str(Sum))
-        if Sum < 0.0:
+
+        if Anzahl < 0.0:
+            Sum = object.preisvkh * Anzahl
             Einnahmen = Einnahmen - Sum
         else:
+            Sum = object.preisek * Anzahl
             Ausgaben = Ausgaben + Sum
     while True:
         if Einnahmen > 100 or Ausgaben > 100:
-            Einnahmen = Einnahmen / 10
-            Ausgaben = Ausgaben / 10
+            Einnahmen = Einnahmen / 2
+            Ausgaben = Ausgaben / 2
         else: break
     print("Ausgaben: " + str(Ausgaben) + "  Einnahmen: " + str(Einnahmen) + "\n")
     appSuche.setMeter("progress", [Ausgaben, Einnahmen])

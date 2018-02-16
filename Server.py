@@ -446,6 +446,7 @@ def AddArt(Dict):
         object2.save()
     Antwort = model_to_dict(object)
     local_db.close()
+    BeID = BeID + 1
     return Antwort
 
 def GetID():
