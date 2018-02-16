@@ -131,7 +131,7 @@ def Delete(btn):
 
 def Suche():
     appSuche.thread(SucheProcess)
-    appSuche.after(100, Suche)
+    appSuche.after(500, Suche)
 
 def SucheProcess():
     global AutoCacheSlowDown
