@@ -24,6 +24,7 @@ appSuche.setBg("#ffffff")
 #appSuche.setIcon("DATA/stock.jpg")
 
 IDToChange = 0
+AlteSuche = ""
 
 try: AutoCacheID = int(BlueLoad("AutoCacheID", "DATA/DATA"))
 except: AutoCacheID = 1
@@ -130,92 +131,99 @@ def Delete(btn):
 
 def Suche():
     appSuche.thread(SucheProcess)
+    appSuche.after(100, Suche)
 
 def SucheProcess():
     global AutoCacheSlowDown
-    Debug("Suche")
-    #appSuche.deleteAllGridRows("Suche")
-    #appSuche.addGridRows("Suche", [["Identification", "Artikel", "Lieferant", "Name", "Ort", "Preis", "Anzahl"]])
-    appSuche.clearListBox("Suche")
-    AutoCacheSlowDown = True
-
-    #appSuche.setMeter("status", 0, text="Suche wird gestartet")
-
+    global AlteSuche
     Suche = appSuche.getEntry("Suche")
-    EndString = ""
-    for character in Suche:
-        if character.isalpha() or character.isdigit():
-            EndString = EndString + str(character)
-    Suche = EndString.upper()
-    appSuche.setEntry("Suche", Suche, callFunction=False)
+    if not AlteSuche == Suche:
+        Debug("Suche")
 
-    Ort = ""
-    #Ort = appSuche.getEntry("Ort")
-    #EndString = ""
-    #for character in Ort:
-    #    if character.isalpha() or character.isdigit():
-    #        EndString = EndString + str(character)
-    #    Ort = EndString.upper()
-    #appSuche.setEntry("Ort", Ort, callFunction=False)
+        AlteSuche = Suche
 
-    Lieferant = ""
-    #Lieferant = appSuche.getEntry("Lieferant")
-    #EndString = ""
-    #for character in Lieferant:
-    #    if character.isalpha() or character.isdigit():
-    #        EndString = EndString + str(character)
-    #    Lieferant = EndString.upper()
-    #appSuche.setEntry("Lieferant", Lieferant, callFunction=False)
+        #appSuche.deleteAllGridRows("Suche")
+        #appSuche.addGridRows("Suche", [["Identification", "Artikel", "Lieferant", "Name", "Ort", "Preis", "Anzahl"]])
+        appSuche.clearListBox("Suche")
+        AutoCacheSlowDown = True
 
-    if Suche == "":
-        NichtSuchen = True
-    else:
-        NichtSuchen = False
+        #appSuche.setMeter("status", 0, text="Suche wird gestartet")
 
-    if not NichtSuchen:
-        #AntwortListStock=SendeSucheStock(Suche, Ort, Lieferant).split("<K>")
-        #print("AntwortListStock " + str(AntwortListStock))
+        EndString = ""
+        for character in Suche:
+            if character.isalpha() or character.isdigit():
+                EndString = EndString + str(character)
+        Suche = EndString.upper()
+        appSuche.setEntry("Suche", Suche, callFunction=False)
 
-        AntwortDict=SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
+        Ort = ""
+        #Ort = appSuche.getEntry("Ort")
+        #EndString = ""
+        #for character in Ort:
+        #    if character.isalpha() or character.isdigit():
+        #        EndString = EndString + str(character)
+        #    Ort = EndString.upper()
+        #appSuche.setEntry("Ort", Ort, callFunction=False)
 
-        #if ServerPreiscorschlagIsOn:
-        #    for ID, Time in SuchePreisvorschlag(Suche, Lieferant).items():
-        #        AntwortDict[ID]=str(Time)
-        #AntwortListPreisvorschlag=SendeSuchePreisvorschlag(Suche, Lieferant).split("<K>")
-        #print("AntwortListPreisvorschlag " + str(AntwortListPreisvorschlag))
+        Lieferant = ""
+        #Lieferant = appSuche.getEntry("Lieferant")
+        #EndString = ""
+        #for character in Lieferant:
+        #    if character.isalpha() or character.isdigit():
+        #        EndString = EndString + str(character)
+        #    Lieferant = EndString.upper()
+        #appSuche.setEntry("Lieferant", Lieferant, callFunction=False)
 
-        print("AntwortDict: " + str(AntwortDict))
+        if Suche == "":
+            NichtSuchen = True
+        else:
+            NichtSuchen = False
 
-        for ID, Time in AntwortDict.items():
-            if not ID == "":
-                print("ID: " + str(ID))
-                print(" Time: " + str(Time))
+        if not NichtSuchen:
+            #AntwortListStock=SendeSucheStock(Suche, Ort, Lieferant).split("<K>")
+            #print("AntwortListStock " + str(AntwortListStock))
 
-                ArtLocal = GetArtLocal(ID)
-                if str(ArtLocal.lastchange) == str(Time):
-                    Art = ArtLocal
-                    print(" GetArtLocal")
-                else:
-                    Art = GetArt(ID)
-                    print(" GetArtServer")
-                #appSuche.addGridRows("Suche", [[str(ID),
-                #                               str(Art.artikel),
-                #                               str(Art.lieferant),
-                #                               str(Art.name),
-                #                               str(Art.ort),
-                #                               str(Art.preisvk),
-                #                               str(Art.anzahl)]])
-                Linie = str(ID)
-                Linie = Linie + " | " + str(Art.artikel)
-                Linie = Linie + " | " + str(Art.lieferant)
-                Linie = Linie + " | " + str(Art.name_de)
-                Linie = Linie + " | " + str(Art.ort)
-                Linie = Linie + " | " + str(Art.preisvk)
-                Linie = Linie + " | " + str(Art.anzahl)
-                appSuche.addListItem("Suche", Linie)
-                appSuche.setListItemBg("Suche", Linie, "#ffffff")
+            AntwortDict=SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
 
-        appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
+            #if ServerPreiscorschlagIsOn:
+            #    for ID, Time in SuchePreisvorschlag(Suche, Lieferant).items():
+            #        AntwortDict[ID]=str(Time)
+            #AntwortListPreisvorschlag=SendeSuchePreisvorschlag(Suche, Lieferant).split("<K>")
+            #print("AntwortListPreisvorschlag " + str(AntwortListPreisvorschlag))
+
+            print("AntwortDict: " + str(AntwortDict))
+
+            for ID, Time in AntwortDict.items():
+                if not ID == "":
+                    print("ID: " + str(ID))
+                    print(" Time: " + str(Time))
+
+                    ArtLocal = GetArtLocal(ID)
+                    if str(ArtLocal.lastchange) == str(Time):
+                        Art = ArtLocal
+                        print(" GetArtLocal")
+                    else:
+                        Art = GetArt(ID)
+                        print(" GetArtServer")
+                    #appSuche.addGridRows("Suche", [[str(ID),
+                    #                               str(Art.artikel),
+                    #                               str(Art.lieferant),
+                    #                               str(Art.name),
+                    #                               str(Art.ort),
+                    #                               str(Art.preisvk),
+                    #                               str(Art.anzahl)]])
+                    Linie = str(ID)
+                    Linie = Linie + " | " + str(Art.artikel)
+                    Linie = Linie + " | " + str(Art.lieferant)
+                    Linie = Linie + " | " + str(Art.name_de)
+                    Linie = Linie + " | " + str(Art.ort)
+                    Linie = Linie + " | " + str(Art.preisvk)
+                    Linie = Linie + " | " + str(Art.anzahl)
+                    appSuche.addListItem("Suche", Linie)
+                    appSuche.setListItemBg("Suche", Linie, "#ffffff")
+
+            appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
+    
 
 def StockChange(btn):
     Debug("StockChange")
@@ -303,7 +311,7 @@ def AutoProgressBar():
 
 appSuche.setFocus("Suche")
 
-appSuche.setEntryChangeFunction("Suche", Suche)
+#appSuche.setEntryChangeFunction("Suche", Suche)
 #appSuche.setEntryChangeFunction("Ort", Suche)
 #appSuche.setEntryChangeFunction("Lieferant", Suche)
 
@@ -314,6 +322,7 @@ appSuche.bindKey("<F11>", BtnPrintOrt)
 appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 
+appSuche.after(1000, Suche)
 appSuche.after(1000, AutoMakeCache)
 appSuche.after(1000, AutoProgressBar)
 
