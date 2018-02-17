@@ -128,7 +128,7 @@ def GetBewegungIndexLocal(): #return Int
 
 ##############          STOCK
 def GetBewegung(ID): # return object
-    if True:#try:
+    try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         Dict = {"mode":"GetBewegung"}
         sock.connect(SERVERSTOCK_IP)
@@ -154,27 +154,31 @@ def GetBewegung(ID): # return object
         local_db.close()
         print("GetBewegung(" + str(ID) + ") = " + str(ThisArtikel))
         return ThisArtikel
-    #except:
-    #    print("GetBewegung(" + str(ID) + ") = ERROR")
-    #    return {}
+    except:
+        print("GetBewegung(" + str(ID) + ") = ERROR")
+        return {}
 
 
 def GetBewegungIndex(): #return Int
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    Dict = {"mode": "GetBewegungIndex"}
-    sock.connect(SERVERSTOCK_IP)
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Dict = {"mode": "GetBewegungIndex"}
+        sock.connect(SERVERSTOCK_IP)
 
-    #Debug("Send " + str(Dict))
-    data = json.dumps(Dict)  # data serialized
-    data = data.encode()
-    sock.sendto(data, SERVERSTOCK_IP)
-    data = sock.recv(2048)
-    data = data.decode()
-    data = json.loads(data)
-    sock.close()
-    #Debug("Get " + str(data))
-    print("GetBewegungIndex() = " + str(data))
-    return int(data)
+        #Debug("Send " + str(Dict))
+        data = json.dumps(Dict)  # data serialized
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        data = data.decode()
+        data = json.loads(data)
+        sock.close()
+        #Debug("Get " + str(data))
+        print("GetBewegungIndex() = " + str(data))
+        return int(data)
+    except:
+        print("GetBewegungIndex() = 0")
+        return 0
 
 def GetArt(ID):#return object
     try:
