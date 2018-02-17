@@ -282,18 +282,18 @@ def AutoProgressBarProcess():
         Anzahl = float(object.end) - float(object.start)
 
         if Anzahl < 0.0:
-            Sum = object.preisvkh * Anzahl
+            Sum = (object.preisvkh - object.preisek) * Anzahl
             Einnahmen = Einnahmen - Sum
         else:
             Sum = object.preisek * Anzahl
             Ausgaben = Ausgaben + Sum
     while True:
         if Einnahmen > 100 or Ausgaben > 100:
-            Einnahmen = Einnahmen / 2
-            Ausgaben = Ausgaben / 2
+            Einnahmen = Einnahmen / 10
+            Ausgaben = Ausgaben / 10
         else: break
     print("Ausgaben: " + str(Ausgaben) + "  Einnahmen: " + str(Einnahmen) + "\n")
-    appSuche.setMeter("progress", [Ausgaben, Einnahmen])
+    appSuche.setMeter("progress", [Ausgaben, Einnahmen], text=[str(int(Ausgaben)), str(int(Einnahmen))])
     appSuche.after(5000, AutoProgressBar)
 
 def AutoProgressBar():
