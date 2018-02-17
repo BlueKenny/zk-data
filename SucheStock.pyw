@@ -109,6 +109,7 @@ ListBoxSuche = appSuche.addListBox("Suche", [], 2, 0, 3, 2)
 appSuche.setListBoxHeight("Suche", 30)
 ListBoxSuche.bind("<Double-1>", lambda *args: ArtikelAnzeigen())# if List Item double click then change
 
+appSuche.addLabel("info1", "", 5, 0, 1, 0)
 
 def Delete(btn):
     Debug("Delete")
@@ -257,6 +258,7 @@ def AutoMakeCacheProcess():
     BewegungLocalIndex = GetBewegungIndexLocal()
     BewegungServerIndex = GetBewegungIndex()
     if BewegungLocalIndex < BewegungServerIndex:
+        appSuche.setLabel("info1", "Lade Bewegung " + str(BewegungLocalIndex))
         GetBewegung(BewegungLocalIndex)
         if AutoCacheSlowDown:
             appSuche.after(10000, AutoMakeCache)
@@ -264,6 +266,7 @@ def AutoMakeCacheProcess():
         else:
             appSuche.after(10, AutoMakeCache)
     else:
+        appSuche.setLabel("info1", "")
         appSuche.after(60000, AutoMakeCache)
 
 def AutoMakeCache():
