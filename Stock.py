@@ -8,6 +8,9 @@ try: import pyotherside
 except: True
 import libs.send
 
+# export MIR_SOCKET=/var/run/mir_socket
+# qml-module-qtquick2
+
 class Main:
     def __init__(self):
         print("init")
