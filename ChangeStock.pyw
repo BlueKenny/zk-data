@@ -24,27 +24,14 @@ else:
 def Save():
     global DATA
     print("Save")
-    if not GetArt(ID).lastchange == DATA.lastchange:
+    ID = appChange.getLabel("Title")
+    
+    if not GetArt(ID)["lastchange"] == DATA["lastchange"] and not PID:
         appChange.infoBox("Achtung", "Dieser Artikel wurde gerade von einem anderen ort aus geändert", parent=None)
-        return True
+        return False
     else:
         print("Send Data to Server")
-        if SetArt({"identification":str(ID),
-                "name_de":appChange.getEntry("Name"),
-                "barcode":appChange.getEntry("Barcode"),
-                "artikel":appChange.getEntry("Artikel"),
-                "artikel2":appChange.getEntry("Artikel2"),
-                "artikel3":appChange.getEntry("Artikel3"),
-                "artikel4":appChange.getEntry("Artikel4"),
-                "lieferant":appChange.getEntry("Lieferant"),
-                "preisek":appChange.getEntry("Einkaufspreis"),
-                "preisvkh":appChange.getEntry("Verkaufspreis HTVA"),
-                "preisvk":appChange.getEntry("Verkaufspreis TVAC"),
-                "anzahl":DATA.anzahl,
-                "minimum":appChange.getEntry("Minimum"),
-                "ort":appChange.getEntry("Ort"),
-                "lastchange":DATA.lastchange,
-                "creation":DATA.creation}):
+        if SetArt({"identification":str(ID), "name_de":appChange.getEntry("Name"), "barcode":appChange.getEntry("Barcode"), "artikel":appChange.getEntry("Artikel"), "artikel2":appChange.getEntry("Artikel2"), "artikel3":appChange.getEntry("Artikel3"), "artikel4":appChange.getEntry("Artikel4"), "lieferant":appChange.getEntry("Lieferant"), "preisek":appChange.getEntry("Einkaufspreis"), "preisvkh":appChange.getEntry("Verkaufspreis HTVA"), "preisvk":appChange.getEntry("Verkaufspreis TVAC"), "minimum":appChange.getEntry("Minimum"), "ort":appChange.getEntry("Ort")}):
             return True
         else:
             appChange.infoBox("Achtung", "Artikel konnte nicht gespeichert werden", parent=None)
@@ -121,23 +108,19 @@ def VerifyInputChar(Entry):
 
 def VerifyChanges():
     print("VerifyChanges")
-    if not DATA == DATA_LOCAL: UserMadeChanges= True
-    else: UserMadeChanges = True
+    UserMadeChanges = True
+    ID = appChange.getLabel("Title")
     if UserMadeChanges:
         if appChange.yesNoBox("Speichern", "Wollen sie speichern?", parent=None):
             if Save():
                 BlueSave("LastID", ID, "DATA/DATA")
                 return True
             else:
-                BlueSave("LastID", ID, "DATA/DATA")
                 appChange.infoBox("Speichern", "änderungen wurden nicht gespeichert", parent=None)
                 return False
         else:
             BlueSave("LastID", "None", "DATA/DATA")
             return True
-    else:
-        BlueSave("LastID", ID, "DATA/DATA")
-        return True
 
 def BtnStockGraph(btn):
     if platform.system() == "Linux": COMMAND = "./ArtGraph.py "
@@ -145,7 +128,6 @@ def BtnStockGraph(btn):
     os.system(COMMAND + str(ID))
 
 DATA = GetArt(ID)
-DATA_LOCAL = GetArtLocal(ID)
 
 if "P" in ID:
     print("Öffne preisvorschlag")
@@ -153,8 +135,8 @@ if "P" in ID:
     while True:
         try:
             NewData = GetID()
-            DATA.identification = NewData.identification
-            DATA.barcode = NewData.barcode
+            DATA["identification"] = NewData["identification"]
+            DATA["barcode"] = NewData["barcode"]
             break
         except: True
 else: PID = False
@@ -165,64 +147,64 @@ if platform.system() == "Windows": COMMAND = "ArtGraph.py "
 
 appChange = gui("Stock ändern", "800x600", handleArgs=False)
 appChange.setBg("#3399ff")
-appChange.addLabel("Title", str(DATA.identification), 0, 0, 5, 0)
+appChange.addLabel("Title", str(DATA["identification"]), 0, 0, 5, 0)
 
 appChange.addLabelEntry("Name", 1, 0, 2, 0)
 appChange.setEntryChangeFunction("Name", VerifyInputChar)
-appChange.setEntry("Name", DATA.name_de)
+appChange.setEntry("Name", DATA["name_de"])
 
 appChange.addLabelEntry("Lieferant", 1, 3, 2, 0)
 appChange.setEntryChangeFunction("Lieferant", VerifyInputChar)
-DATA.lieferant = DATA.lieferant.split("_")[0]
-appChange.setEntry("Lieferant", DATA.lieferant)
+DATA["lieferant"] = DATA["lieferant"].split("_")[0]
+appChange.setEntry("Lieferant", DATA["lieferant"])
 
 appChange.addLabel("leer1", "", 2, 0, 2, 0)
 
 appChange.addLabelEntry("Artikel", 3, 0, 2, 0)
 appChange.setEntryChangeFunction("Artikel", VerifyInputChar)
-appChange.setEntry("Artikel", DATA.artikel)
+appChange.setEntry("Artikel", DATA["artikel"])
 
 appChange.addLabelEntry("Artikel2", 3, 3, 2, 0)
 appChange.setEntryChangeFunction("Artikel2", VerifyInputChar)
-appChange.setEntry("Artikel2", DATA.artikel2)
+appChange.setEntry("Artikel2", DATA["artikel2"])
 
 appChange.addLabelEntry("Artikel3", 4, 0, 2, 0)
 appChange.setEntryChangeFunction("Artikel3", VerifyInputChar)
-appChange.setEntry("Artikel3", DATA.artikel3)
+appChange.setEntry("Artikel3", DATA["artikel3"])
 
 appChange.addLabelEntry("Artikel4", 4, 3, 2, 0)
 appChange.setEntryChangeFunction("Artikel4", VerifyInputChar)
-appChange.setEntry("Artikel4", DATA.artikel4)
+appChange.setEntry("Artikel4", DATA["artikel4"])
 
 appChange.addLabel("leer2", "", 5, 0, 2, 0)
 
 appChange.addLabelEntry("Einkaufspreis", 6, 0, 2, 0)
 appChange.setEntryChangeFunction("Einkaufspreis", VerifyInputFloat)
-appChange.setEntry("Einkaufspreis", DATA.preisek)
+appChange.setEntry("Einkaufspreis", DATA["preisek"])
 
 appChange.addLabelEntry("Verkaufspreis HTVA", 7, 0, 2, 0)
 appChange.setEntryChangeFunction("Verkaufspreis HTVA", VerifyInputFloat)
-appChange.setEntry("Verkaufspreis HTVA", DATA.preisvkh)
+appChange.setEntry("Verkaufspreis HTVA", DATA["preisvkh"])
 
 appChange.addLabelEntry("Verkaufspreis TVAC", 7, 3, 2, 0)
 appChange.setEntryChangeFunction("Verkaufspreis TVAC", VerifyInputFloat)
-appChange.setEntry("Verkaufspreis TVAC", DATA.preisvk)
+appChange.setEntry("Verkaufspreis TVAC", DATA["preisvk"])
 
 
 appChange.addLabel("leer3", "", 8, 0, 2, 0)
 
 appChange.addLabelEntry("Barcode", 9, 0, 2, 0)
 appChange.setEntryChangeFunction("Barcode", VerifyInputInt)
-appChange.setEntry("Barcode", DATA.barcode)
+appChange.setEntry("Barcode", DATA["barcode"])
 appChange.setEntryState("Barcode", "disabled")
 
 appChange.addLabelEntry("Ort", 9, 3, 2, 0)
 appChange.setEntryChangeFunction("Ort", VerifyInputChar)
-appChange.setEntry("Ort", DATA.ort)
+appChange.setEntry("Ort", DATA["ort"])
 
 appChange.addLabelEntry("Minimum", 10, 0, 2, 0)
 appChange.setEntryChangeFunction("Minimum", VerifyInputFloat)
-appChange.setEntry("Minimum", DATA.minimum)
+appChange.setEntry("Minimum", DATA["minimum"])
 
 def StopWindow(btn):
     Debug("StopWindow")

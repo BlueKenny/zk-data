@@ -45,7 +45,7 @@ def BtnPrintBarcode(btn):
         Data = GetArt(ID)
         Anzahl = appSuche.numberBox("Drucken", "Welche Anzahl soll gedruckt werden?")
         for a in range(0, Anzahl):
-            PrintBarcode("", Data.identification, Data.barcode, Data.name_de, Data.preisvk)
+            PrintBarcode("", Data["identification"], Data["barcode"], Data["name_de"], Data["preisvk"])
 
 def BtnPrintOrt(btn):
     ID = str(appSuche.getListItems("Suche")[0].split(" | ")[0]).rstrip()
@@ -53,7 +53,7 @@ def BtnPrintOrt(btn):
 
     if not "P" in ID:
         Data = GetArt(ID)
-        PrintLocation(Data.ort)
+        PrintLocation(Data["ort"])
 
 def ArtikelAnzeigen():
     global AlteSuche
@@ -179,12 +179,12 @@ def SucheProcess():
                     Art = GetArt(ID)
                     
                     Linie = str(ID)
-                    Linie = Linie + " | " + str(Art.artikel)
-                    Linie = Linie + " | " + str(Art.lieferant)
-                    Linie = Linie + " | " + str(Art.name_de)
-                    Linie = Linie + " | " + str(Art.ort)
-                    Linie = Linie + " | " + str(Art.preisvk)
-                    Linie = Linie + " | " + str(Art.anzahl)
+                    Linie = Linie + " | " + str(Art["artikel"])
+                    Linie = Linie + " | " + str(Art["lieferant"])
+                    Linie = Linie + " | " + str(Art["name_de"])
+                    Linie = Linie + " | " + str(Art["ort"])
+                    Linie = Linie + " | " + str(Art["preisvk"])
+                    Linie = Linie + " | " + str(Art["anzahl"])
                     appSuche.addListItem("Suche", Linie)
                     appSuche.setListItemBg("Suche", Linie, "#ffffff")
 
@@ -203,12 +203,10 @@ def StockChange(btn):
                 appSuche.errorBox("Fehler", "Abgebrochen")
             else:
                 try:
-                    object = AddArt(IDToChange, "-" + str(int(Anzahl)))
-                    Debug(IDToChange)
-                    if not object == {}:
-                        if not object.anzahl < 0:
-                            appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
-                            appSuche.setEntry("Suche", IDToChange)
+                    Check = AddArt(IDToChange, "-" + str(int(Anzahl)))
+                    if Check:
+                        appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
+                        appSuche.setEntry("Suche", IDToChange)
                     else:
                         appSuche.infoBox("Fehler", "Anzahl wurde nicht geändert")
                 except: appSuche.infoBox("Fehler", "Fehler")
@@ -218,62 +216,15 @@ def StockChange(btn):
                 appSuche.errorBox("Fehler", "Abgebrochen")
             else:
                 try:
-                    object = AddArt(IDToChange, int(Anzahl))
-                    Debug(IDToChange)
-                    if not object == {}:
-                        if not object.anzahl < 0:
-                            appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
-                            appSuche.setEntry("Suche", IDToChange)
+                    Check = AddArt(IDToChange, int(Anzahl))
+                    if Check:
+                        appSuche.infoBox("Gespeichert", "Anzahl wurde geändert")
+                        appSuche.setEntry("Suche", IDToChange)
                     else:
                         appSuche.infoBox("Fehler", "Anzahl wurde nicht geändert")
                 except: appSuche.infoBox("Fehler", "Fehler")
     AlteSuche = ""
 
-def AutoMakeCacheProcess():
-    global AutoCacheSlowDown
-    BewegungLocalIndex = GetBewegungIndexLocal()
-    BewegungServerIndex = GetBewegungIndex()
-    if BewegungLocalIndex < BewegungServerIndex:
-        appSuche.setLabel("info1", "Lade Bewegung " + str(BewegungLocalIndex))
-        GetBewegung(BewegungLocalIndex)
-        if AutoCacheSlowDown:
-            appSuche.after(10000, AutoMakeCache)
-            AutoCacheSlowDown = False
-        else:
-            appSuche.after(10, AutoMakeCache)
-    else:
-        appSuche.setLabel("info1", "")
-        appSuche.after(60000, AutoMakeCache)
-
-def AutoMakeCache():
-    appSuche.thread(AutoMakeCacheProcess)
-
-def AutoProgressBarProcess():
-    print("\nProcess")
-    Dict = GetBewegungTagLocal()
-    Ausgaben = 0.0
-    Einnahmen = 0.0
-    for ID, object in Dict.items():
-        #print("ID:" + str(ID))
-        Anzahl = float(object.end) - float(object.start)
-
-        if Anzahl < 0.0:
-            Sum = (object.preisvkh - object.preisek) * Anzahl
-            Einnahmen = Einnahmen - Sum
-        else:
-            Sum = object.preisek * Anzahl
-            Ausgaben = Ausgaben + Sum
-    while True:
-        if Einnahmen > 100 or Ausgaben > 100:
-            Einnahmen = Einnahmen / 10
-            Ausgaben = Ausgaben / 10
-        else: break
-    print("Ausgaben: " + str(Ausgaben) + "  Einnahmen: " + str(Einnahmen) + "\n")
-    appSuche.setMeter("progress", [Ausgaben, Einnahmen], text=[str(int(Ausgaben)), str(int(Einnahmen))])
-    appSuche.after(5000, AutoProgressBar)
-
-def AutoProgressBar():
-    appSuche.thread(AutoProgressBarProcess)
 
 
 appSuche.setFocus("Suche")
@@ -290,7 +241,4 @@ appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 
 appSuche.after(1000, Suche)
-#appSuche.after(1000, AutoMakeCache)
-#appSuche.after(1000, AutoProgressBar)
-
 appSuche.go()

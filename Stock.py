@@ -4,10 +4,9 @@ import os
 import threading
 import time
 
-import pyotherside
+try: import pyotherside
+except: True
 import libs.send
-
-from playhouse.shortcuts import model_to_dict, dict_to_model
 
 class Main:
     def __init__(self):
@@ -34,7 +33,7 @@ class Main:
             DesktopEntry.write("Icon=None\n")
             
             os.system("chmod +x " + file)
-        
+        s
         
     def p(self, text):
         print(text)
@@ -44,12 +43,7 @@ class Main:
             Antwort = []
             IDList = libs.send.SearchArt({"suche": suche, "lieferant": "", "ort": ""})
             for ID in IDList:
-                Dict = model_to_dict(libs.send.GetArt(str(ID)))
-                if "P" in Dict["identification"]:
-                    Dict["farbe"] = "orange"
-                else:
-                    Dict["farbe"] = "blue"
-                
+                Dict = libs.send.GetArt(str(ID))
                 Antwort.append(Dict)
             pyotherside.send("antwortSearchArt", Antwort) 
 

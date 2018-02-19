@@ -44,6 +44,8 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 local_db = SqliteDatabase("DATA/stock.db")
 memory_db = SqliteDatabase("::memory::")
 
+FreeID = 100000
+
 class Bewegung(Model):
     identification = CharField(primary_key = True)
     bcode = CharField(null = False)
@@ -345,20 +347,7 @@ def Preisvorschlag():
                 BlueSave("LastChange", str(NewLastChange), ImportData)
                 memory_db.close()
 
-def GetBewegung(Dict):
-    print("GetBewegung")
-    id = str(Dict["identification"])
-    local_db.connect()
-    query = Bewegung.select().where(Bewegung.identification == id)
-    if query.exists():
-        object = Bewegung.get(Bewegung.identification == id)
-        Antwort = model_to_dict(object)
-    else:
-        Antwort = {}
-    local_db.close()
-    return Antwort
-
-def SearchArt(Dict):
+def SearchArt(Dict):# Give Dict with Search return List of IDs 
     print("SearchArt")
     for key, var in Dict.items():
         print(str(key) + ": " + str(var))
@@ -384,7 +373,7 @@ def SearchArt(Dict):
     local_db.close()
     return Antwort
 
-def GetArt(Dict):
+def GetArt(Dict):# return Dict
     print("GetArt")
     id = str(DATA["identification"])
     print("id: " + str(id))
@@ -399,7 +388,7 @@ def GetArt(Dict):
     local_db.close()
     return Antwort
 
-def SetArt(Dict):
+def SetArt(Dict):# return Bool of sucess
     print("SetArt")
     id = str(DATA["identification"])
     print("id: " + str(id))
@@ -414,7 +403,7 @@ def SetArt(Dict):
         Antwort = False
     return Antwort
 
-def AddArt(Dict):
+def AddArt(Dict):# return Bool of sucess
     global BeID
     print("AddArt")
     id = str(DATA["identification"])
@@ -431,14 +420,22 @@ def AddArt(Dict):
 
     object = Artikel.get(Artikel.identification == id)
     object.lastchange = str(Timestamp())
+    
+    start = float(object.anzahl)
     if "-" in add:
         add = int(add[1:])
-        start = float(object.anzahl)
-        object.anzahl = object.anzahl - add
+        object.anzahl = object.anzahl - add 
+    else:
+        object.anzahl = object.anzahl + int(add)
+        
+    print("Anzahl " + str(object.anzahl))
+    
+    if object.anzahl < 0:
+        Antwort = False
+    else:
+        object.save()
         end = float(object.anzahl)
-        if not object.anzahl < 0:
-            object.save()
-            object2 = Bewegung.create(identification=str(BeID),
+        object2 = Bewegung.create(identification=str(BeID),
                                       bcode=str(id),
                                       datum=str(Date()),
                                       start=start,
@@ -448,32 +445,17 @@ def AddArt(Dict):
                                       preisvk=object.preisvk,
                                       mode="MISC",
                                       user=str(ipname[0]))
-            object2.save()
-    else:
-        start = float(object.anzahl)
-        object.anzahl = object.anzahl + int(add)
-        end = float(object.anzahl)
-        print("Anzahl " + str(object.anzahl))
-        object.save()
-        object2 = Bewegung.create(identification=str(BeID),
-                                  bcode=str(id),
-                                  datum=str(Date()),
-                                  start=start,
-                                  end=end,
-                                  preisek=object.preisek,
-                                  preisvkh=object.preisvkh,
-                                  preisvk=object.preisvk,
-                                  mode="MISC",
-                                  user=str(ipname[0]))
+                                         
         object2.save()
-    Antwort = model_to_dict(object)
+        BeID = BeID + 1
+        Antwort = True
+    
     local_db.close()
-    BeID = BeID + 1
     return Antwort
 
-def GetID():
+def GetID():# return Dict
+    global FreeID
     print("GetID")
-    FreeID = 100000
     local_db.connect()
     while True:
         query = Artikel.select().where(Artikel.identification == str(FreeID))

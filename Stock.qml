@@ -21,29 +21,59 @@ Rectangle {
         id: ti
     
         x: parent.width/2 - ti.width/2
-        y: parent.height/10
+        y: parent.height/50
         
         text: ""
         focus: true
 
-        onTextChanged: {
-            python.call('Stock.main.SearchArt', [text], function() {});
-            
-        }
+        onTextChanged: python.call('Stock.main.SearchArt', [text], function() {})
     }
     
-    ListView {
+    TableView {
         id: liste
-        x: parent.width/2
-        y: parent.height/2
-        anchors.fill: parent
+        width: parent.width
+        x: 0
+        y: ti.y + ti.height + 10
+        height: parent.height - y
         
+        
+        TableViewColumn {
+            role: "identification"
+            title: "ID"
+            width: parent.width/8
+        }
+        TableViewColumn {
+            role: "artikel"
+            title: "Artikel"
+            width: parent.width/8
+        }
+        TableViewColumn {
+            role: "lieferant"
+            title: "Lieferant"
+            width: parent.width/8
+        }
+        TableViewColumn {
+            role: "name_de"
+            title: "Name"
+            width: parent.width/4
+        }
+        TableViewColumn {
+            role: "ort"
+            title: "Ort"
+            width: parent.width/8
+        }
+        TableViewColumn {
+            role: "preisvk"
+            title: "Preis"
+            width: parent.width/8
+        }
+        TableViewColumn {
+            role: "anzahl"
+            title: "Anzahl"
+            width: parent.width/8
+        }
         model: ListModel {
             id: listModel
-        }
-        delegate: Text {
-            text: name_de
-            color: farbe
         }
     }
     
