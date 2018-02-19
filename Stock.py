@@ -37,6 +37,10 @@ class Main:
             DesktopEntry.write("Icon=None\n")
             
             os.system("chmod +x " + file)
+            
+        update = os.popen("git pull").readlines()
+        if not len(update) == 1:
+            pyotherside.send("antwortSearchArt", {"name_de":"Bitte neustarten"}) 
         
         
     def p(self, text):
