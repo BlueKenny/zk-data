@@ -1,9 +1,7 @@
 import QtQuick 2.2
 import io.thp.pyotherside 1.2
-//import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.1
-//import QtQuick.Controls.Styles 1.1
-
+import QtQuick.Window 2.2
 
 Rectangle {
     id: frame
@@ -25,9 +23,10 @@ Rectangle {
         x: parent.width/2 - ti.width/2
         y: parent.height / 50
             
-            
-        height: 100
-        font.pixelSize: 50
+        // for Phone
+        height: 500/Screen.pixelDensity
+        width: parent.width/2
+        font.pixelSize: 300/Screen.pixelDensity
         
         horizontalAlignment: TextInput.AlignHCenter
         font.capitalization: Font.AllUpperCase
@@ -51,7 +50,8 @@ Rectangle {
         TableViewColumn {
             role: "identification"
             title: "ID"
-            width: parent.width/8
+            //width: parent.width/8
+            width: parent.width/3
         }
         TableViewColumn {
             role: "artikel"
