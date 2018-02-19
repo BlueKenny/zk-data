@@ -1,12 +1,15 @@
 import QtQuick 2.2
 import io.thp.pyotherside 1.2
 import QtQuick.Controls 1.1
-import QtQuick.Window 2.2
+//import QtQuick.Window 2.2
 
 Rectangle {
     id: frame
-    width: 800
-    height: 800
+    width: 1000
+    height: 1000
+    //anchors.fill: parent
+    
+    property bool isPhone: true
     
     function antwortSearchArt(item) {
         listModel.clear();
@@ -14,8 +17,6 @@ Rectangle {
             listModel.append(item[i]);
         }
     }
-    
-    property bool isPhone: true
 
     TextField {
         id: ti
@@ -23,10 +24,14 @@ Rectangle {
         x: parent.width/2 - ti.width/2
         y: parent.height / 50
             
-        // for Phone
-        height: 500/Screen.pixelDensity
-        width: parent.width/2
-        font.pixelSize: 300/Screen.pixelDensity
+        height: {
+            if (isPhone == true) {
+                return parent.height / 5
+            } else {
+                return parent.height / 10
+            }
+        }
+        
         
         horizontalAlignment: TextInput.AlignHCenter
         font.capitalization: Font.AllUpperCase
