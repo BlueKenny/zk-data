@@ -6,7 +6,8 @@ import time
 
 try: import pyotherside
 except: True
-import libs.send
+try: import libs.send
+except: True
 
 class Main:
     def __init__(self):
@@ -33,7 +34,7 @@ class Main:
             DesktopEntry.write("Icon=None\n")
             
             os.system("chmod +x " + file)
-        s
+        
         
     def p(self, text):
         print(text)
