@@ -1,6 +1,6 @@
 import QtQuick 2.2
 import io.thp.pyotherside 1.2
-import QtQuick.Layouts 1.3
+//import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
