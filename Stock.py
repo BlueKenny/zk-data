@@ -10,6 +10,7 @@ import libs.send
 
 # export MIR_SOCKET=/var/run/mir_socket
 # qml-module-qtquick2
+# qml-module-qtquick-controls
 
 class Main:
     def __init__(self):
@@ -53,5 +54,13 @@ class Main:
                 Antwort.append(Dict)
             pyotherside.send("antwortSearchArt", Antwort) 
 
+    def isPhone(self):
+        if os.path.exists("/home/phablet"):
+            print("isPhone: True")
+            return True
+        else:
+            print("isPhone: False")
+            return False
+        
 main = Main()
 

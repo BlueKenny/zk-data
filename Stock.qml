@@ -2,7 +2,7 @@ import QtQuick 2.2
 import io.thp.pyotherside 1.2
 //import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.1
+//import QtQuick.Controls.Styles 1.1
 
 
 Rectangle {
@@ -16,10 +16,13 @@ Rectangle {
             listModel.append(item[i]);
         }
     }
+    
+    property var isPhone: false
 
     TextField {
         id: ti
     
+        
         x: parent.width/2 - ti.width/2
         y: parent.height/50
         
@@ -82,8 +85,9 @@ Rectangle {
         Component.onCompleted: {
             addImportPath(Qt.resolvedUrl('.'));
             importModule('Stock', function () {});
-            
+            python.call('Stock.main.isPhone', [], function(isPhone) {})
             setHandler("antwortSearchArt", antwortSearchArt);
+          
         }
     }
 }
