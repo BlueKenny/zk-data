@@ -353,6 +353,8 @@ def SearchArt(Dict):# Give Dict with Search return List of IDs
         print(str(key) + ": " + str(var))
 
     local_db.connect()
+    Dict["suche"] = Dict["suche"].upper()
+    
     if not Dict["suche"] == "":
         if Dict["suche"].isdigit():
             query = Artikel.select().where((Artikel.identification == str(Dict["suche"])) | (Artikel.barcode == str(Dict["suche"])) | (Artikel.artikel == str(Dict["suche"])) | (Artikel.artikel2 == str(Dict["suche"])) | (Artikel.artikel3 == str(Dict["suche"])) | (Artikel.artikel4 == str(Dict["suche"])))
