@@ -18,8 +18,6 @@ else:
 BlueMkDir(DIR + "DATA")
 import json
 
-from playhouse.shortcuts import model_to_dict, dict_to_model
-
 if BlueLoad("SERVERSTOCK", DIR + "DATA/DATA") == None: BlueSave("SERVERSTOCK", "127.0.0.1", DIR + "DATA/DATA")
 
 SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 10000)
