@@ -8,9 +8,13 @@ Rectangle {
     width: 1000
     height: 1000
     //anchors.fill: parent
-    
+   
     property bool isPhone: true
     
+    function ifPhone(bool) {
+        isPhone: bool
+    }
+            
     function antwortSearchArt(item) {
         listModel.clear();
         for (var i=0; i<item.length; i++) {
@@ -26,9 +30,9 @@ Rectangle {
             
         height: {
             if (isPhone == true) {
-                return parent.height / 5
-            } else {
                 return parent.height / 10
+            } else {
+                return parent.height / 20
             }
         }
         
@@ -98,7 +102,9 @@ Rectangle {
         Component.onCompleted: {
             addImportPath(Qt.resolvedUrl('.'));
             importModule('Stock', function () {});
-            python.call('Stock.main.isPhone', [], function(isPhone) {})
+            
+            call("Stock.main.isPhone", [], function () {})
+            setHandler("ifPhone", ifPhone);
             setHandler("antwortSearchArt", antwortSearchArt);
           
         }

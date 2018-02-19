@@ -57,10 +57,10 @@ class Main:
     def isPhone(self):
         if os.path.exists("/home/phablet"):
             print("isPhone: True")
-            return True
+            pyotherside.send("ifPhone", True) 
         else:
             print("isPhone: False")
-            return False
+            pyotherside.send("ifPhone", False) 
         
 main = Main()
 
