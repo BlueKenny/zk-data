@@ -8,7 +8,7 @@ try: import pyotherside
 except: True
 import libs.send
 
-# export MIR_SOCKET=/var/run/mir_socket
+os.system("export MIR_SOCKET=/var/run/mir_socket")
 # qml-module-qtquick2
 # qml-module-qtquick-controls
 

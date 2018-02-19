@@ -27,6 +27,11 @@ Rectangle {
             
         height: 100
         
+        horizontalAlignment: TextInput.AlignHCenter
+        font.capitalization: Font.AllUpperCase
+        //inputMethodHints: [Qt.ImhUppercaseOnly, Qt.ImhNoPredictiveText]
+        placeholderText: "Suche"
+        
         text: ""
         focus: true
 
