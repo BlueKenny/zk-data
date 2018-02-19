@@ -29,7 +29,7 @@ Rectangle {
         
         horizontalAlignment: TextInput.AlignHCenter
         font.capitalization: Font.AllUpperCase
-        //inputMethodHints: [Qt.ImhUppercaseOnly, Qt.ImhNoPredictiveText]
+        inputMethodHints: Qt.ImhUppercaseOnly, Qt.ImhNoPredictiveText
         placeholderText: "Suche"
         
         text: ""
