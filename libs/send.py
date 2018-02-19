@@ -6,7 +6,7 @@ import socket
 import os
 from libs.barcode import *
 
-if os.path.exists("/home/phablet"):
+if False:#os.path.exists("/home/phablet"):
 	DIR = "/home/phablet/.local/share/zk-data.stock/"
 	from .BlueFunc import *
 	from .debug import *
