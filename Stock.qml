@@ -25,7 +25,9 @@ Rectangle {
         x: parent.width/2 - ti.width/2
         y: parent.height / 50
             
+            
         height: 100
+        font.pixelSize: 50
         
         horizontalAlignment: TextInput.AlignHCenter
         font.capitalization: Font.AllUpperCase
