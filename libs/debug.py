@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-if os.path.exists("/home/phablet"):
+if False:#os.path.exists("/home/phablet"):
 	DIR = "/home/phablet/.local/share/zk-data.stock/"
 	from BlueFunc import *
 else:
