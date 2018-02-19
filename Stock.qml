@@ -17,14 +17,15 @@ Rectangle {
         }
     }
     
-    property var isPhone: false
+    property bool isPhone: true
 
     TextField {
         id: ti
     
-        
         x: parent.width/2 - ti.width/2
-        y: parent.height/50
+        y: parent.height / 50
+            
+        height: 100
         
         text: ""
         focus: true
