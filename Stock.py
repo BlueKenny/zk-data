@@ -15,7 +15,10 @@ class Main:
         #for user in os.listdir("/home/"):
         #    print(user)
         User = os.popen("echo $USER").readlines()[0].rstrip()
-        Desktop = os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip()
+        
+        if os.path.exists("/home/phablet"): Desktop = "/home/phablet/.local/share/applications/"
+        else: Desktop = os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip()
+        
         file = Desktop + "/Stock.desktop"
         if not os.path.exists(file):
             print("Write Desktop Entry")
