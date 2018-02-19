@@ -6,8 +6,7 @@ import time
 
 try: import pyotherside
 except: True
-try: import libs.send
-except: True
+import libs.send
 
 class Main:
     def __init__(self):
@@ -41,10 +40,6 @@ class Main:
         update = os.popen("git pull").readlines()
         if not len(update) == 1:
             pyotherside.send("antwortSearchArt", {"name_de":"Bitte neustarten"}) 
-        
-        
-    def p(self, text):
-        print(text)
         
     def SearchArt(self, suche):
         if not suche == "":
