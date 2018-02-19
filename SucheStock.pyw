@@ -170,38 +170,14 @@ def SucheProcess():
             NichtSuchen = False
 
         if not NichtSuchen:
-            #AntwortListStock=SendeSucheStock(Suche, Ort, Lieferant).split("<K>")
-            #print("AntwortListStock " + str(AntwortListStock))
+            AntwortListe=SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
+            print("AntwortListe: " + str(AntwortListe))
 
-            AntwortDict=SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
-
-            #if ServerPreiscorschlagIsOn:
-            #    for ID, Time in SuchePreisvorschlag(Suche, Lieferant).items():
-            #        AntwortDict[ID]=str(Time)
-            #AntwortListPreisvorschlag=SendeSuchePreisvorschlag(Suche, Lieferant).split("<K>")
-            #print("AntwortListPreisvorschlag " + str(AntwortListPreisvorschlag))
-
-            print("AntwortDict: " + str(AntwortDict))
-
-            for ID, Time in AntwortDict.items():
+            for ID in AntwortListe:
                 if not ID == "":
                     print("ID: " + str(ID))
-                    print(" Time: " + str(Time))
-
-                    ArtLocal = GetArtLocal(ID)
-                    if str(ArtLocal.lastchange) == str(Time):
-                        Art = ArtLocal
-                        print(" GetArtLocal")
-                    else:
-                        Art = GetArt(ID)
-                        print(" GetArtServer")
-                    #appSuche.addGridRows("Suche", [[str(ID),
-                    #                               str(Art.artikel),
-                    #                               str(Art.lieferant),
-                    #                               str(Art.name),
-                    #                               str(Art.ort),
-                    #                               str(Art.preisvk),
-                    #                               str(Art.anzahl)]])
+                    Art = GetArt(ID)
+                    
                     Linie = str(ID)
                     Linie = Linie + " | " + str(Art.artikel)
                     Linie = Linie + " | " + str(Art.lieferant)
@@ -314,7 +290,7 @@ appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 
 appSuche.after(1000, Suche)
-appSuche.after(1000, AutoMakeCache)
-appSuche.after(1000, AutoProgressBar)
+#appSuche.after(1000, AutoMakeCache)
+#appSuche.after(1000, AutoProgressBar)
 
 appSuche.go()

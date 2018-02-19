@@ -300,7 +300,7 @@ def AddArt(ID, Anzahl):#return object
         print("AddArt(" + str(ID) + ", " + str(Anzahl) + ") = ERROR")
         return {}
 
-def SearchArt(Dict):# Give Dict with search return Dict(ID:Time)
+def SearchArt(Dict):# Give Dict with search return Dict(object)
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect(SERVERSTOCK_IP)

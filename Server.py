@@ -12,6 +12,8 @@ import csv
 import random
 import os.path, time
 
+import threading
+
 SERVER_PORT=10000
 
 StockCreationList = {}
@@ -40,6 +42,7 @@ if SERVER_SQL == "None":
 
 from playhouse.shortcuts import model_to_dict, dict_to_model
 local_db = SqliteDatabase("DATA/stock.db")
+memory_db = SqliteDatabase("::memory::")
 
 class Bewegung(Model):
     identification = CharField(primary_key = True)
@@ -270,6 +273,10 @@ def Date():
 def Timestamp():
     return time.time()
 
+def SavePreisvorschlag(List):
+    #print("Geladene daten werden in die datenbank importiert")
+    Artikel.insert_many(List).execute()
+
 def Preisvorschlag():
     print("Preisvorschläge werden geladen")
     for ImportDatei in os.listdir("Import/Preise/"):
@@ -283,12 +290,8 @@ def Preisvorschlag():
 
             if not NewLastChange == OldLastChange:
                 print("RELOAD " + str(ImportData))
-                local_db.connect()
-                query = Artikel.select().where(Artikel.lieferant == LieferantName)
-                if query.exists():
-                    print("Lösche alte einträge")
-                    for ID in query:
-                        ID.delete_instance()
+                memory_db.connect()
+                Artikel.delete().where(Artikel.lieferant == LieferantName).execute()
 
                 DictOfPos = {}
                 ErsteLinie = open(ImportDatei, "r", errors="ignore").readlines()[0]
@@ -296,32 +299,51 @@ def Preisvorschlag():
                     DictOfPos[each.rstrip()] = ErsteLinie.split(":").index(each)
                 print(DictOfPos)
 
+                FreeID = 1
                 with open(ImportDatei, "r") as csvfile:
                     reader = csv.reader(csvfile, delimiter=":", quotechar="\"")
+                    print("Lade preisliste")
+                    DictList = []
                     for eachLine in reader:
                         if not "artikel" in eachLine or not "preisek" in eachLine:
-                            print("linie " + str(eachLine))
-
+                            if len(str(FreeID)) > 2:
+                                if str(FreeID)[-3] + str(FreeID)[-2] + str(FreeID)[-1] == "000":
+                                    print("Lade " + str(FreeID))
+                            if str(FreeID)[-1] == "0":
+                                #print("Lade " + str(FreeID))
+                                #print("Geladene daten werden in die datenbank importiert")
+                                #Artikel.insert_many(DictList).execute()
+                                threading.Thread(target=SavePreisvorschlag, args=[DictList]).start()
+                                DictList = []
+                                    
                             Dict = {}
-                            FreeID = 1
+                            
                             while True:
                                 query = Artikel.select().where(Artikel.identification == "P" + str(FreeID))
                                 if not query.exists():
                                     break
                                 FreeID = FreeID + 1
 
-                            Dict["identification"] = "P" + str(FreeID)
+                            
                             for eachPos, eachName in enumerate(DictOfPos):
                                 Dict[eachName] = eachLine[eachPos]
 
+                            Dict["identification"] = "P" + str(FreeID)
+                            
                             Dict["lieferant"] = LieferantName
                             Dict["preisek"] = Dict["preisek"].replace(",", ".")
                             Dict["preisvkh"] = Dict["preisvkh"].replace(",", ".")
                             Dict["preisvk"] = Dict["preisvk"].replace(",", ".")
-                            Artikel.create(**Dict)
+                            
+                            DictList.append(Dict)
+
+                            FreeID = FreeID + 1
+                            
+                    print("Geladene daten werden in die datenbank importiert")
+                    Artikel.insert_many(DictList).execute()
 
                 BlueSave("LastChange", str(NewLastChange), ImportData)
-                local_db.close()
+                memory_db.close()
 
 def GetBewegung(Dict):
     print("GetBewegung")
@@ -349,11 +371,11 @@ def SearchArt(Dict):
             query = Artikel.select().where((Artikel.identification == str(Dict["suche"])) | (Artikel.artikel == str(Dict["suche"])) | (Artikel.artikel2 == str(Dict["suche"])) | (Artikel.artikel3 == str(Dict["suche"])) | (Artikel.artikel4 == str(Dict["suche"])))
         
 
-    Antwort = {}
+    Antwort = []
     while True:
         Count = 1
         for ID in query:
-            Antwort[ID.identification] = ID.lastchange
+            Antwort.append(str(ID.identification))
             if Count == INDEXLIMIT:
                 break
             else:
@@ -471,7 +493,8 @@ def GetID():
     local_db.close()
     return Antwort
 
-Preisvorschlag()
+threading.Thread(target=Preisvorschlag).start()
+#Preisvorschlag()
 
 while True:
     Debug("Warte auf befehl...")
@@ -503,7 +526,7 @@ while True:
             print("GetBewegungIndex")
             Antwort = int(BeID)
 
-        if mode == "SearchArt":#return Dict of IDs with Timestamp
+        if mode == "SearchArt":#return List of IDs
             Antwort = SearchArt(DATA)
 
         if mode == "GetArt":#return Dict
