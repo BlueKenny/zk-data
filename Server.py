@@ -40,9 +40,11 @@ if SERVER_SQL == "None":
     SERVER_SQL = "127.0.0.1"
     SERVER_SQL=BlueSave("SERVERSQL", SERVER_SQL, "DATA/DATA")
 
+from playhouse.migrate import *
 from playhouse.shortcuts import model_to_dict, dict_to_model
+
 local_db = SqliteDatabase("DATA/stock.db")
-memory_db = SqliteDatabase("::memory::")
+local_migrator = SqliteMigrator(local_db)
 
 FreeID = 100000
 
@@ -86,17 +88,22 @@ class Artikel(Model):# All Str are upper()
     baujahr = IntegerField(default = 0)
     web = BooleanField(default = False)
     farbe = CharField(default = "")
+    groesse = CharField(default = "")
 
     class Meta:
         database = local_db
 
 
 local_db.connect()
-try:
-    local_db.create_tables([Artikel])
-except:
-    print("Artikel table exists in local_db")
+
+try: local_db.create_tables([Artikel])
+except: print("Artikel table exists in local_db")
+
+try: migrate(local_migrator.add_column("Artikel", "groesse", CharField(default = "")))
+except: print("Artikel:groesse:existiert schon")
+
 local_db.close()
+
 
 local_db.connect()
 try:
@@ -126,136 +133,6 @@ try:
 except:
     INDEXLIMIT = 50
     BlueSave("IndexLimit", INDEXLIMIT, DIR + "DATA/DATA")
-
-# Old Load
-LoadOld = False
-if LoadOld:
-    for eachDir in sorted(os.listdir(DIR + "Stock/")):
-        print(str(eachDir) + "%")
-        for eachFile in sorted(os.listdir(DIR + "Stock/" + eachDir)):
-            if True:#try:
-                #Debug("Load Stock file " + str(eachFile))
-                datei = DIR + "Stock/" + eachDir + "/" + eachFile
-                eachFile = int(eachFile)
-
-                #	Creation
-                ArticleCreation = BlueLoad("Creation", datei)
-                if ArticleCreation == None or ArticleCreation == "x":
-                    ArticleCreation="2000-01-01"
-                    BlueSave("Creation", ArticleCreation, datei)
-                StockCreationList[eachFile] = str(ArticleCreation)
-                #	Last Change
-                ArticleLastChange = BlueLoad("LastChange", datei)
-                if ArticleLastChange == None or ArticleLastChange == "x":
-                    ArticleLastChange="0.00"
-                    BlueSave("LastChange", ArticleLastChange, datei)
-                StockLastChangeList[eachFile] = str(ArticleLastChange)
-                #	Barcode
-                ArticleBarcode = str(BlueLoad("Barcode", datei))
-                if ArticleBarcode == None or ArticleBarcode == "None" or ArticleBarcode == "x" or ArticleBarcode == "":
-                    ArticleBarcode = IDToBarcode(eachFile)
-                    BlueSave("Barcode", ArticleBarcode, datei)
-                StockBarcodeList[eachFile] = int(ArticleBarcode)
-                #	Article
-                ArticleNumber = BlueLoad("Artikel", datei)
-                if ArticleNumber == None: ArticleNumber = ""
-                else: ArticleNumber = ArticleNumber.lower()
-                StockArtikelList[eachFile] = str(ArticleNumber).upper()
-                #	Article2
-                ArticleNumber = BlueLoad("Artikel2", datei)
-                if ArticleNumber == None: ArticleNumber = ""
-                else: ArticleNumber = ArticleNumber.lower()
-                StockArtikel2List[eachFile] = str(ArticleNumber).upper()
-                #	Article3
-                ArticleNumber = BlueLoad("Artikel3", datei)
-                if ArticleNumber == None: ArticleNumber = ""
-                else: ArticleNumber = ArticleNumber.lower()
-                StockArtikel3List[eachFile] = str(ArticleNumber).upper()
-                #	Supplier
-                ArticleSupplier = BlueLoad("Lieferant", datei).lower()
-                if ArticleSupplier == None or ArticleSupplier == "x":
-                    ArticleSupplier = ""
-                    BlueSave("Lieferant", ArticleSupplier, datei)
-                StockLieferantList[eachFile] = str(ArticleSupplier).upper()
-                #	Name
-                ArticleName = BlueLoad("Name", datei)
-                StockNameList[eachFile] = str(ArticleName)
-                #	Location
-                ArticleLocation = BlueLoad("Ort", datei)
-                if ArticleLocation == None or ArticleLocation == "x":
-                    ArticleLocation = ""
-                    BlueSave("Ort", ArticleLocation, datei)
-                StockOrtList[eachFile] = str(ArticleLocation).upper()
-                #	Cost and Prices
-                ArticleCost = str(BlueLoad("PreisEK", datei))
-                if ArticleCost == "x" or ArticleCost == "None" or ArticleCost == "": ArticleCost = "0.00"
-                ArticleCost=RoundUp0000(str(ArticleCost).replace(",", "."))
-                ArticlePriceVatIncl = str(BlueLoad("PreisVK", datei))
-                if ArticlePriceVatIncl == "x" or ArticlePriceVatIncl == "None" or ArticlePriceVatIncl == "": ArticlePriceVatIncl = "0.00"
-                ArticlePriceVatIncl=RoundUp05(str(ArticlePriceVatIncl).replace(",", "."))
-                ArticlePriceVatExcl = str(BlueLoad("PreisVKH", datei))
-                ArticlePriceVatExcl=RoundUp0000(float(ArticlePriceVatIncl)/1.21)
-                StockPreisEKList[eachFile] = float(ArticleCost)
-                StockPreisVKHList[eachFile] = float(ArticlePriceVatExcl)
-                StockPreisVKList[eachFile] = float(ArticlePriceVatIncl)
-
-                #	Quantity
-                ArticleQuantity = str(BlueLoad("Anzahl", datei))
-                if ArticleQuantity == None or ArticleQuantity == "None" or ArticleQuantity == "x" or ArticleQuantity == "":
-                    ArticleQuantity = 0
-                    BlueSave("Anzahl", ArticleQuantity, datei)
-                StockAnzahlList[eachFile]=float(ArticleQuantity)
-
-                local_db.connect()
-                query = Artikel.select().where(Artikel.identification == str(eachFile))
-                if not query.exists():
-                    print("Erstelle Artikel " + str(eachFile))
-                    ThisArtikel = Artikel.create(creation=StockCreationList[eachFile],
-                                                 lastchange=StockLastChangeList[eachFile],
-                                                 barcode=StockBarcodeList[eachFile],
-                                                 artikel=StockArtikelList[eachFile],
-                                                 artikel2=StockArtikel2List[eachFile],
-                                                 artikel3=StockArtikel3List[eachFile],
-                                                 artikel4="",
-                                                 lieferant=StockLieferantList[eachFile],
-                                                 name_de=StockNameList[eachFile],
-                                                 ort=StockOrtList[eachFile],
-                                                 preisek=StockPreisEKList[eachFile],
-                                                 preisvkh=StockPreisVKHList[eachFile],
-                                                 preisvk=StockPreisVKList[eachFile],
-                                                 anzahl=StockAnzahlList[eachFile],
-                                                 minimum=0.0,
-                                                 identification=str(eachFile))
-                    ThisArtikel.save()
-                local_db.close()
-    #except: Debug("Failed to load")
-
-    local_db.connect()
-    for jedesJahr in os.listdir("StockBewegung"):
-        for jedenMonat in sorted(os.listdir("StockBewegung/" + jedesJahr)):
-            for jedeDatei in sorted(os.listdir("StockBewegung/" + jedesJahr + "/" + jedenMonat + "/")):
-                file = "StockBewegung/" + jedesJahr + "/" + jedenMonat + "/" + jedeDatei
-                for line in open(file, "r").readlines():
-                    data = line.split(":")
-                    ID = data[0]
-                    DATUM = jedesJahr + "-" + jedenMonat + "-" + jedeDatei.replace(".csv", "")
-                    if not ID == "ID":
-                        query = Bewegung.select().where(Bewegung.identification == str(BeID))
-                        if not query.exists():
-                            print("Bewegung " + DATUM + " " + str(BeID) + " \n" + str(data))
-                            ThisArtikel = Bewegung.create(identification = str(BeID),
-                                                         bcode=str(ID),
-                                                         datum=str(DATUM),
-                                                         start=float(data[1]),
-                                                         end=float(data[2]),
-                                                         preisek=float(data[3]),
-                                                         preisvkh=float(data[4]),
-                                                         preisvk=float(data[5]),
-                                                         mode=str(data[6]),
-                                                         user=str(data[7]).rstrip())
-                            ThisArtikel.save()
-                        BeID = BeID + 1
-    local_db.close()
 
 # LOAD
 print("LOAD DATAbase Stock")
