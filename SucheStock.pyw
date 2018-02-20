@@ -76,7 +76,7 @@ def tbFunc(btn):
         object = GetID()
         if platform.system() == "Linux": COMMAND = "./ChangeStock.pyw"
         if platform.system() == "Windows": COMMAND = "ChangeStock.pyw"
-        COMMAND = COMMAND + " " + str(object.identification)
+        COMMAND = COMMAND + " " + str(object["identification"])
         application = os.popen(COMMAND).readlines()
     if btn == "F1 -": StockChange("<F1>")
     if btn == "F2 +": StockChange("<F2>")
