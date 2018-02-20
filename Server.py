@@ -292,7 +292,7 @@ def Preisvorschlag():
 
             if not NewLastChange == OldLastChange:
                 print("RELOAD " + str(ImportData))
-                memory_db.connect()
+                local_db.connect()
                 Artikel.delete().where(Artikel.lieferant == LieferantName).execute()
 
                 DictOfPos = {}
@@ -345,7 +345,7 @@ def Preisvorschlag():
                     Artikel.insert_many(DictList).execute()
 
                 BlueSave("LastChange", str(NewLastChange), ImportData)
-                memory_db.close()
+                local_db.close()
 
 def SearchArt(Dict):# Give Dict with Search return List of IDs 
     print("SearchArt")
