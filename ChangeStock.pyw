@@ -12,7 +12,7 @@ import platform
 import sys
 
 
-EntryList=["Barcode", "Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK"]
+EntryList=["Barcode", "Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Grösse"]
 
 if len(sys.argv) == 1:
     ID = StockSetBCode()
@@ -31,7 +31,7 @@ def Save():
         return False
     else:
         print("Send Data to Server")
-        if SetArt({"identification":str(ID), "name_de":appChange.getEntry("Name"), "barcode":appChange.getEntry("Barcode"), "artikel":appChange.getEntry("Artikel"), "artikel2":appChange.getEntry("Artikel2"), "artikel3":appChange.getEntry("Artikel3"), "artikel4":appChange.getEntry("Artikel4"), "lieferant":appChange.getEntry("Lieferant"), "preisek":appChange.getEntry("Einkaufspreis"), "preisvkh":appChange.getEntry("Verkaufspreis HTVA"), "preisvk":appChange.getEntry("Verkaufspreis TVAC"), "minimum":appChange.getEntry("Minimum"), "ort":appChange.getEntry("Ort")}):
+        if SetArt({"identification":str(ID), "name_de":appChange.getEntry("Name"), "barcode":appChange.getEntry("Barcode"), "artikel":appChange.getEntry("Artikel"), "artikel2":appChange.getEntry("Artikel2"), "artikel3":appChange.getEntry("Artikel3"), "artikel4":appChange.getEntry("Artikel4"), "lieferant":appChange.getEntry("Lieferant"), "preisek":appChange.getEntry("Einkaufspreis"), "preisvkh":appChange.getEntry("Verkaufspreis HTVA"), "preisvk":appChange.getEntry("Verkaufspreis TVAC"), "minimum":appChange.getEntry("Minimum"), "ort":appChange.getEntry("Ort"), "groesse":appChange.getEntry("Grösse")}):
             return True
         else:
             appChange.infoBox("Achtung", "Artikel konnte nicht gespeichert werden", parent=None)
@@ -152,6 +152,7 @@ appChange.addLabel("Title", str(DATA["identification"]), 0, 0, 5, 0)
 appChange.addLabelEntry("Name", 1, 0, 2, 0)
 appChange.setEntryChangeFunction("Name", VerifyInputChar)
 appChange.setEntry("Name", DATA["name_de"])
+appChange.setFocus("Name")
 
 appChange.addLabelEntry("Lieferant", 1, 3, 2, 0)
 appChange.setEntryChangeFunction("Lieferant", VerifyInputChar)
@@ -205,6 +206,10 @@ appChange.setEntry("Ort", DATA["ort"])
 appChange.addLabelEntry("Minimum", 10, 0, 2, 0)
 appChange.setEntryChangeFunction("Minimum", VerifyInputFloat)
 appChange.setEntry("Minimum", DATA["minimum"])
+
+appChange.addLabelEntry("Grösse", 10, 3, 2, 0)
+appChange.setEntryChangeFunction("Grösse", VerifyInputFloat)
+appChange.setEntry("Grösse", DATA["groesse"])
 
 def StopWindow(btn):
     Debug("StopWindow")
