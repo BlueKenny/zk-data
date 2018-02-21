@@ -24,9 +24,6 @@ appSuche.setBg("#3399ff")
 #appSuche.setIcon("DATA/stock.jpg")
 
 IDToChange = 0
-AlteSuche = ""
-
-AutoCacheSlowDown = False
 
 def BtnStockGraph(btn):
     ID = appSuche.getListBox("Suche")[0].split(" | ")[0]
@@ -56,7 +53,6 @@ def BtnPrintOrt(btn):
         PrintLocation(Data["ort"])
 
 def ArtikelAnzeigen():
-    global AlteSuche
     print("ArtikelAnzeigen")
     ID = str(appSuche.getListBox("Suche")[0].split(" | ")[0]).rstrip()
     print("ID:" + ID)
@@ -65,7 +61,7 @@ def ArtikelAnzeigen():
     application = os.popen(COMMAND + " " + ID).readlines()
     if not str(BlueLoad("LastID", "DATA/DATA")) == "None":
         appSuche.setEntry("Suche", BlueLoad("LastID", "DATA/DATA"))
-        AlteSuche = ""
+        Suche()
 
 def tbFunc(btn):
     global IDToChange
@@ -90,9 +86,9 @@ tools = ["NEU", "", "F1 -", "F2 +", " ", "F11 Ort", "F12 Barcode"]
 appSuche.addToolbar(tools, tbFunc, findIcon=False)
 
 
-appSuche.addDualMeter("progress", 0, 0)
-appSuche.setMeterFill("progress", ["red", "green"])
-appSuche.setMeter("progress", [0, 0])
+#appSuche.addDualMeter("progress", 0, 0)
+#appSuche.setMeterFill("progress", ["red", "green"])
+#appSuche.setMeter("progress", [0, 0])
 
 appSuche.addLabelEntry("Suche", 1, 0, 1, 0)
 #appSuche.addLabelEntry("Ort", 1, 1, 1, 0)
@@ -120,79 +116,55 @@ def Delete(btn):
 
 
 def Suche():
+    appSuche.setLabel("info1", "Suche gestartet")
     appSuche.thread(SucheProcess)
-    appSuche.after(500, Suche)
+    #appSuche.after(500, Suche)
 
 def SucheProcess():
-    global AutoCacheSlowDown
-    global AlteSuche
     Suche = appSuche.getEntry("Suche")
-    if not AlteSuche == Suche:
-        Debug("Suche")
 
-        AlteSuche = Suche
+    Debug("Suche")
 
-        #appSuche.deleteAllGridRows("Suche")
-        #appSuche.addGridRows("Suche", [["Identification", "Artikel", "Lieferant", "Name", "Ort", "Preis", "Anzahl"]])
-        appSuche.clearListBox("Suche")
-        AutoCacheSlowDown = True
+    appSuche.clearListBox("Suche")
 
-        #appSuche.setMeter("status", 0, text="Suche wird gestartet")
+    EndString = ""
+    for character in Suche:
+        if character.isalpha() or character.isdigit():
+            EndString = EndString + str(character)
+    Suche = EndString.upper()
+    appSuche.setEntry("Suche", Suche, callFunction=False)
 
-        EndString = ""
-        for character in Suche:
-            if character.isalpha() or character.isdigit():
-                EndString = EndString + str(character)
-        Suche = EndString.upper()
-        appSuche.setEntry("Suche", Suche, callFunction=False)
+    Ort = ""
+    Lieferant = ""
 
-        Ort = ""
-        #Ort = appSuche.getEntry("Ort")
-        #EndString = ""
-        #for character in Ort:
-        #    if character.isalpha() or character.isdigit():
-        #        EndString = EndString + str(character)
-        #    Ort = EndString.upper()
-        #appSuche.setEntry("Ort", Ort, callFunction=False)
+    if Suche == "":
+        NichtSuchen = True
+    else:
+        NichtSuchen = False
 
-        Lieferant = ""
-        #Lieferant = appSuche.getEntry("Lieferant")
-        #EndString = ""
-        #for character in Lieferant:
-        #    if character.isalpha() or character.isdigit():
-        #        EndString = EndString + str(character)
-        #    Lieferant = EndString.upper()
-        #appSuche.setEntry("Lieferant", Lieferant, callFunction=False)
+    if not NichtSuchen:
+        AntwortListe=SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
+        print("AntwortListe: " + str(AntwortListe))
 
-        if Suche == "":
-            NichtSuchen = True
-        else:
-            NichtSuchen = False
+        for ID in AntwortListe:
+            if not ID == "":
+                print("ID: " + str(ID))
+                Art = GetArt(ID)
+                        
+                Linie = str(ID)
+                Linie = Linie + " | " + str(Art["artikel"])
+                Linie = Linie + " | " + str(Art["lieferant"])
+                Linie = Linie + " | " + str(Art["name_de"])
+                Linie = Linie + " | " + str(Art["ort"])
+                Linie = Linie + " | " + str(Art["preisvk"])
+                Linie = Linie + " | " + str(Art["anzahl"])
+                appSuche.addListItem("Suche", Linie)
+                appSuche.setListItemBg("Suche", Linie, "#ffffff")
 
-        if not NichtSuchen:
-            AntwortListe=SearchArt({"suche":Suche, "ort":Ort, "lieferant":Lieferant})
-            print("AntwortListe: " + str(AntwortListe))
-
-            for ID in AntwortListe:
-                if not ID == "":
-                    print("ID: " + str(ID))
-                    Art = GetArt(ID)
-                    
-                    Linie = str(ID)
-                    Linie = Linie + " | " + str(Art["artikel"])
-                    Linie = Linie + " | " + str(Art["lieferant"])
-                    Linie = Linie + " | " + str(Art["name_de"])
-                    Linie = Linie + " | " + str(Art["ort"])
-                    Linie = Linie + " | " + str(Art["preisvk"])
-                    Linie = Linie + " | " + str(Art["anzahl"])
-                    appSuche.addListItem("Suche", Linie)
-                    appSuche.setListItemBg("Suche", Linie, "#ffffff")
-
-            appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
-    
+        appSuche.selectListItemAtPos("Suche", 0, callFunction=False)
+    appSuche.setLabel("info1", "Suche Beendet")
 
 def StockChange(btn):
-    global AlteSuche
     Debug("StockChange")
     try: IDToChange = appSuche.getListBox("Suche")[0].split(" | ")[0].rstrip()
     except: appSuche.errorBox("Fehler", "Bitte wählen sie zuerst einen Artikel aus")
@@ -223,15 +195,19 @@ def StockChange(btn):
                     else:
                         appSuche.infoBox("Fehler", "Anzahl wurde nicht geändert")
                 except: appSuche.infoBox("Fehler", "Fehler")
-    AlteSuche = ""
+    Suche()
 
 
 
 appSuche.setFocus("Suche")
 
-#appSuche.setEntryChangeFunction("Suche", Suche)
+def NichtGesucht(btn):
+    appSuche.setLabel("info1", "Suche noch nicht gestartet")
+
+appSuche.setEntryChangeFunction("Suche", NichtGesucht)
 #appSuche.setEntryChangeFunction("Ort", Suche)
 #appSuche.setEntryChangeFunction("Lieferant", Suche)
+appSuche.enableEnter(Suche)
 
 appSuche.bindKey("<F1>", StockChange)
 appSuche.bindKey("<F2>", StockChange)
@@ -240,5 +216,6 @@ appSuche.bindKey("<F11>", BtnPrintOrt)
 appSuche.bindKey("<F12>", BtnPrintBarcode)
 appSuche.bindKey("<Delete>", Delete)
 
-appSuche.after(1000, Suche)
+
+#appSuche.after(1000, Suche)
 appSuche.go()
