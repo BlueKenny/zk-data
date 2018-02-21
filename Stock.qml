@@ -36,7 +36,8 @@ Rectangle {
             PropertyChanges {target:ti; font.pixelSize: ti.height*0.5}
             
             //PropertyChanges {target:liste; font.pixelSize: 100}
-            PropertyChanges {target:busyi; visible: true}
+            
+            PropertyChanges {target:busyindicator; height: frame.height*0.4}
             
             
         },
