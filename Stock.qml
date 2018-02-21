@@ -12,7 +12,10 @@ Rectangle {
     id: frame
     width: 1000
     height: 1000
-    //anchors.fill: parent
+    
+    function busy(status) {
+        busyindicator.visible = status
+    }
     
     function ifPhone(bool) {
         frame.state = "Handy"
@@ -32,7 +35,8 @@ Rectangle {
             PropertyChanges {target:ti; width:frame.width*0.7}
             PropertyChanges {target:ti; font.pixelSize: ti.height*0.5}
             
-            //PropertyChanges {target:liste.identification; font.pixelSize: 100}
+            //PropertyChanges {target:liste; font.pixelSize: 100}
+            PropertyChanges {target:busyi; visible: true}
             
             
         },
@@ -50,15 +54,16 @@ Rectangle {
         
             
         horizontalAlignment: TextInput.AlignHCenter
-        //font.capitalization: Font.AllUpperCase
+        //font.capitalization: font.AllUpperCase
         inputMethodHints: Qt.ImhUppercaseOnly, Qt.ImhNoPredictiveText
         placeholderText: "Suche"
             
         text: ""
         focus: true
 
-        //onTextChanged
-        //onAccepted: python.call('Stock.main.SearchArt', [text], function() {})
+        onAccepted: {
+            python.call('Stock.main.SearchArt', [text], function() {})
+        }
     }
         
     TableView {
@@ -78,38 +83,49 @@ Rectangle {
             role: "artikel"
             title: "Artikel"
             width: parent.width/8
-        }/*
+        }
         TableViewColumn {
             role: "lieferant"
             title: "Lieferant"
                 width: parent.width/8        
+        }
+        TableViewColumn {
+            role: "name_de"
+            title: "Name"
+            width: parent.width/4
+        }
+        TableViewColumn {
+            role: "ort"
+            title: "Ort"
+            width: parent.width/8
             }
-            TableViewColumn {
-                role: "name_de"
-                title: "Name"
-                width: parent.width/4
-            }
-            TableViewColumn {
-                role: "ort"
-                title: "Ort"
-                width: parent.width/8
-            }
-            TableViewColumn {
-                role: "preisvk"
-                title: "Preis"
-                width: parent.width/8
-            }
-            TableViewColumn {
-                role: "anzahl"
-                title: "Anzahl"
-                width: parent.width/8
-            }
-            model: ListModel {
-                id: listModel
-            }   */
-        
-    
+        TableViewColumn {
+            role: "preisvk"
+            title: "Preis"
+            width: parent.width/8
+        }
+        TableViewColumn {
+            role: "anzahl"
+            title: "Anzahl"
+            width: parent.width/8
+        }/*
+        rowDelegate: Rectangle{
+            height: 100
+            //font.pixelSize: 100
+        }*/
+        model: ListModel {
+            id: listModel
+        }      
     }
+       
+    BusyIndicator {
+        id: busyindicator
+        running: image.status === Image.Loadings
+        visible: true
+        x: parent.width / 2
+        y: parent.height / 2
+    }
+    
     
     Python {
         id: python
@@ -120,6 +136,9 @@ Rectangle {
             call("Stock.main.isPhone", [], function () {})
             setHandler("ifPhone", ifPhone);
             setHandler("antwortSearchArt", antwortSearchArt);
+            setHandler("busy", busy);
+            
+            
           
         }
     }

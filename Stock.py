@@ -16,7 +16,7 @@ os.system("export MIR_SOCKET=/var/run/mir_socket")
 # pyotherside
 #git clone https://github.com/BlueKenny/zk-data.git
 
-class Main:
+class Main:    
     def __init__(self):
         print("init")
         #for user in os.listdir("/home/"):
@@ -48,8 +48,16 @@ class Main:
         update = os.popen("git pull").readlines()
         if not len(update) == 1:
             pyotherside.send("antwortSearchArt", {"name_de":"Bitte neustarten"}) 
+            
+        self.busy(False)
+        
+    
+    def busy(self, status):
+        status = bool(status)
+        pyotherside.send("busy", status)
         
     def SearchArt(self, suche):
+        self.busy(True)
         if not suche == "":
             Antwort = []
             IDList = libs.send.SearchArt({"suche": suche, "lieferant": "", "ort": ""})
@@ -57,6 +65,7 @@ class Main:
                 Dict = libs.send.GetArt(str(ID))
                 Antwort.append(Dict)
             pyotherside.send("antwortSearchArt", Antwort) 
+        self.busy(False)
 
     def isPhone(self):
         if os.path.exists("/home/phablet"):
