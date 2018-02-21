@@ -56,11 +56,14 @@ class Main:
         status = bool(status)
         pyotherside.send("busy", status)
         
+    def GetArt(self, ID):
+        print(ID)
+    
     def SearchArt(self, suche):
         self.busy(True)
         if not suche == "":
             Antwort = []
-            IDList = libs.send.SearchArt({"suche": suche, "lieferant": "", "ort": ""})
+            IDList = libs.send.SearchArt({"suche": suche, "ort": "", "lieferant": ""})
             for ID in IDList:
                 Dict = libs.send.GetArt(str(ID))
                 Antwort.append(Dict)
