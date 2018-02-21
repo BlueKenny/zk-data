@@ -78,7 +78,7 @@ StackView {
                 inputMethodHints: Qt.ImhUppercaseOnly, Qt.ImhNoPredictiveText
                 placeholderText: "Suche"
 
-                text: ""
+                text: infoID
                 focus: true
 
                 onAccepted: {
@@ -161,7 +161,9 @@ StackView {
                     setHandler("ifPhone", ifPhone);
                     setHandler("antwortSearchArt", antwortSearchArt);
                     setHandler("busy", busy);
+                    
                     call("Stock.main.isPhone", [], function () {})
+                    call('Stock.main.SearchArt', [ti.text], function() {})
                 }
             }
         }
@@ -175,7 +177,7 @@ StackView {
             width: 1000
             height: 1000
 
-            function open() {
+            function open2() {
                 frames.push(frameSuche);
             }
 
@@ -239,6 +241,14 @@ StackView {
                 delegate: delegateListe2
 
 
+            }
+            
+            Button {
+                text: "Zuruck"
+                onClicked: open2()
+                height: frame2.height / 20
+                width: frame2.width / 10
+                x: frame2.width - width
             }
 
             BusyIndicator {
