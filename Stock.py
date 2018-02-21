@@ -48,16 +48,28 @@ class Main:
         update = os.popen("git pull").readlines()
         if not len(update) == 1:
             pyotherside.send("antwortSearchArt", {"name_de":"Bitte neustarten"}) 
-            
-        self.busy(False)
         
     
     def busy(self, status):
+        print("busy = " + str(status))
         status = bool(status)
         pyotherside.send("busy", status)
+    def busy2(self, status):
+        print("busy2 = " + str(status))
+        status = bool(status)
+        pyotherside.send("busy2", status)
         
     def GetArt(self, ID):
-        print(ID)
+        print("antwortGetArt")
+        self.busy2(True)
+        Dict = libs.send.GetArt(str(ID))
+        del Dict["identification"]
+        Antwort = []
+        for text, var in Dict.items():
+            Antwort.append({"name": str(text) + ": " + str(var)})
+        pyotherside.send("antwortGetArt", Antwort)
+        self.busy2(False)
+        
     
     def SearchArt(self, suche):
         self.busy(True)
@@ -71,12 +83,18 @@ class Main:
         self.busy(False)
 
     def isPhone(self):
-        if os.path.exists("/home/phablet"):
-            print("isPhone: True")
-            pyotherside.send("ifPhone", True) 
-        else:
-            print("isPhone: False")
-            pyotherside.send("ifPhone", True) 
+        if os.path.exists("/home/phablet"): handy = True
+        else: handy = True
+        print("isPhone: " + str(handy))
+        pyotherside.send("ifPhone", handy)
+        self.busy(False)
+    
+    def isPhone2(self):
+        if os.path.exists("/home/phablet"): handy = True
+        else: handy = True
+        print("isPhone2: " + str(handy))
+        pyotherside.send("ifPhone2", handy)
+        self.busy2(False)
         
 main = Main()
 

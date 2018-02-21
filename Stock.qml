@@ -13,6 +13,9 @@ StackView {
     id: frames
     initialItem: frameSuche
 
+    property string infoID: ''
+
+
     Component {
         id: frameSuche
 
@@ -22,6 +25,7 @@ StackView {
             height: 1000
 
             function open(id) {
+                infoID = id
                 frames.push(frameInfo);
             }
 
@@ -133,7 +137,6 @@ StackView {
                 }
                 model: ListModel {
                     id: listModel
-
                 }
                 onClicked: {
                      open(listModel.get(row).identification)
@@ -144,7 +147,6 @@ StackView {
             BusyIndicator {
                 id: busyindicator
                 running: image.status === Image.Loadings
-                visible: true
                 x: frame.width / 2
                 y: frame.height / 2
             }
@@ -156,10 +158,10 @@ StackView {
                     addImportPath(Qt.resolvedUrl('.'));
                     importModule('Stock', function () {});
 
-                    call("Stock.main.isPhone", [], function () {})
                     setHandler("ifPhone", ifPhone);
                     setHandler("antwortSearchArt", antwortSearchArt);
                     setHandler("busy", busy);
+                    call("Stock.main.isPhone", [], function () {})
                 }
             }
         }
@@ -185,6 +187,13 @@ StackView {
                 frame2.state = "Handy"
             }
 
+            function antwortGetArt(item) {
+                //listModel.clear();
+                for (var i=0; i<item.length; i++) {
+                    listModel2.append(item[i]);
+                }
+            }
+
             states: [
                 State {
                     name: "Handy"
@@ -198,14 +207,43 @@ StackView {
                 }
             ]
 
+            Label {
+                id: labelIdentification
+                text: infoID
+                y: frame2.height * 0.02
+                x: frame2.width / 2
+            }
+
             ListView {
+                id: liste2
+                y: labelIdentification.y * 2
+                height: parent.height
+                width: parent.width
+
+
+                ListModel {
+                    id: listModel2
+                }
+
+                Component {
+                    id: delegateListe2
+
+                    Text {
+                        text: name
+                        height: liste2.height / 20
+                        font.pixelSize: height * 0.6
+                    }
+
+                }
+                model: listModel2
+                delegate: delegateListe2
+
 
             }
 
             BusyIndicator {
                 id: busyindicator2
                 running: image.status === Image.Loadings
-                visible: true
                 x: frame2.width / 2
                 y: frame2.height / 2
             }
@@ -217,9 +255,11 @@ StackView {
                     addImportPath(Qt.resolvedUrl('.'));
                     importModule('Stock', function () {});
 
-                    call("Stock.main.isPhone", [], function () {})
-                    setHandler("ifPhone", ifPhone2);
-                    setHandler("busy", busy2);
+                    setHandler("ifPhone2", ifPhone2);
+                    setHandler("busy2", busy2);
+                    setHandler("antwortGetArt", antwortGetArt);
+                    call("Stock.main.isPhone2", [], function () {})
+                    call("Stock.main.GetArt", [infoID], function () {})
                 }
             }
         }
