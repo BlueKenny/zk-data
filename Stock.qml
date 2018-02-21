@@ -22,7 +22,6 @@ StackView {
             height: 1000
 
             function open(id) {
-                //frames.push("qrc:/StockChange");
                 frames.push(frameInfo);
             }
 
@@ -83,6 +82,7 @@ StackView {
                 }
             }
 
+
             TableView {
                 id: liste
                 width: parent.width
@@ -125,24 +125,28 @@ StackView {
                     role: "anzahl"
                     title: "Anzahl"
                     width: parent.width/8
-                }/*
+                }
                 rowDelegate: Rectangle{
-                    height: 100
-                }*/
+                    id: row
+                    height: liste.height/10
+                    //font.pixelSize: height*0.6
+                }
                 model: ListModel {
                     id: listModel
+
                 }
                 onClicked: {
                      open(listModel.get(row).identification)
                     //python.call('Stock.main.GetArt', [listModel.get(row).identification], function() {})
                 }
             }
+
             BusyIndicator {
                 id: busyindicator
                 running: image.status === Image.Loadings
                 visible: true
-                x: parent.width / 2
-                y: parent.height / 2
+                x: frame.width / 2
+                y: frame.height / 2
             }
 
 
@@ -164,11 +168,59 @@ StackView {
     Component {
         id: frameInfo
 
-        Rectangle{
-            id: frame
+        Rectangle {
+            id: frame2
+            width: 1000
+            height: 1000
 
-            TextField {
-                text: "test"
+            function open() {
+                frames.push(frameSuche);
+            }
+
+            function busy2(status) {
+                busyindicator2.visible = status
+            }
+
+            function ifPhone2(bool) {
+                frame2.state = "Handy"
+            }
+
+            states: [
+                State {
+                    name: "Handy"
+                    //PropertyChanges {target:ti; height:frame.height/15}
+                    //PropertyChanges {target:ti; width:frame.width*0.7}
+                    //PropertyChanges {target:ti; font.pixelSize: ti.height*0.4}
+                },
+                State {
+                    name: "Desktop"
+                    //PropertyChanges {target:top1; color:"yellow"}
+                }
+            ]
+
+            ListView {
+
+            }
+
+            BusyIndicator {
+                id: busyindicator2
+                running: image.status === Image.Loadings
+                visible: true
+                x: frame2.width / 2
+                y: frame2.height / 2
+            }
+
+
+            Python {
+                id: python
+                Component.onCompleted: {
+                    addImportPath(Qt.resolvedUrl('.'));
+                    importModule('Stock', function () {});
+
+                    call("Stock.main.isPhone", [], function () {})
+                    setHandler("ifPhone", ifPhone2);
+                    setHandler("busy", busy2);
+                }
             }
         }
     }
