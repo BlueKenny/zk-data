@@ -64,7 +64,7 @@ class Main:
             pyotherside.send("ifPhone", True) 
         else:
             print("isPhone: False")
-            pyotherside.send("ifPhone", False) 
+            pyotherside.send("ifPhone", True) 
         
 main = Main()
 

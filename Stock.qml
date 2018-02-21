@@ -3,16 +3,19 @@ import io.thp.pyotherside 1.2
 import QtQuick.Controls 1.1
 //import QtQuick.Window 2.2
 
-Flickable {
+// Fedora
+//dnf install pyotherside
+//dnf install qt5-qtquickcontrols
+//dnf install qt5-qtquickcontrols2
+
+Rectangle {
     id: frame
     width: 1000
     height: 1000
     //anchors.fill: parent
-   
-    property bool isPhone: true
     
     function ifPhone(bool) {
-        isPhone: bool
+        frame.state = "Handy"
     }
             
     function antwortSearchArt(item) {
@@ -22,56 +25,64 @@ Flickable {
         }
     }
 
-    Rectangle {
-        TextField {
-            id: ti
-        
-            x: frame.width/2 - ti.width/2
-            y: frame.height / 50
-                
-            height: {
-                if (isPhone == true) {
-                    return frame.height / 10
-                } else {
-                    return frame.height / 20
-                }
-            }
+    states: [
+        State {
+            name: "Handy"
+            PropertyChanges {target:ti; height:frame.height/10}
+            PropertyChanges {target:ti; width:frame.width*0.7}
+            PropertyChanges {target:ti; font.pixelSize: ti.height*0.5}
+            
+            //PropertyChanges {target:liste.identification; font.pixelSize: 100}
             
             
-            horizontalAlignment: TextInput.AlignHCenter
-            font.capitalization: Font.AllUpperCase
-            inputMethodHints: Qt.ImhUppercaseOnly, Qt.ImhNoPredictiveText
-            placeholderText: "Suche"
-            
-            text: ""
-            focus: true
-
-            onTextChanged: python.call('Stock.main.SearchArt', [text], function() {})
+        },
+        State {
+            name: "Desktop"
+            //PropertyChanges {target:top1; color:"yellow"}
         }
+    ]
+    
+    TextField {
+        id: ti
         
-        TableView {
-            id: liste
-            width: parent.width
-            x: 0
-            y: ti.y + ti.height + 10
-            height: parent.height - y
+        x: frame.width/2 - ti.width/2
+        y: frame.height / 50      
+        
+            
+        horizontalAlignment: TextInput.AlignHCenter
+        //font.capitalization: Font.AllUpperCase
+        inputMethodHints: Qt.ImhUppercaseOnly, Qt.ImhNoPredictiveText
+        placeholderText: "Suche"
+            
+        text: ""
+        focus: true
+
+        //onTextChanged
+        //onAccepted: python.call('Stock.main.SearchArt', [text], function() {})
+    }
+        
+    TableView {
+        id: liste
+        width: parent.width
+        x: 0
+        y: ti.y + ti.height + 10
+        height: parent.height - y
             
             
-            TableViewColumn {
-                role: "identification"
-                title: "ID"
-                //width: parent.width/8
-                width: parent.width/3
-            }
-            TableViewColumn {
-                role: "artikel"
-                title: "Artikel"
-                width: parent.width/8
-            }
-            TableViewColumn {
-                role: "lieferant"
-                title: "Lieferant"
-                width: parent.width/8
+        TableViewColumn {
+            role: "identification"
+            title: "ID"
+            width: parent.width/8
+        }
+        TableViewColumn {
+            role: "artikel"
+            title: "Artikel"
+            width: parent.width/8
+        }/*
+        TableViewColumn {
+            role: "lieferant"
+            title: "Lieferant"
+                width: parent.width/8        
             }
             TableViewColumn {
                 role: "name_de"
@@ -95,10 +106,8 @@ Flickable {
             }
             model: ListModel {
                 id: listModel
-            }
-        }
-    }
-    Item {
+            }   */
+        
     
     }
     
