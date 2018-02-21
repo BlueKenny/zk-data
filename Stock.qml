@@ -37,7 +37,10 @@ Rectangle {
             
             //PropertyChanges {target:liste; font.pixelSize: 100}
             
-            PropertyChanges {target:busyindicator; height: frame.height*0.4}
+            PropertyChanges {target:busyindicator; height: frame.height*0.2}
+            PropertyChanges {target:busyindicator; width: frame.width*0.2}
+            PropertyChanges {target:busyindicator; x: frame.width/2 - busyindicator.width/2}
+            PropertyChanges {target:busyindicator; y: frame.height/2 - busyindicator.height/2}
             
             
         },
