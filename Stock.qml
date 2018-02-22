@@ -67,7 +67,9 @@ StackView {
                     PropertyChanges {target:busyindicator; x: frame.width/2 - busyindicator.width/2}
                     PropertyChanges {target:busyindicator; y: frame.height/2 - busyindicator.height/2}
                     
-                    PropertyChanges {target:identification; width: frame.width/4}
+                    PropertyChanges {target:columnIdentification; width: frame.width/3}
+                    PropertyChanges {target:columnArtikel; width: frame.width/3}
+                    PropertyChanges {target:columnLieferant; width: frame.width/3}
 
 
                 },
@@ -111,16 +113,19 @@ StackView {
 
 
                 TableViewColumn {
+                    id: columnIdentification
                     role: "identification"
                     title: "ID"
                     width: parent.width/8
                 }
                 TableViewColumn {
+                    id: columnArtikel
                     role: "artikel"
                     title: "Artikel"
                     width: parent.width/8
                 }
                 TableViewColumn {
+                    id: columnLieferant
                     role: "lieferant"
                     title: "Lieferant"
                         width: parent.width/8
