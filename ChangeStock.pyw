@@ -24,14 +24,26 @@ else:
 def Save():
     global DATA
     print("Save")
-    ID = appChange.getLabel("Title")
+    DATA["name_de"] = appChange.getEntry("Name")
+    DATA["lieferant"] = appChange.getEntry("Lieferant")
+    DATA["artikel"] = appChange.getEntry("Artikel")
+    DATA["artikel2"] = appChange.getEntry("Artikel2")
+    DATA["artikel3"] = appChange.getEntry("Artikel3")
+    DATA["artikel4"] = appChange.getEntry("Artikel4")
+    DATA["preisek"] = appChange.getEntry("Einkaufspreis")
+    DATA["preisvkh"] = appChange.getEntry("Verkaufspreis HTVA")
+    DATA["preisvk"] = appChange.getEntry("Verkaufspreis TVAC")
+    DATA["barcode"] = appChange.getEntry("Barcode")
+    DATA["ort"] = appChange.getEntry("Ort")
+    DATA["minimum"] = appChange.getEntry("Minimum")
+    DATA["groesse"] = appChange.getEntry("Grösse")
     
     if not GetArt(ID)["lastchange"] == DATA["lastchange"] and not PID:
         appChange.infoBox("Achtung", "Dieser Artikel wurde gerade von einem anderen ort aus geändert", parent=None)
         return False
     else:
         print("Send Data to Server")
-        if SetArt({"identification":str(ID), "name_de":appChange.getEntry("Name"), "barcode":appChange.getEntry("Barcode"), "artikel":appChange.getEntry("Artikel"), "artikel2":appChange.getEntry("Artikel2"), "artikel3":appChange.getEntry("Artikel3"), "artikel4":appChange.getEntry("Artikel4"), "lieferant":appChange.getEntry("Lieferant"), "preisek":appChange.getEntry("Einkaufspreis"), "preisvkh":appChange.getEntry("Verkaufspreis HTVA"), "preisvk":appChange.getEntry("Verkaufspreis TVAC"), "minimum":appChange.getEntry("Minimum"), "ort":appChange.getEntry("Ort"), "groesse":appChange.getEntry("Grösse")}):
+        if SetArt(DATA):
             return True
         else:
             appChange.infoBox("Achtung", "Artikel konnte nicht gespeichert werden", parent=None)
@@ -81,7 +93,8 @@ def VerifyInputInt(Entry):
                 appChange.setEntry(Entry, IDToBarcode(ID))
                 appChange.infoBox("Achtung", "Dieser Barcode ist ungültig und wird jetzt neu generiert")
     except:
-        if Entry == "Barcode":	appChange.setEntry(Entry, IDToBarcode(ID))
+        if Entry == "Barcode":
+            appChange.setEntry(Entry, IDToBarcode(ID))
         else:
             appChange.setEntry(Entry, "0")
 
