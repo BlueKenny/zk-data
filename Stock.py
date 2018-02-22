@@ -74,7 +74,7 @@ class Main:
                 Dict = libs.send.GetArt(str(ID))
                 Antwort.append(Dict)
             pyotherside.send("antwortSearchArt", Antwort) 
-            self.busy(False)
+        self.busy(False)
 
     def isPhone(self):
         if os.path.exists("/home/phablet"):
