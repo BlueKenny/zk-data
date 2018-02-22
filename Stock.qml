@@ -2,11 +2,13 @@ import QtQuick 2.2
 import io.thp.pyotherside 1.2
 import QtQuick.Controls 1.1
 //import QtQuick.Window 2.2
+import QtMultimedia 5.8
 
 // Fedora
 //dnf install pyotherside
 //dnf install qt5-qtquickcontrols
 //dnf install qt5-qtquickcontrols2
+//dnf install qt5-qtmultimedia
 
 
 StackView {
@@ -66,6 +68,10 @@ StackView {
                 }
             ]
 
+            Camera {
+                id: camera
+            }            
+            
             TextField {
                 id: ti
 
@@ -82,6 +88,7 @@ StackView {
                 focus: true
 
                 onAccepted: {
+                    camera.capture
                     python.call('Stock.main.SearchArt', [text], function() {})
                 }
             }
