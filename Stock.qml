@@ -213,6 +213,7 @@ StackView {
                 State {
                     name: "Handy"
                     PropertyChanges {target:labelIdentification; font.pixelSize:frame2.height*0.05}
+                    PropertyChanges {target:labelIdentification; x:frame2.width/2 - width/2}
                     
                     PropertyChanges {target:buttonBack; height:frame2.height/10}
                     PropertyChanges {target:buttonBack; width:frame2.width/5}
