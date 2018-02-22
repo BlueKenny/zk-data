@@ -212,9 +212,12 @@ StackView {
             states: [
                 State {
                     name: "Handy"
-                    PropertyChanges {target:labelIdentification; font.pixelSize:frame2.height*0.2}
+                    PropertyChanges {target:labelIdentification; font.pixelSize:frame2.height*0.05}
                     
-                    //PropertyChanges {target:ti; width:frame.width*0.7}
+                    PropertyChanges {target:buttonBack; height:frame2.height/10}
+                    PropertyChanges {target:buttonBack; width:frame2.width/5}
+                    PropertyChanges {target:buttonBack; x:frame2.width-width}
+                    
                     //PropertyChanges {target:ti; font.pixelSize: ti.height*0.4}
                 },
                 State {
@@ -258,6 +261,7 @@ StackView {
             }
             
             Button {
+                id: buttonBack
                 text: "Zuruck"
                 onClicked: open2()
                 height: frame2.height / 20
