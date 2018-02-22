@@ -59,7 +59,7 @@ class Main:
         Dict = libs.send.GetArt(str(ID))
         del Dict["identification"]
         Antwort = []
-        for text, var in Dict.items():
+        for text, var in sorted(Dict.items()):
             Antwort.append({"name": str(text) + ": " + str(var)})
         pyotherside.send("antwortGetArt", Antwort)
         self.busy2(False)
