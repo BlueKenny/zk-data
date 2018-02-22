@@ -219,7 +219,7 @@ StackView {
                     PropertyChanges {target:buttonBack; width:frame2.width/5}
                     PropertyChanges {target:buttonBack; x:frame2.width-width}
                     
-                    //PropertyChanges {target:ti; font.pixelSize: ti.height*0.4}
+                    PropertyChanges {target:lsite2; y: labelIdentification.y + labelIdentification.height}
                 },
                 State {
                     name: "Desktop"
