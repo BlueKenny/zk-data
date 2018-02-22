@@ -77,17 +77,19 @@ class Main:
         self.busy(False)
 
     def isPhone(self):
-        if os.path.exists("/home/phablet"): handy = True
-        else: handy = True
+        if os.path.exists("/home/phablet"):
+            handy = True
+            pyotherside.send("ifPhone", handy)
+        else: handy = False
         print("isPhone: " + str(handy))
-        pyotherside.send("ifPhone", handy)
         self.busy(False)
     
     def isPhone2(self):
-        if os.path.exists("/home/phablet"): handy = True
-        else: handy = True
+        if os.path.exists("/home/phablet"):
+            handy = True
+            pyotherside.send("ifPhone2", handy)
+        else: handy = False
         print("isPhone2: " + str(handy))
-        pyotherside.send("ifPhone2", handy)
         self.busy2(False)
         
 main = Main()

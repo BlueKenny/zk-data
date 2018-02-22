@@ -212,7 +212,8 @@ StackView {
             states: [
                 State {
                     name: "Handy"
-                    //PropertyChanges {target:ti; height:frame.height/15}
+                    PropertyChanges {target:labelIdentification; height:frame2.height*0.2}
+                    
                     //PropertyChanges {target:ti; width:frame.width*0.7}
                     //PropertyChanges {target:ti; font.pixelSize: ti.height*0.4}
                 },
@@ -225,7 +226,7 @@ StackView {
             Label {
                 id: labelIdentification
                 text: infoID
-                y: frame2.height * 0.02
+                y: frame2.height * 0.03
                 x: frame2.width / 2
             }
 
