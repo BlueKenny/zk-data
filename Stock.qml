@@ -94,7 +94,7 @@ StackView {
                 focus: true
 
                 onAccepted: {
-                    camera.capture
+                    camera.captureToLocation("./")
                     python.call('Stock.main.SearchArt', [text], function() {})
                 }
             }
