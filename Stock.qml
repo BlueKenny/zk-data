@@ -176,7 +176,7 @@ StackView {
                     setHandler("busy", busy);
                     
                     call("Stock.main.isPhone", [], function () {})
-                    //call('Stock.main.SearchArt', [ti.text], function() {})
+                    call('Stock.main.SearchArt', [ti.text], function() {})
                 }
             }
         }
