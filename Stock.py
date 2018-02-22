@@ -9,12 +9,6 @@ except: True
 import libs.send
 
 os.system("export MIR_SOCKET=/var/run/mir_socket")
-# apt-get update
-# apt-get install git
-# qml-module-qtquick2
-# qml-module-qtquick-controls
-# pyotherside
-#git clone https://github.com/BlueKenny/zk-data.git
 
 class Main:    
     def __init__(self):

@@ -15,6 +15,7 @@ import QtMultimedia 5.5
 // qml-module-qtmultimedia
 // qml-module-qtquick-controls
 // pyotherside
+// git
 
 
 StackView {
@@ -93,7 +94,7 @@ StackView {
                 focus: true
 
                 onAccepted: {
-                    camera.captureToLocation("./")
+                    camera.capture
                     python.call('Stock.main.SearchArt', [text], function() {})
                 }
             }
