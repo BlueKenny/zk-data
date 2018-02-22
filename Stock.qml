@@ -84,7 +84,6 @@ StackView {
                 x: frame.width/2 - ti.width/2
                 y: frame.height / 50
 
-
                 horizontalAlignment: TextInput.AlignHCenter
                 //font.capitalization: font.AllUpperCase
                 inputMethodHints: Qt.ImhUppercaseOnly, Qt.ImhNoPredictiveText
