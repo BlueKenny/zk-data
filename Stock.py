@@ -73,6 +73,7 @@ class Main:
             for ID in IDList:
                 Dict = libs.send.GetArt(str(ID))
                 Antwort.append(Dict)
+                self.busy(False)
             pyotherside.send("antwortSearchArt", Antwort) 
             if len(IDList) == 0:
                 os.system("test_vibrator")
