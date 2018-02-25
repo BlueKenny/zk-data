@@ -71,10 +71,6 @@ StackView {
                     
                     PropertyChanges {target:row; height: liste.height/5}
                     PropertyChanges {target:row; font.pixelSize: height*0.8}
-                    
-                    
-                    height: liste.height/10
-                    f: height * 0.8
 
 
                 },
