@@ -70,7 +70,7 @@ StackView {
                     PropertyChanges {target:columnLieferant; width: frame.width/3}
                     
                     PropertyChanges {target:row; height: liste.height/5}
-                    PropertyChanges {target:row; font.pixelSize: row.height*0.8}
+                    PropertyChanges {target:row; font.pixelSize: height*0.8}
                     
                     
                     height: liste.height/10
