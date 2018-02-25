@@ -116,7 +116,15 @@ StackView {
                 y: ti.y + ti.height + 10
                 height: parent.height - y
 
-
+                
+                rowDelegate: Text {
+                    id: row           
+                    //anchors.left: parent.left
+                    //anchors.right: parent.right
+                    height: liste.height/10
+                    font.pixelSize: height * 0.6
+                    
+                }
                 TableViewColumn {
                     id: columnIdentification
                     role: "identification"
@@ -155,17 +163,12 @@ StackView {
                     title: "Anzahl"
                     width: parent.width/8
                 }
-                rowDelegate: Rectangle{
-                    id: row
-                    height: liste.height/10
-                    //font.pixelSize: height*0.6
-                }
                 model: ListModel {
                     id: listModel
+                    //font.pixelSize: parent.height
                 }
                 onClicked: {
                      open(listModel.get(row).identification)
-                    //python.call('Stock.main.GetArt', [listModel.get(row).identification], function() {})
                 }
             }
 

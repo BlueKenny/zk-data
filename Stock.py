@@ -17,7 +17,7 @@ class Main:
         #    print(user)
         User = os.popen("echo $USER").readlines()[0].rstrip()
         
-        if os.path.exists("/home/phablet"): Desktop = "/home/phablet/.local/share/applications/"
+        if os.path.exists("/home/phablet"): Desktop = "/home/phablet/.local/share/applications"
         else: Desktop = os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip()
         
         file = Desktop + "/Stock.desktop"
