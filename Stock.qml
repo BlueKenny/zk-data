@@ -60,8 +60,6 @@ StackView {
                     PropertyChanges {target:ti; width:frame.width*0.7}
                     PropertyChanges {target:ti; font.pixelSize: ti.height*0.4}
 
-                    //PropertyChanges {target:liste; font.pixelSize: 100}
-
                     PropertyChanges {target:busyindicator; height: frame.height*0.2}
                     PropertyChanges {target:busyindicator; width: frame.width*0.2}
                     PropertyChanges {target:busyindicator; x: frame.width/2 - busyindicator.width/2}
@@ -70,6 +68,13 @@ StackView {
                     PropertyChanges {target:columnIdentification; width: frame.width/3}
                     PropertyChanges {target:columnArtikel; width: frame.width/3}
                     PropertyChanges {target:columnLieferant; width: frame.width/3}
+                    
+                    PropertyChanges {target:row; height: liste.height/5}
+                    PropertyChanges {target:row; font.pixelSize: row.height*0.8}
+                    
+                    
+                    height: liste.height/10
+                    f: height * 0.8
 
 
                 },
