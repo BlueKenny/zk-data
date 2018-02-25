@@ -74,6 +74,8 @@ class Main:
                 Dict = libs.send.GetArt(str(ID))
                 Antwort.append(Dict)
             pyotherside.send("antwortSearchArt", Antwort) 
+            if len(IDList) == 0:
+                os.system("test_vibrator")
         self.busy(False)
 
     def isPhone(self):

@@ -32,7 +32,7 @@ StackView {
             id: frame
             width: 1000
             height: 1000
-
+            
             function open(id) {
                 infoID = id
                 frames.push(frameInfo);
@@ -81,7 +81,10 @@ StackView {
 
             Camera {
                 id: camera
-            }            
+                flash.mode: Camera.FlashOn
+                captureMode: Camera.CaptureStillImage
+                imageCapture.resolution: "640x480"
+            }    
             
             TextField {
                 id: ti
@@ -98,6 +101,8 @@ StackView {
                 focus: true
 
                 onAccepted: {
+                    camera.start()
+                    console.warn("cameraName: " + camera.displayName)
                     camera.imageCapture.capture()
                     python.call('Stock.main.SearchArt', [text], function() {})
                 }
