@@ -30,7 +30,7 @@ class Main:
             DesktopEntry.write("[Desktop Entry]\n")
             DesktopEntry.write("Name=Stock\n")
             DesktopEntry.write("Path=/home/" + User + "/zk-data/\n")
-            DesktopEntry.write("Exec=git pull && qmlscene /home/" + User + "/zk-data/Stock.qml\n")
+            DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Stock.qml\n")
             DesktopEntry.write("Terminal=false\n")
             DesktopEntry.write("X-Ubuntu-Touch=true\n")
             DesktopEntry.write("Type=Application\n")
