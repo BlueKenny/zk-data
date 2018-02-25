@@ -71,6 +71,7 @@ class Main:
             Antwort = []
             IDList = libs.send.SearchArt({"suche": suche, "ort": "", "lieferant": ""})
             for ID in IDList:
+                self.busy(True)
                 Dict = libs.send.GetArt(str(ID))
                 Antwort.append(Dict)
                 self.busy(False)
