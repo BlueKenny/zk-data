@@ -122,7 +122,7 @@ StackView {
                     //anchors.left: parent.left
                     //anchors.right: parent.right
                     height: liste.height/10
-                    font.pixelSize: height * 0.6
+                    font.pixelSize: height * 0.8
                     
                 }
                 TableViewColumn {
