@@ -127,6 +127,7 @@ Rectangle {
 
                 Image {
                     id: photoPreview
+                    visible: false
                 }
 
                 TextField {
