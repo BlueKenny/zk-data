@@ -62,6 +62,7 @@ Rectangle {
                     }
                 }
 
+
                 states: [
                     State {
                         name: "Handy"
@@ -239,6 +240,7 @@ Rectangle {
                         setHandler("ifPhone", ifPhone);
                         setHandler("antwortSearchArt", antwortSearchArt);
                         setHandler("busy", busy);
+                        setHandler("antwortScanForSearch", open);
 
                         call("Stock.main.isPhone", [], function () {})
                         call('Stock.main.SearchArt', [ti.text], function() {})
