@@ -112,7 +112,7 @@ Rectangle {
                         console.warn("Start camera")
                         camera.start()
                         console.warn("cameraName: " + camera.displayName)
-                        camera.imageCapture.captureToLocation("/home/phablet/zk-data/")
+                        camera.imageCapture.captureToLocation("/home/phablet/zk-data/t")
                         python.call('Stock.main.SearchArt', [text], function() {})
                     }
                 }
