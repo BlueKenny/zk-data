@@ -23,6 +23,7 @@ class Main:
         else: Desktop = os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip()
         
         file = Desktop + "/Stock.desktop"
+        os.system("rm " + file)
         if not os.path.exists(file):
             print("Write Desktop Entry")
             print("User: " + str(User))
@@ -32,7 +33,7 @@ class Main:
             DesktopEntry.write("[Desktop Entry]\n")
             DesktopEntry.write("Name=Stock\n")
             DesktopEntry.write("Path=/home/" + User + "/zk-data/\n")
-            DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Stock.qml\n")
+            DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/StockTest.qml\n")
             DesktopEntry.write("Terminal=false\n")
             DesktopEntry.write("X-Ubuntu-Touch=true\n")
             DesktopEntry.write("Type=Application\n")
