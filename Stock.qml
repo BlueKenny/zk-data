@@ -99,8 +99,8 @@ Rectangle {
                     //captureMode: Camera.CaptureStillImage
                     //imageCapture.resolution: "640x480"
                     focus {
-                        focusMode: Camera.FocusManual //FocusMacro
-                        focusPointMode: Camera.FocusPointAuto //FocusPointCenter
+                        focusMode: Camera.FocusContinuous //FocusManual //FocusMacro
+                        //focusPointMode: Camera.FocusPointAuto //FocusPointCenter
                     }
 
                     imageCapture {
