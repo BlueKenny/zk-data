@@ -37,7 +37,7 @@ class Main:
             DesktopEntry.write("Type=Application\n")
             DesktopEntry.write("StartupNotify=true\n")
             DesktopEntry.write("Icon=None\n")
-            
+             
             os.system("chmod +x " + file)
             
         update = os.popen("git pull").readlines()
