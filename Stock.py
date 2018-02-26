@@ -45,6 +45,8 @@ class Main:
             pyotherside.send("antwortSearchArt", {"name_de":"Bitte neustarten"}) 
     
     def ScanForSearch(self):
+        pyotherside.send("antwortScanForSearch", "test")
+
         self.busy(True)
         try: barcode = os.popen("zbarimg /home/phablet/Pictures/QtQmlViewer/* -q").readlines()[0].split(":")[1]
         except: os.system("test_vibrator")
