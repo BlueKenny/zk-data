@@ -40,31 +40,31 @@ class Main:
              
             os.system("chmod +x " + file)
             
-        update = os.popen("git pull").readlines()
-        if not len(update) == 1:
-            pyotherside.send("antwortSearchArt", {"name_de":"Bitte neustarten"}) 
+        os.system("git pull")
+        self.busy(False)
     
     def ScanForSearch(self):
-        pyotherside.send("antwortScanForSearch", "test")
-
         self.busy(True)
-        try: barcode = os.popen("zbarimg /home/phablet/Pictures/QtQmlViewer/* -q").readlines()[0].split(":")[1]
-        except: os.system("test_vibrator")
+
+        try:
+            barcode = os.popen("zbarimg /home/phablet/Pictures/QtQmlViewer/* -q").readlines()[0].split(":")[1]
+            print("barcode: " + str(barcode))
+        except:
+            barcode = "nichts"
+            os.system("test_vibrator")
 
         os.system("test_vibrator")
-        print("barcode: " + str(barcode))
-        pyotherside.send("antwortScanForSearch", "test")
+        pyotherside.send("antwortScanForSearch", barcode)
 
-        time.sleep(1)
         self.busy(False)
     
     def busy(self, status):
         status = bool(status)
-        #print("busy = " + str(status))
+        print("busy = " + str(status))
         pyotherside.send("busy", status)
     def busy2(self, status):
         status = bool(status)
-        #print("busy2 = " + str(status))
+        print("busy2 = " + str(status))
         pyotherside.send("busy2", status)
         
     def GetArt(self, ID):

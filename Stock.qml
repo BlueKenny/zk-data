@@ -240,10 +240,12 @@ Rectangle {
                         setHandler("ifPhone", ifPhone);
                         setHandler("antwortSearchArt", antwortSearchArt);
                         setHandler("busy", busy);
-                        setHandler("antwortScanForSearch", open);
+                        setHandler("antwortScanForSearch", function (ScannedCode) {
+                            ti.text = ScannedCode
+                        });
 
-                        call("Stock.main.isPhone", [], function () {})
-                        call('Stock.main.SearchArt', [ti.text], function() {})
+                        call("Stock.main.isPhone", [], function () {});
+                        call('Stock.main.SearchArt', [ti.text], function() {});
                     }
                 }
             }
@@ -257,7 +259,8 @@ Rectangle {
                 width: 1000
                 height: 1000
 
-                function open2() {
+                function open2(ID) {
+                    variable.infoID = ID
                     frames.push(frameSuche);
                 }
 
@@ -331,7 +334,7 @@ Rectangle {
                 Button {
                     id: buttonBack
                     text: "Zuruck"
-                    onClicked: open2()
+                    onClicked: open2(labelIdentification.text)
                     height: frame2.height / 10
                     width: frame2.width / 8
                     x: frame2.width - width
