@@ -63,6 +63,11 @@ Rectangle {
                 states: [
                     State {
                         name: "Handy"
+
+                        PropertyChanges {target:videoOutput; width: frame.width}
+                        PropertyChanges {target:videoOutput; height: frame.width/3}
+
+                        PropertyChanges {target:ti; x:videoOutput.height*1.1}
                         PropertyChanges {target:ti; height:frame.height/15}
                         PropertyChanges {target:ti; width:frame.width*0.7}
                         PropertyChanges {target:ti; font.pixelSize: ti.height*0.4}
@@ -78,6 +83,7 @@ Rectangle {
 
                         PropertyChanges {target:row; height: liste.height/5}
                         PropertyChanges {target:row; font.pixelSize: height*0.8}
+
 
 
                     },
@@ -101,6 +107,7 @@ Rectangle {
                 }
 
                 VideoOutput {
+                    id: videoOutput
                     source: camera
                     focus : visible // to receive focus and capture key events when visible
                     //anchors.fill: parent
