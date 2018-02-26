@@ -51,7 +51,7 @@ class Main:
 
         os.system("test_vibrator")
         print("barcode: " + str(barcode))
-        pyotherside.send("antwortScanForSearch", barcode)
+        pyotherside.send("antwortScanForSearch", "test")
 
         time.sleep(1)
         self.busy(False)
