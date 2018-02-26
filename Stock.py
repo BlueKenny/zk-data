@@ -47,7 +47,7 @@ class Main:
         self.busy(True)
 
         try:
-            barcode = os.popen("zbarimg /home/phablet/Pictures/QtQmlViewer/* -q").readlines()[0]#.split(":")[1]
+            barcode = os.popen("zbarimg /home/phablet/Pictures/scan.jpg -q").readlines()[0]#.split(":")[1]
             print("barcode: " + str(barcode))
         except:
             barcode = "nichts"
