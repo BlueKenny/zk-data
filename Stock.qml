@@ -109,6 +109,7 @@ Rectangle {
                     focus: true
 
                     onAccepted: {
+                        console.warn("Start camera")
                         camera.start()
                         console.warn("cameraName: " + camera.displayName)
                         camera.imageCapture.capture()
