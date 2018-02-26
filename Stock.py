@@ -47,12 +47,12 @@ class Main:
         
     
     def busy(self, status):
-        print("busy = " + str(status))
         status = bool(status)
+        print("busy = " + str(status))
         pyotherside.send("busy", status)
     def busy2(self, status):
-        print("busy2 = " + str(status))
         status = bool(status)
+        print("busy2 = " + str(status))
         pyotherside.send("busy2", status)
         
     def GetArt(self, ID):
