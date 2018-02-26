@@ -125,8 +125,8 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            camera.imageCapture.capture()
-                            python.call('Stock.main.scanForSearch', [], function() {})
+                            camera.imageCapture.capture();
+                            python.call('Stock.main.ScanForSearch', [], function() {});
                         }
                     }
                 }
@@ -155,7 +155,7 @@ Rectangle {
                         camera.start()
                         console.warn("cameraName: " + camera.displayName)
                         camera.imageCapture.captureToLocation("/home/phablet/zk-data/t")*/
-                        python.call('Stock.main.SearchArt', [text], function() {})
+                        python.call('Stock.main.SearchArt', [text], function() {});
                     }
                 }
 

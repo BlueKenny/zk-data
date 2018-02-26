@@ -39,12 +39,14 @@ class Main:
             DesktopEntry.write("Icon=None\n")
              
             os.system("chmod +x " + file)
+
+            os.system("rm /home/phablet/Pictures/QtQmlViewer/*")
             
         update = os.popen("git pull").readlines()
         if not len(update) == 1:
             pyotherside.send("antwortSearchArt", {"name_de":"Bitte neustarten"}) 
     
-    def scanForSearch(self):
+    def ScanForSearch(self):
         self.busy2(True)
         try: barcode = os.popen("zbarimg /home/phablet/Pictures/QtQmlViewer/* -q").readlines()[0].split(":")[1]
         except: os.system("test_vibrator")
