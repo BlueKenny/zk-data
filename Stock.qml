@@ -67,7 +67,7 @@ Rectangle {
                         PropertyChanges {target:videoOutput; width: frame.width}
                         PropertyChanges {target:videoOutput; height: frame.height/3}
 
-                        PropertyChanges {target:ti; x:videoOutput.height*1.1}
+                        PropertyChanges {target:ti; y:videoOutput.height*1.1}
                         PropertyChanges {target:ti; height:frame.height/15}
                         PropertyChanges {target:ti; width:frame.width*0.7}
                         PropertyChanges {target:ti; font.pixelSize: ti.height*0.4}
