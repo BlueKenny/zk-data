@@ -8,8 +8,6 @@ try: import pyotherside
 except: True
 import libs.send
 
-import threading
-
 os.system("export MIR_SOCKET=/var/run/mir_socket")
 
 class Main:    
@@ -45,7 +43,11 @@ class Main:
         update = os.popen("git pull").readlines()
         if not len(update) == 1:
             pyotherside.send("antwortSearchArt", {"name_de":"Bitte neustarten"}) 
-        
+    
+    def scanForSearch(self):
+        print("Scan")
+        os.system("test_vibrator")
+        os.system("test_vibrator")
     
     def busy(self, status):
         status = bool(status)

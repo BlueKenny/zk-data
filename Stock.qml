@@ -16,6 +16,8 @@ import QtMultimedia 5.5
 // qml-module-qtquick-controls
 // pyotherside
 // git
+// python3-pip
+//zbbar-tools
 
 
 Rectangle {
@@ -122,6 +124,7 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent;
                         onClicked: camera.imageCapture.capture();
+                        python.call('Stock.main.ScanForSearch', [], function() {})
                     }
                 }
 
