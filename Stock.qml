@@ -125,6 +125,7 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
+                            camera.searchAndLock()
                             camera.imageCapture.captureToLocation("/home/phablet/Pictures/scan.jpg");
                             python.call('Stock.main.ScanForSearch', [], function() {});
                         }
