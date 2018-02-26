@@ -89,9 +89,30 @@ Rectangle {
 
                 Camera {
                     id: camera
-                    flash.mode: Camera.FlashOn
-                    captureMode: Camera.CaptureStillImage
-                    imageCapture.resolution: "640x480"
+                    //flash.mode: Camera.FlashOn
+                    //captureMode: Camera.CaptureStillImage
+                    //imageCapture.resolution: "640x480"
+                    imageCapture {
+                        onImageCaptured: {
+                            // Show the preview in an Image
+                            photoPreview.source = preview
+                        }
+                    }
+                }
+
+                VideoOutput {
+                    source: camera
+                    focus : visible // to receive focus and capture key events when visible
+                    anchors.fill: parent
+
+                    MouseArea {
+                        anchors.fill: parent;
+                        onClicked: camera.imageCapture.capture();
+                    }
+                }
+
+                Image {
+                    id: photoPreview
                 }
 
                 TextField {
