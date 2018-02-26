@@ -8,6 +8,8 @@ try: import pyotherside
 except: True
 import libs.send
 
+import threading
+
 os.system("export MIR_SOCKET=/var/run/mir_socket")
 
 class Main:    
@@ -57,7 +59,10 @@ class Main:
         print("antwortGetArt")
         self.busy2(True)
         Dict = libs.send.GetArt(str(ID))
+        if len(Dict) == 0:
+            os.system("test_vibrator")
         del Dict["identification"]
+
         Antwort = []
         for text, var in sorted(Dict.items()):
             Antwort.append({"name": str(text) + ": " + str(var)})
