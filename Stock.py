@@ -47,7 +47,7 @@ class Main:
             pyotherside.send("antwortSearchArt", {"name_de":"Bitte neustarten"}) 
     
     def ScanForSearch(self):
-        self.busy2(True)
+        self.busy(True)
         try: barcode = os.popen("zbarimg /home/phablet/Pictures/QtQmlViewer/* -q").readlines()[0].split(":")[1]
         except: os.system("test_vibrator")
 
@@ -56,7 +56,7 @@ class Main:
         pyotherside.send("antwortScanForSearch", barcode)
         os.system("rm /home/phablet/Pictures/QtQmlViewer/*")
 
-        self.busy2(False)
+        self.busy(False)
     
     def busy(self, status):
         status = bool(status)
