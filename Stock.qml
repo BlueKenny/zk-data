@@ -103,7 +103,9 @@ Rectangle {
                 VideoOutput {
                     source: camera
                     focus : visible // to receive focus and capture key events when visible
-                    anchors.fill: parent
+                    //anchors.fill: parent
+                    width: 100
+                    height: 100
 
                     MouseArea {
                         anchors.fill: parent;
@@ -129,11 +131,11 @@ Rectangle {
                     text: variable.infoID
                     focus: true
 
-                    onAccepted: {
+                    onAccepted: {/*
                         console.warn("Start camera")
                         camera.start()
                         console.warn("cameraName: " + camera.displayName)
-                        camera.imageCapture.captureToLocation("/home/phablet/zk-data/t")
+                        camera.imageCapture.captureToLocation("/home/phablet/zk-data/t")*/
                         python.call('Stock.main.SearchArt', [text], function() {})
                     }
                 }
