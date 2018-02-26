@@ -318,11 +318,19 @@ Rectangle {
 
                     Component {
                         id: delegateListe2
+                        Item {
+                            Rectangle {
+                                Text {
+                                    text: name
+                                }
 
-                        Text {
-                            text: name
-                            height: liste2.height / 20
-                            font.pixelSize: height * 0.6
+
+                                Text {
+                                    text: name
+                                    height: liste2.height / 20
+                                    font.pixelSize: height * 0.6
+                                }
+                            }
                         }
 
                     }
