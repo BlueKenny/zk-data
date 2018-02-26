@@ -65,7 +65,7 @@ Rectangle {
                         name: "Handy"
 
                         PropertyChanges {target:videoOutput; width: frame.width}
-                        PropertyChanges {target:videoOutput; height: frame.width/3}
+                        PropertyChanges {target:videoOutput; height: frame.height/3}
 
                         PropertyChanges {target:ti; x:videoOutput.height*1.1}
                         PropertyChanges {target:ti; height:frame.height/15}
