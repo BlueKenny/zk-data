@@ -98,6 +98,10 @@ Rectangle {
                     //flash.mode: Camera.FlashOn
                     //captureMode: Camera.CaptureStillImage
                     //imageCapture.resolution: "640x480"
+                    focus {
+                        focusMode: Camera.FocusPointCenter
+                    }
+
                     imageCapture {
                         onImageCaptured: {
                             // Show the preview in an Image
