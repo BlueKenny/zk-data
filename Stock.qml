@@ -242,7 +242,7 @@ Rectangle {
                         PropertyChanges {target:buttonBack; width:frame2.width/5}
                         PropertyChanges {target:buttonBack; x:frame2.width-width}
 
-                        PropertyChanges {target:liste2; y: labelIdentification.y * 1.5}
+                        //PropertyChanges {target:liste2; y: labelIdentification.y * 1.5}
                     },
                     State {
                         name: "Desktop"
