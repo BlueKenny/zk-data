@@ -39,8 +39,6 @@ class Main:
             DesktopEntry.write("Icon=None\n")
              
             os.system("chmod +x " + file)
-
-            os.system("rm /home/phablet/Pictures/QtQmlViewer/*")
             
         update = os.popen("git pull").readlines()
         if not len(update) == 1:
@@ -54,8 +52,8 @@ class Main:
         os.system("test_vibrator")
         print("barcode: " + str(barcode))
         pyotherside.send("antwortScanForSearch", barcode)
-        os.system("rm /home/phablet/Pictures/QtQmlViewer/*")
 
+        time.sleep(1)
         self.busy(False)
     
     def busy(self, status):
