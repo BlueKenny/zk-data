@@ -122,9 +122,11 @@ Rectangle {
                     height: 100
 
                     MouseArea {
-                        anchors.fill: parent;
-                        onClicked: camera.imageCapture.capture();
-                        python.call('Stock.main.ScanForSearch', [], function() {})
+                        anchors.fill: parent
+                        onClicked: {
+                            camera.imageCapture.capture()
+                            python.call('Stock.main.scanForSearch', [], function() {})
+                        }
                     }
                 }
 
