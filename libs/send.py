@@ -35,7 +35,7 @@ def GetBarcode(image):#return String
         data = base64.b64encode(imageFile.read())
         #data = imageFile.read()
 
-    Data = [data[i:i+1024] for i in range(0, len(data), 1024)]
+    Data = [data[i:i+2048] for i in range(0, len(data), 2048)]
     #print(Data)
     
     index = 0
