@@ -5,6 +5,7 @@ import platform
 import socket
 import os
 from libs.barcode import *
+import base64
 
 if False:#os.path.exists("/home/phablet"):
 	DIR = "/home/phablet/.local/share/zk-data.stock/"
@@ -24,6 +25,52 @@ SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 10000)
 
 
 ##############          STOCK
+
+def GetBarcode(image):#return String
+    #with open(image, 'rb') as infile:
+    #    while True:
+    #        chunk = infile.read(1024)
+    #        if not chunk: break
+    with open(image, "rb") as imageFile:
+        data = base64.b64encode(imageFile.read())
+        #data = imageFile.read()
+
+    Data = [data[i:i+1024] for i in range(0, len(data), 1024)]
+    #print(Data)
+    
+    index = 0
+    for eachData in Data:
+        eachData = eachData.decode("utf-8")
+        antwort = Barcode(index, eachData)
+        #print("eachData: " + str(eachData))
+        index = index + 1
+
+    #chunk_file.close()
+    return antwort
+
+def Barcode(Position, Bytes):#return String
+    while True:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Dict = {"mode":"GetBarcode"}
+        sock.connect(SERVERSTOCK_IP)
+        Dict["bytes"] = Bytes
+        Dict["position"] = Position
+
+        data = json.dumps(Dict)  # data serialized
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        data = data.decode()
+        data = json.loads(data)
+        sock.close()
+
+        print("GetBarcode(" + str(Position) + ", " + str(Bytes) + ") = " + str(data))
+        return data
+    #except:
+    #    print("GetArt(...) = ERROR")
+    #    return {}
+
+
 def GetArt(ID):#return Dict
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
