@@ -7,6 +7,7 @@ import time
 try: import pyotherside
 except: True
 import libs.send
+import random
 
 os.system("export MIR_SOCKET=/var/run/mir_socket")
 
@@ -70,12 +71,19 @@ class Main:
         
     def GetLieferschein(self, ID):
         print("antwortGetArt")
-        DATA = {"datum" : "0",
-                "linien" : ["1", "2"],
-                "anzahl" : {"1":1, "2":3},
-                "bcode" : {"1":"100200", "2":"100300"},
-                "name" : {"1":"testo", "2":"test"}}
+        DATA = {}
+        DATA["datum"] = "0"
+        DATA["linien"] = []
+        DATA["anzahl"] = {}
+        DATA["bcode"] = {}
+        DATA["name"] = {}
 
+        for x in range(1, 11):
+            x = str(x)
+            DATA["linien"].append(x)
+            DATA["anzahl"][x] = random.randint(0, 10)
+            DATA["bcode"][x] = str(random.randint(100000, 999999))
+            DATA["name"][x] = "t" + str(random.randint(0, 100))
         self.busy2(True)
 
         Antwort = []

@@ -65,6 +65,7 @@ Rectangle {
                     x: labelTitle2.x
                     text: bcode
                     Keys.onPressed: {
+                        liste.currentIndex = index
                         console.warn("count: " + contactModel.count);
                        // console.warn(contactModel.get(currentItem).count)
                         console.warn(contactModel.get(1).name)
