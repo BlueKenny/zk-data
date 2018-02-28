@@ -11,6 +11,7 @@ import json
 import csv
 import random
 import os.path, time
+#import base64
 
 import threading
 
@@ -46,7 +47,39 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 local_db = SqliteDatabase("DATA/stock.db")
 local_migrator = SqliteMigrator(local_db)
 
+kunde_db = SqliteDatabase("DATA/kunde.db")
+kunde_migrator = SqliteMigrator(kunde_db)
+
 FreeID = 100000
+
+class Kunde(Model):
+    identification = CharField(primary_key = True)
+    name = CharField(default="")
+    land = CharField(default="")
+    adresse = CharField(default="")
+    plz = IntegerField(default=0)
+    ort = CharField(default="")
+    email1 = CharField(default="")
+    email2 = CharField(default="")
+    email3 =CharField(default="")
+    tel1 = IntegerField(default=0)
+    tel2 = IntegerField(default=0)
+    tel3 = IntegerField(default=0)
+    tva = CharField(default="")
+    credit = FloatField(default=0.0)
+    debit = FloatField(default=0.0)
+    solde_2015 = FloatField(default=0.0)
+    solde_2016 = FloatField(default=0.0)
+    solde_2017 = FloatField(default=0.0)
+    solde_2018 = FloatField(default=0.0)
+    sprache_de = BooleanField(default = False)
+    sprache_fr = BooleanField(default = False)
+    sprache_nl = BooleanField(default = False)
+    lastchange = CharField(default=str(Timestamp()))
+    creation = CharField(default=str(Date()))
+
+    class Meta:
+        database = kunde_db
 
 class Bewegung(Model):
     identification = CharField(primary_key = True)
@@ -105,6 +138,21 @@ except: print("Artikel:groesse:existiert schon")
 local_db.close()
 
 
+kunde_db.connect()
+
+try: kunde_db.create_tables([Kunde])
+except: print("Kunde table exists in kunde_db")
+
+try: migrate(kunde_migrator.add_column("Kunde", "land", CharField(default = "")))
+except: print("Kunde:land:existiert schon")
+
+kunde_db.close()
+
+
+
+
+
+
 local_db.connect()
 try:
     local_db.create_tables([Bewegung])
@@ -114,10 +162,11 @@ local_db.close()
 
 # Ordner
 DIR = ""
-#BlueMkDir(DIR + "StockBewegung")
 BlueMkDir(DIR + "DATA")
 BlueMkDir(DIR + "Import")
 BlueMkDir(DIR + "Import/Preise")
+
+Barcodes = {}
 
 local_db.connect()
 BeID = 1
@@ -144,6 +193,74 @@ s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 try: s.bind(SERVER_IP)
 except: print("Server Port schon gebunden")
 s.listen(1)
+
+
+def KundenLaden():
+    import csv
+    with open('kd.csv', newline='') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=':', quotechar='"')
+        for row in sorted(spamreader):
+            if not "identification" in row[0]:
+                Dict = {}
+                print(row)
+                Dict["identification"] = str(row[0])
+                Dict["name"] = row[1]
+                Dict["adresse"] = row[2]
+                Dict["plz"] = row[3]
+                if "BG-" in Dict["plz"]:
+                    Dict["land"] = "BG"
+                    Dict["plz"] = Dict["plz"].replace("BG-", "")
+                if "BE" in Dict["plz"]:
+                    Dict["land"] = "BE"
+                    Dict["plz"] = Dict["plz"].replace("BE", "")
+                if "B " in Dict["plz"]:
+                    Dict["land"] = "BE"
+                    Dict["plz"] = Dict["plz"].replace("B ", "")
+                if "B-" in Dict["plz"]:
+                    Dict["land"] = "BE"
+                    Dict["plz"] = Dict["plz"].replace("B-", "")
+                if "L-" in Dict["plz"]:
+                    Dict["land"] = "LU"
+                    Dict["plz"] = Dict["plz"].replace("L-", "")
+                try: Dict["plz"] = int(Dict["plz"])
+                except: Dict["plz"] = 0
+                Dict["ort"] = row[4].upper()
+                Dict["email1"] = row[5].replace("-", "")
+                Dict["email2"] = row[6].replace("-", "")
+                Dict["email3"] = row[7].replace("-", "")
+                try:
+                    Dict["tel1"] = row[8].replace("/", "").replace(".", "").replace(" ", "").replace("tel", "")
+                    Dict["tel1"] = int(Dict["tel1"])
+                except: Dict["tel1"] = 0
+                try:
+                    Dict["tel2"] = row[9].replace("/", "").replace(".", "").replace(" ", "").replace("tel", "")
+                    Dict["tel2"] = int(Dict["tel2"])
+                except: Dict["tel2"] = 0
+                try:
+                    Dict["tel3"] = row[10].replace("/", "").replace(".", "").replace(" ", "").replace("tel", "")
+                    Dict["tel3"] = int(Dict["tel3"])
+                except: Dict["tel3"] = 0
+                Dict["tva"] = row[11]
+                Dict["solde_2015"] = row[12].replace(" ", "").replace("€", "").replace(".", "").replace("-", "").replace(",", ".")
+                if Dict["solde_2015"] == "": Dict["solde_2015"] = 0
+                Dict["solde_2016"] = row[13].replace(" ", "").replace("€", "").replace(".", "").replace("-", "").replace(",", ".")
+                if Dict["solde_2016"] == "": Dict["solde_2016"] = 0
+                Dict["solde_2017"] = row[14].replace(" ", "").replace("€", "").replace(".", "").replace("-", "").replace(",", ".")
+                if Dict["solde_2017"] == "": Dict["solde_2017"] = 0
+                
+
+                kunde_db.connect()
+                query = Kunde.select().where(Kunde.identification == Dict["identification"])
+                if not query.exists():
+                    ThisArtikel = Kunde.create(identification = Dict["identification"])
+                    ThisArtikel.save()
+
+                ThisArtikel = dict_to_model(Kunde, Dict)
+                ThisArtikel.save()
+
+                kunde_db.close()
+
+#KundenLaden()
 
 def Date():
     now = datetime.datetime.now()
@@ -354,6 +471,27 @@ def GetID():# return Dict
     local_db.close()
     return Antwort
 
+def GetBarcode(Position, Bytes, User): # return String
+    global Barcodes
+    #print("Position: " + str(Position))
+    #print("Bytes: " + str(Bytes))
+    #print("User: " + str(User))
+    if Position == 0:
+        Barcodes[User] = {}
+    Barcodes[User][Position] = base64.b64decode(Bytes) #Bytes.encode()
+    #print(Barcodes[User])
+
+    ReadData = b""
+    for key, item in Barcodes[User].items():
+        #print("item: " + str(item))
+        ReadData = ReadData + item
+    
+    #image = open("barcode.jpg", "wb").write(ReadData)
+
+    #os.system("zbarimg barcode.jpg")
+    return Antwort
+
+
 threading.Thread(target=Preisvorschlag).start()
 #Preisvorschlag()
 
@@ -364,7 +502,7 @@ while True:
     except: ipname = ["nix"]
     Debug("Verbunden mit " + str(ipname[0]))
     while True:
-        DATA = c.recv(2048)
+        DATA = c.recv(4096)
         if not DATA:
             Debug("Client sendet nicht mehr")
             break
@@ -401,6 +539,9 @@ while True:
 
         if mode == "GetID":#return Dict
             Antwort = GetID()
+
+        if mode == "GetBarcode":#return String
+            Antwort = GetBarcode(DATA["position"], DATA["bytes"], ipname[0])
 
         Debug("Sende : " + str(Antwort))
         Antwort = json.dumps(Antwort)  # data serialized
