@@ -307,7 +307,7 @@ Rectangle {
 
                 ListView {
                     id: liste2
-                    y: labelIdentification.height * 3
+                    y: labelIdentification.y * 1.1
                     height: parent.height
                     width: parent.width
 
@@ -319,25 +319,21 @@ Rectangle {
                     Component {
                         id: delegateListe2
                         Item {
-                            Rectangle {
-                                Text {
-                                    text: name
-                                }
-
-
-                                Text {
-                                    text: name
-                                    height: liste2.height / 20
-                                    font.pixelSize: height * 0.6
-                                }
+                            width: 180; height: 400
+                            Text {
+                                id: textName
+                                text: "name"
+                                x: 100
+                            }
+                            TextField {
+                                id: textAnzahl
+                                text: "name"
+                                x: 200
                             }
                         }
 
+
                     }
-                    model: listModel2
-                    delegate: delegateListe2
-
-
                 }
 
                 Button {

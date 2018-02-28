@@ -20,7 +20,7 @@ class Main:
         if os.path.exists("/home/phablet"): Desktop = "/home/phablet/.local/share/applications"
         else: Desktop = os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip()
         
-        file = Desktop + "/Stock.desktop"
+        file = Desktop + "/Kasse.desktop"
         os.system("rm " + file)
         if not os.path.exists(file):
             print("Write Desktop Entry")
@@ -29,9 +29,9 @@ class Main:
             print("file: " + str(file))
             DesktopEntry = open(file, "a")
             DesktopEntry.write("[Desktop Entry]\n")
-            DesktopEntry.write("Name=Stock\n")
+            DesktopEntry.write("Name=Kasse\n")
             DesktopEntry.write("Path=/home/" + User + "/zk-data/\n")
-            DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Stock.qml\n")
+            DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Kasse.qml\n")
             DesktopEntry.write("Terminal=false\n")
             DesktopEntry.write("X-Ubuntu-Touch=true\n")
             DesktopEntry.write("Type=Application\n")
@@ -68,19 +68,20 @@ class Main:
         print("busy2 = " + str(status))
         pyotherside.send("busy2", status)
         
-    def GetArt(self, ID):
+    def GetLieferschein(self, ID):
         print("antwortGetArt")
+        DATA = {"datum" : "0",
+                "linien" : ["1", "2"],
+                "anzahl" : {"1":1, "2":3},
+                "bcode" : {"1":"100200", "2":"100300"},
+                "name" : {"1":"testo", "2":"test"}}
+
         self.busy2(True)
-        Dict = libs.send.GetArt(str(ID))
-        if len(Dict) == 0:
-            os.system("test_vibrator")
-        del Dict["identification"]
 
         Antwort = []
-        for text, var in sorted(Dict.items()):
-            print("text:" + str(text) + " var:" + str(var))
-            Antwort.append({"name": str(text), "var" : str(var)})
-        pyotherside.send("antwortGetArt", Antwort)
+        for linie in DATA["linien"]:
+            Antwort.append({"anzahl":DATA["anzahl"][linie], "bcode":DATA["bcode"][linie], "name":DATA["name"][linie]})
+        pyotherside.send("antwortGetLieferschein", Antwort)
         self.busy2(False)
         
     
