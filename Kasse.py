@@ -84,7 +84,7 @@ class Main:
             DATA["linien"].append(x)
             DATA["anzahl"][x] = random.randint(0, 10)
             DATA["bcode"][x] = str(random.randint(100000, 999999))
-            DATA["name"][x] = "t" + str(random.randint(0, 100))
+            DATA["name"][x] = "t" + x
         self.busy2(True)
 
         Antwort = []
