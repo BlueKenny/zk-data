@@ -77,8 +77,9 @@ class Main:
         DATA["anzahl"] = {}
         DATA["bcode"] = {}
         DATA["name"] = {}
-
-        for x in range(1, 11):
+    
+        AnzahlLinien = random.randint(10, 50)
+        for x in range(1, AnzahlLinien):
             x = str(x)
             DATA["linien"].append(x)
             DATA["anzahl"][x] = random.randint(0, 10)
