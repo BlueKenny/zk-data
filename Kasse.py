@@ -80,7 +80,7 @@ class Main:
 
         Antwort = []
         for linie in DATA["linien"]:
-            Antwort.append({"anzahl":DATA["anzahl"][linie], "bcode":DATA["bcode"][linie], "name":DATA["name"][linie]})
+            Antwort.append({"linie":linie, "anzahl":DATA["anzahl"][linie], "bcode":DATA["bcode"][linie], "name":DATA["name"][linie]})
         pyotherside.send("antwortGetLieferschein", Antwort)
         self.busy2(False)
         

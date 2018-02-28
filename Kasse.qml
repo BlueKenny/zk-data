@@ -35,7 +35,10 @@ Rectangle {
     }
 
     ListView {
+        id: liste
         y: 50
+        focus: true
+        highlight: Rectangle { color: "lightsteelblue"; width: window.width }
 
         width: 180; height: 200
         ListModel {
@@ -45,23 +48,32 @@ Rectangle {
         Component {
             id: contactDelegate
             Item {
-                width: 180; height: 40
-                //Column {
+                width: window.width; height: window.height/10
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: liste.currentIndex = index
+                }
                 TextField {
                     id: textAnzahl
                     x: labelTitle1.x
                     text: anzahl
+                    focus: false
+
                 }
                 TextField {
                     id: textBarcode
                     x: labelTitle2.x
                     text: bcode
+                    Keys.onPressed: {
+                        console.warn("count: " + contactModel.count);
+                       // console.warn(contactModel.get(currentItem).count)
+                        console.warn(contactModel.get(1).name)
+                    }
                 }
                 Text {
                     id: textName
                     text: name
                     x: labelTitle3.x
-                    //}
                 }
             }
         }
