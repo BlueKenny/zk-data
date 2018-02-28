@@ -40,7 +40,7 @@ Rectangle {
         focus: true
         highlight: Rectangle { color: "lightsteelblue"; width: window.width }
 
-        width: 180; height: 200
+        width: window.width; height: window.height * 0.8
         ListModel {
             id: contactModel
         }
