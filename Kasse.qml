@@ -36,11 +36,17 @@ Rectangle {
 
     ListView {
         id: liste
-        y: 50
+        y: 80
         focus: true
         highlight: Rectangle { color: "lightsteelblue"; width: window.width }
 
         width: window.width; height: window.height * 0.8
+
+        onCurrentIndexChanged: {
+            console.warn(liste.currentIndex)
+            contactModel.textBarcode.forceActiveFocus()
+        }
+
         ListModel {
             id: contactModel
         }
@@ -53,23 +59,21 @@ Rectangle {
                     anchors.fill: parent
                     onClicked: liste.currentIndex = index
                 }
+                Keys.onReturnPressed: {
+                    liste.currentIndex = index + 1
+                    //liste.get()
+                    textBarcode.forceActiveFocus()
+                }
                 TextField {
                     id: textAnzahl
                     x: labelTitle1.x
                     text: anzahl
                     focus: false
-
                 }
                 TextField {
                     id: textBarcode
                     x: labelTitle2.x
                     text: bcode
-                    Keys.onPressed: {
-                        liste.currentIndex = index
-                        console.warn("count: " + contactModel.count);
-                       // console.warn(contactModel.get(currentItem).count)
-                        console.warn(contactModel.get(1).name)
-                    }
                 }
                 Text {
                     id: textName
