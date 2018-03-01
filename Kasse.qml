@@ -44,7 +44,7 @@ Rectangle {
 
         onCurrentIndexChanged: {
             console.warn(liste.currentIndex)
-            contactModel.textBarcode.forceActiveFocus()
+            contactDelegate.textBarcode.forceActiveFocus()
         }
 
         ListModel {
