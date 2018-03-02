@@ -10,12 +10,18 @@ Rectangle {
     width: 500
     height: 500
 
+    Item {
+        id: variable
+        property int listeIndex: 0
+    }
 
     function antwortGetLieferschein(item) {
-        //listModel.clear();
+        variable.listeIndex = liste.currentIndex
+        contactModel.clear();
         for (var i=0; i<item.length; i++) {
             contactModel.append(item[i]);
         }
+        liste.currentIndex = variable.listeIndex
     }
 
     Label {
@@ -56,6 +62,9 @@ Rectangle {
                 }
                 Keys.onReturnPressed: {
                     liste.currentIndex = index + 1
+                    python.call('Kasse.main.AddLinie', [], function() {});
+                    python.call('Kasse.main.GetLieferschein', [], function() {});
+
                 }
                 onActiveFocusChanged: {
                     console.warn(liste.currentIndex)
@@ -123,7 +132,7 @@ Rectangle {
 
             setHandler("antwortGetLieferschein", antwortGetLieferschein);
 
-            call('Kasse.main.GetLieferschein', ["100200"], function() {});
+            call('Kasse.main.GetLieferschein', [], function() {});
         }
     }
 }

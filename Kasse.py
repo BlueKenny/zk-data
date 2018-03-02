@@ -11,6 +11,14 @@ import random
 
 os.system("export MIR_SOCKET=/var/run/mir_socket")
 
+DATA = {}
+DATA["datum"] = "0"
+DATA["linien"] = []
+DATA["anzahl"] = {}
+DATA["bcode"] = {}
+DATA["name"] = {}
+ 
+
 class Main:    
     def __init__(self):
         print("init")
@@ -43,6 +51,8 @@ class Main:
             
         os.system("git pull")
         self.busy(False)
+
+        self.AddLinie()
     
     def ScanForSearch(self):
         self.busy(True)
@@ -68,24 +78,39 @@ class Main:
         status = bool(status)
         print("busy2 = " + str(status))
         pyotherside.send("busy2", status)
-        
-    def GetLieferschein(self, ID):
-        print("antwortGetArt")
-        DATA = {}
-        DATA["datum"] = "0"
-        DATA["linien"] = []
-        DATA["anzahl"] = {}
-        DATA["bcode"] = {}
-        DATA["name"] = {}
+       
+    def AddLinie(self):
+        global DATA
+           
+        NeueLinie = 1
+        while True:
+            if not str(NeueLinie) in DATA["linien"]:
+                break
+            NeueLinie = NeueLinie + 1
+
+        print("Neue linie: " + str(NeueLinie))
     
-        AnzahlLinien = random.randint(10, 50)
-        for x in range(1, AnzahlLinien):
-            x = str(x)
-            DATA["linien"].append(x)
-            DATA["anzahl"][x] = random.randint(0, 10)
-            DATA["bcode"][x] = str(random.randint(100000, 999999))
-            DATA["name"][x] = "t" + x
+        DATA["linien"].append(NeueLinie)
+        DATA["anzahl"][NeueLinie] = 1
+        DATA["bcode"][NeueLinie] = ""
+        DATA["name"][NeueLinie] = ""
+ 
+    def GetLieferschein(self):
+        global DATA
+
+        print("GetLieferschein")
+        
+
+        #AnzahlLinien = random.randint(10, 50)
+        #for x in range(1, AnzahlLinien):
+        #    x = str(x)
+        #    DATA["linien"].append(x)
+        #    DATA["anzahl"][x] = random.randint(0, 10)
+        #    DATA["bcode"][x] = str(random.randint(100000, 999999))
+        #    DATA["name"][x] = "t" + x
         self.busy2(True)
+ 
+        
 
         Antwort = []
         for linie in DATA["linien"]:
