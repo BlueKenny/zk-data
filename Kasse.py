@@ -7,20 +7,12 @@ import time
 try: import pyotherside
 except: True
 import libs.send
-import random
 
 os.system("export MIR_SOCKET=/var/run/mir_socket")
 
-DATA = {}
-DATA["datum"] = "0"
-DATA["linien"] = []
-DATA["anzahl"] = {}
-DATA["bcode"] = {}
-DATA["name"] = {}
- 
-
 class Main:    
     def __init__(self):
+        global DATA
         print("init")
         #for user in os.listdir("/home/"):
         #    print(user)
@@ -52,23 +44,16 @@ class Main:
         os.system("git pull")
         self.busy(False)
 
-        self.AddLinie()
-    
-    def ScanForSearch(self):
-        self.busy(True)
+        
+        DATA = {}
+        DATA["datum"] = "0"
+        DATA["linien"] = []
+        DATA["anzahl"] = {}
+        DATA["bcode"] = {}
+        DATA["name"] = {}
 
-        try:
-            libs.send.GetBarcode("/home/phablet/Pictures/scan.jpg")
-            #barcode = os.popen("zbarimg /home/phablet/Pictures/scan.jpg -q").readlines()[0]#.split(":")[1]
-            print("barcode: " + str(barcode))
-        except:
-            barcode = "nichts"
-            os.system("test_vibrator")
-
-        os.system("test_vibrator")
-        pyotherside.send("antwortScanForSearch", barcode)
-
-        self.busy(False)
+        if DATA["linien"] == []:
+            self.AddLinie()
     
     def busy(self, status):
         status = bool(status)
@@ -99,25 +84,27 @@ class Main:
         global DATA
 
         print("GetLieferschein")
-        
-
-        #AnzahlLinien = random.randint(10, 50)
-        #for x in range(1, AnzahlLinien):
-        #    x = str(x)
-        #    DATA["linien"].append(x)
-        #    DATA["anzahl"][x] = random.randint(0, 10)
-        #    DATA["bcode"][x] = str(random.randint(100000, 999999))
-        #    DATA["name"][x] = "t" + x
+       
         self.busy2(True)
  
-        
-
         Antwort = []
         for linie in DATA["linien"]:
             Antwort.append({"linie":linie, "anzahl":DATA["anzahl"][linie], "bcode":DATA["bcode"][linie], "name":DATA["name"][linie]})
-        pyotherside.send("antwortGetLieferschein", Antwort)
+            print("linie " + str(linie))        
+        pyotherside.send("antwortGetLieferschei", Antwort)
         self.busy2(False)
         
+
+    #def SetLieferschein(self, mode, variable):
+    #    global DATA
+
+    #    print("SetLieferschein")
+       
+    #    self.busy2(True)
+ 
+    #    if mode == "anzahl": DATA[mode] = str(variable)
+
+    #    self.busy2(False)
     
     def SearchArt(self, suche):
         self.busy(True)
