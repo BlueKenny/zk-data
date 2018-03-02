@@ -77,6 +77,7 @@ class Kunde(Model):
     sprache_nl = BooleanField(default = False)
     lastchange = CharField(default=str(Timestamp()))
     creation = CharField(default=str(Date()))
+    info = TextField(default="")
 
     class Meta:
         database = kunde_db
@@ -145,6 +146,8 @@ except: print("Kunde table exists in kunde_db")
 
 try: migrate(kunde_migrator.add_column("Kunde", "land", CharField(default = "")))
 except: print("Kunde:land:existiert schon")
+try: migrate(kunde_migrator.add_column("Kunde", "info", TextField(default = "")))
+except: print("Kunde:info:existiert schon")
 
 kunde_db.close()
 

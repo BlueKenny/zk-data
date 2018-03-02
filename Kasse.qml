@@ -42,11 +42,6 @@ Rectangle {
 
         width: window.width; height: window.height * 0.8
 
-        onCurrentIndexChanged: {
-            console.warn(liste.currentIndex)
-            contactDelegate.textBarcode.forceActiveFocus()
-        }
-
         ListModel {
             id: contactModel
         }
@@ -61,24 +56,40 @@ Rectangle {
                 }
                 Keys.onReturnPressed: {
                     liste.currentIndex = index + 1
-                    //liste.get()
-                    textBarcode.forceActiveFocus()
                 }
+                onActiveFocusChanged: {
+                    console.warn(liste.currentIndex)
+                    textBarcode.forceActiveFocus()
+                    textBarcode.selectAll()
+                }
+
                 TextField {
                     id: textAnzahl
                     x: labelTitle1.x
                     text: anzahl
                     focus: false
+
+                    onAccepted: {
+                        deselect()
+                    }
                 }
                 TextField {
                     id: textBarcode
                     x: labelTitle2.x
                     text: bcode
+
+                    onAccepted: {
+                        deselect()
+                    }
                 }
-                Text {
+                TextField {
                     id: textName
                     text: name
                     x: labelTitle3.x
+
+                    onAccepted: {
+                        deselect()
+                    }
                 }
             }
         }
