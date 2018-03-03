@@ -10,6 +10,13 @@ import libs.send
 
 os.system("export MIR_SOCKET=/var/run/mir_socket")
 
+DATA = {}
+DATA["datum"] = "0"
+DATA["linien"] = []
+DATA["anzahl"] = {}
+DATA["bcode"] = {}
+DATA["name"] = {}
+
 class Main:    
     def __init__(self):
         global DATA
@@ -45,16 +52,17 @@ class Main:
         self.busy(False)
 
         
-        DATA = {}
-        DATA["datum"] = "0"
-        DATA["linien"] = []
-        DATA["anzahl"] = {}
-        DATA["bcode"] = {}
-        DATA["name"] = {}
+        
+        #DATA["datum"] = "0"
+        #DATA["linien"] = []
+        #DATA["anzahl"] = {}
+        #DATA["bcode"] = {}
+        #DATA["name"] = {}
 
-        if DATA["linien"] == []:
-            self.AddLinie()
-    
+        #if DATA["linien"] == []:
+        #    self.AddLinie()
+        self.AddLinie()   
+
     def busy(self, status):
         status = bool(status)
         print("busy = " + str(status))
@@ -67,15 +75,15 @@ class Main:
     def AddLinie(self):
         global DATA
            
-        NeueLinie = 1
+        NeueLinie = 0
         while True:
-            if not str(NeueLinie) in DATA["linien"]:
+            if not NeueLinie in DATA["linien"]:
                 break
             NeueLinie = NeueLinie + 1
 
         print("Neue linie: " + str(NeueLinie))
     
-        DATA["linien"].append(NeueLinie)
+        if not NeueLinie in DATA["linien"]: DATA["linien"].append(NeueLinie)
         DATA["anzahl"][NeueLinie] = 1
         DATA["bcode"][NeueLinie] = ""
         DATA["name"][NeueLinie] = ""
@@ -89,22 +97,32 @@ class Main:
  
         Antwort = []
         for linie in DATA["linien"]:
+            linie = int(linie)
             Antwort.append({"linie":linie, "anzahl":DATA["anzahl"][linie], "bcode":DATA["bcode"][linie], "name":DATA["name"][linie]})
             print("linie " + str(linie))        
-        pyotherside.send("antwortGetLieferschei", Antwort)
+        pyotherside.send("antwortGetLieferschein", Antwort)
         self.busy2(False)
-        
 
-    #def SetLieferschein(self, mode, variable):
-    #    global DATA
+    def SetLieferschein(self, mode, linie, variable):
+        global DATA
+        #antwort = ""
 
-    #    print("SetLieferschein")
+        print("SetLieferschein linie " + str(linie))
        
-    #    self.busy2(True)
+        self.busy2(True)
  
-    #    if mode == "anzahl": DATA[mode] = str(variable)
+        #linie = linie + 1
+        if mode == "anzahl": DATA[mode][linie] = int(variable)
+        if mode == "bcode":
+            DATA[mode][linie] = str(variable)
+            if len(variable) == 6:
+                DATA["name"][linie] = libs.send.GetArt(str(variable))["name_de"]
+        if mode == "name": DATA[mode][linie] = str(variable)
+        print("Lieferschein " + str(DATA))
 
-    #    self.busy2(False)
+        self.busy2(False)
+
+        #return antwort
     
     def SearchArt(self, suche):
         self.busy(True)

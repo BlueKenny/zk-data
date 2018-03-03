@@ -16,6 +16,7 @@ Rectangle {
     }
 
     function antwortGetLieferschein(item) {
+        console.warn("antwortGetLieferschein")
         variable.listeIndex = liste.currentIndex
         console.warn("Current Index: " + variable.listeIndex)
         contactModel.clear();
@@ -28,24 +29,24 @@ Rectangle {
 
     Label {
         id: labelTitle1
-        x: window.width / 4 - width / 2
-        y: window.height / 10
         text: "Anzahl"
         font.pixelSize: window.height / 10 * 0.4
+        x: window.width / 4 - width / 2
+        y: window.height / 10
     }
     Label {
         id: labelTitle2
-        x: window.width / 2 - width / 2
-        y: window.height / 10
         text: "Barcode"
         font.pixelSize: window.height / 10 * 0.4
+        x: window.width / 2 - width / 2
+        y: window.height / 10
     }
     Label {
         id: labelTitle3
-        x: window.width * 0.75 - width / 2
-        y: window.height / 10
         text: "Name"
         font.pixelSize: window.height / 10 * 0.4
+        x: window.width * 0.75 - width / 2
+        y: window.height / 10
     }
 
     ListView {
@@ -71,12 +72,14 @@ Rectangle {
                 }
                 Keys.onReturnPressed: {
                     liste.currentIndex = index + 1
+                    console.warn("Enter")
                     if (liste.currentIndex == liste.count) {
                         python.call('Kasse.main.AddLinie', [], function() {});
                         python.call('Kasse.main.GetLieferschein', [], function() {});
                     }
                 }
                 onActiveFocusChanged: {
+                    console.warn("Focus Changed")
                     console.warn(liste.currentIndex)
                     textBarcode.forceActiveFocus()
                     textBarcode.selectAll()
@@ -91,8 +94,8 @@ Rectangle {
                     focus: false
 
                     onAccepted: {
-                        deselect()
-                        //call('Kasse.main.SetLieferschein', ["anzahl", text], function() {});
+                        deselect();
+                        python.call('Kasse.main.SetLieferschein', ["anzahl", liste.currentIndex, text], function() {});
                     }
                 }
                 TextField {
@@ -103,8 +106,8 @@ Rectangle {
                     text: bcode
 
                     onAccepted: {
-                        deselect()
-                        //call('Kasse.main.SetLieferschein', ["bcode", text], function() {});
+                        deselect();
+                        python.call('Kasse.main.SetLieferschein', ["bcode", liste.currentIndex, text], function(neuerName) {textName.text = neuerName});
                     }
                 }
                 TextField {
@@ -115,8 +118,8 @@ Rectangle {
                     text: name
 
                     onAccepted: {
-                        deselect()
-                        //call('Kasse.main.SetLieferschein', ["name", text], function() {});
+                        deselect();
+                        python.call('Kasse.main.SetLieferschein', ["bcode", liste.currentIndex, text], function() {});
                     }
                 }
             }
