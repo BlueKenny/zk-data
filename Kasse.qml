@@ -87,6 +87,7 @@ Rectangle {
 
                 TextField {
                     id: textAnzahl
+                    font.pixelSize: parent.height * 0.4
                     width: window.width / 5
                     x: window.width / 4 - width / 2
                     y: parent.height / 2 - height / 2
@@ -100,10 +101,12 @@ Rectangle {
                 }
                 TextField {
                     id: textBarcode
+                    font.pixelSize: parent.height * 0.4
                     width: window.width / 5
                     x: window.width / 2 - width / 2
                     y: parent.height / 2 - height / 2
                     text: bcode
+                    inputMethodHints: Qt.ImhDigitsOnly
 
                     onAccepted: {
                         deselect();
@@ -112,6 +115,7 @@ Rectangle {
                 }
                 TextField {
                     id: textName
+                    font.pixelSize: parent.height * 0.4
                     width: window.width / 5
                     x: window.width * 0.75 - width / 2
                     y: parent.height / 2 - height / 2
