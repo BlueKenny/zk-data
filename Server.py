@@ -409,7 +409,7 @@ def NeuerLieferschein():# return Dict
             break
         FreierLieferschein = FreierLieferschein + 1
 
-    ThisLieferschein = Lieferschein.create(linien="0", anzahl="1", bcode="", name="", preis="", identification=str(FreierLieferschein))
+    ThisLieferschein = Lieferschein.create(linien="0", anzahl="1", bcode="", name="", preis="0.0", identification=str(FreierLieferschein))
     ThisLieferschein.save()
 
     object = Lieferschein.get(Lieferschein.identification == str(FreierLieferschein))
