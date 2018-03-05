@@ -50,7 +50,24 @@ local_migrator = SqliteMigrator(local_db)
 kunde_db = SqliteDatabase("DATA/kunde.db")
 kunde_migrator = SqliteMigrator(kunde_db)
 
+lieferschein_db = SqliteDatabase("DATA/lieferschein.db")
+lieferschein_migrator = SqliteMigrator(lieferschein_db)
+
 FreeID = 100000
+
+class Lieferschein(Model):
+    identification = CharField(primary_key = True)
+    kunde_id = CharField(default="0")
+    datum = CharField(default=str(Date()))
+    lastchange = CharField(default=str(Timestamp()))
+    linien = CharField(default="")
+    anzahl = CharField(default="")
+    bcode = CharField(default="")
+    name = CharField(default="")
+    preis = CharField(default="")
+
+    class Meta:
+        database = lieferschein_db
 
 class Kunde(Model):
     identification = CharField(primary_key = True)
@@ -153,6 +170,15 @@ kunde_db.close()
 
 
 
+lieferschein_db.connect()
+
+try: lieferschein_db.create_tables([Lieferschein])
+except: print("Lieferschein table exists in lieferschein_db")
+
+lieferschein_db.close()
+
+
+
 
 
 
@@ -170,6 +196,7 @@ BlueMkDir(DIR + "Import")
 BlueMkDir(DIR + "Import/Preise")
 
 Barcodes = {}
+
 
 local_db.connect()
 BeID = 1
@@ -372,42 +399,85 @@ def SearchArt(Dict):# Give Dict with Search return List of IDs
     local_db.close()
     return Antwort
 
-def GetArt(Dict):# return Dict
-    print("GetArt")
-    id = str(DATA["identification"])
-    print("id: " + str(id))
+def GetLieferschein(Dict):# return Dict
+    print("GetLieferschein")
+    lieferschein_db.connect()
 
-    local_db.connect()
-    query = Artikel.select().where(Artikel.identification == id)
+    lieferschein = str(Dict["identification"])
+    query = Lieferschein.select().where(Lieferschein.identification == lieferschein)
     if query.exists():
-        object = Artikel.get(Artikel.identification == id)
+        object = Lieferschein.get(Lieferschein.identification == lieferschein)
         Antwort = model_to_dict(object)
     else:
         Antwort = {}
+    
+    lieferschein_db.close()
+    return Antwort
+
+def SetLieferschein(Dict):# return Bool of sucess
+    print("SetLieferschein")
+    id = str(Dict["identification"])
+    print("id: " + str(id))
+    lieferschein_db.connect()
+    try:
+        Dict["lastchange"] = str(Timestamp())
+        ThisArtikel = dict_to_model(Lieferschein, Dict)
+        ThisArtikel.save()
+        Antwort = True
+    except:
+        Antwort = False
+    
+    lieferschein_db.close()
+    return Antwort
+
+def GetArt(Dict):# return Dict
+    print("GetArt")
+    local_db.connect()
+
+    try:
+        bcode = str(Dict["identification"])
+        query = Artikel.select().where(Artikel.identification == bcode)
+        print("GetArt identification")
+        if query.exists():
+            object = Artikel.get(Artikel.identification == bcode)
+            Antwort = model_to_dict(object)
+        else:
+            Antwort = {}
+    except:
+        barcode = int(Dict["barcode"])
+        query = Artikel.select().where(Artikel.barcode == barcode)
+        print("GetArt barcode")
+        if query.exists():
+            object = Artikel.get(Artikel.barcode == barcode)
+            Antwort = model_to_dict(object)
+        else:
+            Antwort = {}
+
+    
     local_db.close()
     return Antwort
 
 def SetArt(Dict):# return Bool of sucess
     print("SetArt")
-    id = str(DATA["identification"])
+    id = str(Dict["identification"])
     print("id: " + str(id))
+    local_db.connect()
     try:
-        local_db.connect()
-        DATA["lastchange"] = str(Timestamp())
-        ThisArtikel = dict_to_model(Artikel, DATA)
+        Dict["lastchange"] = str(Timestamp())
+        ThisArtikel = dict_to_model(Artikel, Dict)
         ThisArtikel.save()
-        local_db.close()
         Antwort = True
     except:
         Antwort = False
+    local_db.close()
     return Antwort
 
 def AddArt(Dict):# return Bool of sucess
     global BeID
     print("AddArt")
-    id = str(DATA["identification"])
-    add = str(DATA["add"])
-    del DATA["add"]
+    id = str(Dict["identification"])
+    add = str(Dict["add"])
+    del Dict["add"]
     print("add:" + str(add))
     local_db.connect()
 
@@ -530,6 +600,12 @@ while True:
 
         if mode == "SearchArt":#return List of IDs
             Antwort = SearchArt(DATA)
+
+        if mode == "GetLieferschein":#return Dict
+            Antwort = GetLieferschein(DATA)
+
+        if mode == "SetLieferschein":#return Bool of sucess
+            Antwort = SetLieferschein(DATA)
 
         if mode == "GetArt":#return Dict
             Antwort = GetArt(DATA)

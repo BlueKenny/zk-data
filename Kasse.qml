@@ -31,21 +31,28 @@ Rectangle {
         id: labelTitle1
         text: "Anzahl"
         font.pixelSize: window.height / 10 * 0.4
-        x: window.width / 4 - width / 2
+        x: window.width / 5 - width / 2
         y: window.height / 10
     }
     Label {
         id: labelTitle2
         text: "Barcode"
         font.pixelSize: window.height / 10 * 0.4
-        x: window.width / 2 - width / 2
+        x: window.width / 5 * 2 - width / 2
         y: window.height / 10
     }
     Label {
         id: labelTitle3
         text: "Name"
         font.pixelSize: window.height / 10 * 0.4
-        x: window.width * 0.75 - width / 2
+        x: window.width / 5 * 3 - width / 2
+        y: window.height / 10
+    }
+    Label {
+        id: labelTitle4
+        text: "Preis"
+        font.pixelSize: window.height / 10 * 0.4
+        x: window.width / 5 * 4 - width / 2
         y: window.height / 10
     }
 
@@ -54,6 +61,8 @@ Rectangle {
         y: window.height / 10 * 2
         focus: true
         highlight: Rectangle { color: "lightsteelblue"; width: window.width }
+        //highlightFollowsCurrentItem: true
+        //highlightMoveSpeed: 100
 
         width: window.width
         height: window.height * 0.5
@@ -84,12 +93,11 @@ Rectangle {
                     textBarcode.forceActiveFocus()
                     textBarcode.selectAll()
                 }
-
                 TextField {
                     id: textAnzahl
                     font.pixelSize: parent.height * 0.4
                     width: window.width / 5
-                    x: window.width / 4 - width / 2
+                    x: window.width / 5 - width / 2
                     y: parent.height / 2 - height / 2
                     text: anzahl
                     focus: false
@@ -103,27 +111,41 @@ Rectangle {
                     id: textBarcode
                     font.pixelSize: parent.height * 0.4
                     width: window.width / 5
-                    x: window.width / 2 - width / 2
+                    x: window.width / 5 * 2 - width / 2
                     y: parent.height / 2 - height / 2
                     text: bcode
                     inputMethodHints: Qt.ImhDigitsOnly
 
                     onAccepted: {
                         deselect();
-                        python.call('Kasse.main.SetLieferschein', ["bcode", liste.currentIndex, text], function(neuerName) {textName.text = neuerName});
+                        python.call('Kasse.main.SetLieferschein', ["bcode", liste.currentIndex, text], function() {});
                     }
                 }
                 TextField {
                     id: textName
                     font.pixelSize: parent.height * 0.4
                     width: window.width / 5
-                    x: window.width * 0.75 - width / 2
+                    x: window.width / 5 * 3 - width / 2
                     y: parent.height / 2 - height / 2
                     text: name
 
                     onAccepted: {
                         deselect();
-                        python.call('Kasse.main.SetLieferschein', ["bcode", liste.currentIndex, text], function() {});
+                        python.call('Kasse.main.SetLieferschein', ["name", liste.currentIndex, text], function() {});
+                    }
+                }
+                TextField {
+                    id: textPreis
+                    font.pixelSize: parent.height * 0.4
+                    width: window.width / 5
+                    x: window.width / 5 * 4 - width / 2
+                    y: parent.height / 2 - height / 2
+                    text: preis
+                    inputMethodHints: Qt.ImhDigitsOnly
+
+                    onAccepted: {
+                        deselect();
+                        python.call('Kasse.main.SetLieferschein', ["preis", liste.currentIndex, text], function(neuerName) {textName.text = neuerName});
                     }
                 }
             }

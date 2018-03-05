@@ -21,7 +21,7 @@ class Main:
         else: Desktop = os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip()
         
         file = Desktop + "/Stock.desktop"
-        os.system("rm " + file)
+        #os.system("rm " + file)
         if not os.path.exists(file):
             print("Write Desktop Entry")
             print("User: " + str(User))

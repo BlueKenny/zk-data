@@ -11,11 +11,13 @@ import libs.send
 os.system("export MIR_SOCKET=/var/run/mir_socket")
 
 DATA = {}
-DATA["datum"] = "0"
-DATA["linien"] = []
-DATA["anzahl"] = {}
-DATA["bcode"] = {}
-DATA["name"] = {}
+#DATA["datum"] = "0"
+#DATA["linien"] = []
+#DATA["anzahl"] = []
+#DATA["bcode"] = []
+#DATA["name"] = []
+#DATA["preis"] = []
+# str = "/".join(liste1)
 
 class Main:    
     def __init__(self):
@@ -29,7 +31,7 @@ class Main:
         else: Desktop = os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip()
         
         file = Desktop + "/Kasse.desktop"
-        os.system("rm " + file)
+        #os.system("rm " + file)
         if not os.path.exists(file):
             print("Write Desktop Entry")
             print("User: " + str(User))
@@ -51,17 +53,10 @@ class Main:
         os.system("git pull")
         self.busy(False)
 
-        
-        
-        #DATA["datum"] = "0"
-        #DATA["linien"] = []
-        #DATA["anzahl"] = {}
-        #DATA["bcode"] = {}
-        #DATA["name"] = {}
 
         #if DATA["linien"] == []:
         #    self.AddLinie()
-        self.AddLinie()   
+        self.GetLieferschein()   
 
     def busy(self, status):
         status = bool(status)
@@ -75,30 +70,39 @@ class Main:
     def AddLinie(self):
         global DATA
            
-        NeueLinie = 0
+        self.busy2(True)
+
+        NeueLinie = "0"
         while True:
-            if not NeueLinie in DATA["linien"]:
+            if not NeueLinie in DATA["linien"].split("|"):
                 break
-            NeueLinie = NeueLinie + 1
+            NeueLinie = str(int(NeueLinie) + 1)
 
         print("Neue linie: " + str(NeueLinie))
     
-        if not NeueLinie in DATA["linien"]: DATA["linien"].append(NeueLinie)
-        DATA["anzahl"][NeueLinie] = 1
-        DATA["bcode"][NeueLinie] = ""
-        DATA["name"][NeueLinie] = ""
+        DATA["linien"] = DATA["linien"] + "|" + str(NeueLinie)
+        DATA["anzahl"] = DATA["anzahl"] + "|1"
+        DATA["bcode"] = DATA["bcode"] + "|"
+        DATA["name"] = DATA["name"] + "|"
+        DATA["preis"] = DATA["preis"] + "|0.0"
+
+        
+        while not libs.send.SetLieferschein(DATA):
+            self.busy2(False)
  
     def GetLieferschein(self):
         global DATA
-
         print("GetLieferschein")
        
         self.busy2(True)
  
+        DATA = libs.send.GetLieferschein("1")
+
         Antwort = []
-        for linie in DATA["linien"]:
+        for linie in DATA["linien"].split("|"):
             linie = int(linie)
-            Antwort.append({"linie":linie, "anzahl":DATA["anzahl"][linie], "bcode":DATA["bcode"][linie], "name":DATA["name"][linie]})
+            print("linie: " + str(linie))
+            Antwort.append({"linie":linie, "anzahl":DATA["anzahl"].split("|")[linie], "bcode":DATA["bcode"].split("|")[linie], "name":DATA["name"].split("|")[linie], "preis":DATA["preis"].split("|")[linie]})
             print("linie " + str(linie))        
         pyotherside.send("antwortGetLieferschein", Antwort)
         self.busy2(False)
@@ -111,18 +115,38 @@ class Main:
        
         self.busy2(True)
  
-        #linie = linie + 1
-        if mode == "anzahl": DATA[mode][linie] = int(variable)
+        if mode == "anzahl":
+            listdata = DATA[mode].split("|")
+            listdata[linie] = str(variable)
+            DATA[mode] = "|".join(listdata)
         if mode == "bcode":
-            DATA[mode][linie] = str(variable)
-            if len(variable) == 6:
-                DATA["name"][linie] = libs.send.GetArt(str(variable))["name_de"]
-        if mode == "name": DATA[mode][linie] = str(variable)
-        print("Lieferschein " + str(DATA))
+            if not str(variable) == "":
+                listdata = DATA[mode].split("|")
+                listdata[linie] = str(variable)
+                DATA[mode] = "|".join(listdata)
+                
+                artikel = libs.send.GetArt(str(variable))
+                
+                listdata = DATA["name"].split("|")
+                listdata[linie] = artikel["name_de"]
+                DATA["name"] = "|".join(listdata)
+                
+                listdata = DATA["preis"].split("|")
+                listdata[linie] = str(artikel["preisvk"])
+                DATA["preis"] = "|".join(listdata)
 
-        self.busy2(False)
+        if mode == "name":
+            listdata = DATA[mode].split("|")
+            listdata[linie] = str(variable)
+            DATA[mode] = "|".join(listdata)
 
-        #return antwort
+        if mode == "preis":
+            listdata = DATA[mode].split("|")
+            listdata[linie] = str(variable)
+            DATA[mode] = "|".join(listdata)
+
+        while not libs.send.SetLieferschein(DATA):
+            self.busy2(False)
     
     def SearchArt(self, suche):
         self.busy(True)

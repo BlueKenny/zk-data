@@ -71,13 +71,65 @@ def Barcode(Position, Bytes):#return String
     #    return {}
 
 
+
+def GetLieferschein(ID):#return Dict
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Dict = {"mode":"GetLieferschein"}
+        ID = str(ID)
+        sock.connect(SERVERSTOCK_IP)
+        Dict["identification"] = ID
+
+        #Debug("Send " + str(Dict))
+        data = json.dumps(Dict)  # data serialized
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        data = data.decode()
+        data = json.loads(data)
+        sock.close()
+        #Debug("Get " + str(data))
+
+        print("GetLieferschein(" + str(ID) + ") = " + str(data))
+        return data
+    except:
+        print("GetLieferschein(" + str(ID) + ") = ERROR")
+        return {}
+
+
+def SetLieferschein(Dict):#return Bool
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        Dict["mode"] = "SetLieferschein"
+        sock.connect(SERVERSTOCK_IP)
+
+        #Debug("Send " + str(Dict))
+        data = json.dumps(Dict)  # data serialized
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        data = data.decode()
+        data = json.loads(data)
+        sock.close()
+        #Debug("Get " + str(data))
+        print("SetLieferschein(" + str(Dict) + ") = " + str(data))
+        return data
+    except:
+        print("SetLieferschein(" + str(Dict) + ") = ERROR")
+        return False
+
+
 def GetArt(ID):#return Dict
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         Dict = {"mode":"GetArt"}
         ID = str(ID)
         sock.connect(SERVERSTOCK_IP)
-        Dict["identification"] = str(ID)
+        if len(ID) == 13 or len(ID) == 12:
+            Dict["barcode"] = int(ID)
+        else:
+            Dict["identification"] = str(ID)
 
         #Debug("Send " + str(Dict))
         data = json.dumps(Dict)  # data serialized
