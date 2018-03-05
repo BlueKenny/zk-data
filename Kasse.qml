@@ -1,13 +1,13 @@
 import QtQuick 2.2
 import io.thp.pyotherside 1.2
-import QtQuick.Controls 1.1
+import QtQuick.Controls 2.0
 //import QtQuick.Window 2.2
 import QtMultimedia 5.5
 
 
 Rectangle {
     id: window
-    width: 800
+    width: 1000
     height: 800
 
     Item {
@@ -60,9 +60,13 @@ Rectangle {
         id: liste
         y: window.height / 10 * 2
         focus: true
-        highlight: Rectangle { color: "lightsteelblue"; width: window.width }
-        //highlightFollowsCurrentItem: true
-        //highlightMoveSpeed: 100
+        highlightMoveDuration: 0
+        highlight: Rectangle { color: "lightsteelblue"; width: window.width}
+
+        ScrollBar.vertical: ScrollBar {
+            active: true;
+            policy: ScrollBar.AlwaysOn
+        }
 
         width: window.width
         height: window.height * 0.5
@@ -74,6 +78,8 @@ Rectangle {
         Component {
             id: contactDelegate
             Item {
+                id: itemListe
+                property int currentIndex: index // store item index
                 width: window.width; height: window.height/10
                 MouseArea {
                     anchors.fill: parent
@@ -93,6 +99,11 @@ Rectangle {
                     textBarcode.forceActiveFocus()
                     textBarcode.selectAll()
                 }
+                Button {
+                    id: buttonOption
+                    text: "X"
+                    y: parent.height / 2 - height / 2
+                }
                 TextField {
                     id: textAnzahl
                     font.pixelSize: parent.height * 0.4
@@ -101,12 +112,18 @@ Rectangle {
                     y: parent.height / 2 - height / 2
                     text: anzahl
                     inputMethodHints: Qt.ImhDigitsOnly
+                    horizontalAlignment: TextEdit.AlignHCenter
 
                     focus: false
 
                     onAccepted: {
                         deselect();
                         python.call('Kasse.main.SetLieferschein', ["anzahl", liste.currentIndex, text], function() {});
+                    }
+                    onFocusChanged: {
+                        if(focus) {
+                            liste.currentIndex = itemListe.currentIndex;
+                        }
                     }
                 }
                 TextField {
@@ -117,10 +134,16 @@ Rectangle {
                     y: parent.height / 2 - height / 2
                     text: bcode
                     inputMethodHints: Qt.ImhDigitsOnly
+                    horizontalAlignment: TextEdit.AlignHCenter
 
                     onAccepted: {
                         deselect();
                         python.call('Kasse.main.SetLieferschein', ["bcode", liste.currentIndex, text], function() {});
+                    }
+                    onFocusChanged: {
+                        if(focus) {
+                            liste.currentIndex = itemListe.currentIndex;
+                        }
                     }
                 }
                 TextField {
@@ -130,10 +153,16 @@ Rectangle {
                     x: window.width / 5 * 3 - width / 2
                     y: parent.height / 2 - height / 2
                     text: name
+                    horizontalAlignment: TextEdit.AlignHCenter
 
                     onAccepted: {
                         deselect();
                         python.call('Kasse.main.SetLieferschein', ["name", liste.currentIndex, text], function() {});
+                    }
+                    onFocusChanged: {
+                        if(focus) {
+                            liste.currentIndex = itemListe.currentIndex;
+                        }
                     }
                 }
                 TextField {
@@ -144,10 +173,15 @@ Rectangle {
                     y: parent.height / 2 - height / 2
                     text: preis
                     inputMethodHints: Qt.ImhDigitsOnly
-
+                    horizontalAlignment: TextEdit.AlignHCenter
                     onAccepted: {
                         deselect();
                         python.call('Kasse.main.SetLieferschein', ["preis", liste.currentIndex, text], function() {});
+                    }
+                    onFocusChanged: {
+                        if(focus) {
+                            liste.currentIndex = itemListe.currentIndex;
+                        }
                     }
                 }
             }
@@ -156,6 +190,7 @@ Rectangle {
         model: contactModel
         delegate: contactDelegate
     }
+
 
     Button {
         id: buttonOK

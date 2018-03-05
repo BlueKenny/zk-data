@@ -152,19 +152,12 @@ class Main:
             listdata = DATA[mode].split("|")
             listdata[linie] = str(variable).replace(",", ".")
             DATA[mode] = "|".join(listdata)
-            #try:
-            #    float(listdata[linie])
-            #    farbe = "green"
-            #except:            
-            #    farbe = "red"
 
         while not libs.send.SetLieferschein(DATA):
             self.busy2(True)        
 
         self.GetLieferschein()
         self.busy2(False)
-
-        return "red"
             
     
     def SearchArt(self, suche):
