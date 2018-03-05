@@ -1,6 +1,6 @@
 import QtQuick 2.2
 import io.thp.pyotherside 1.2
-import QtQuick.Controls 2.0
+import QtQuick.Controls 1.1
 //import QtQuick.Window 2.2
 import QtMultimedia 5.5
 
@@ -62,11 +62,11 @@ Rectangle {
         focus: true
         highlightMoveDuration: 0
         highlight: Rectangle { color: "lightsteelblue"; width: window.width}
-
+/*
         ScrollBar.vertical: ScrollBar {
             active: true;
             policy: ScrollBar.AlwaysOn
-        }
+        }*/
 
         width: window.width
         height: window.height * 0.5
@@ -87,15 +87,15 @@ Rectangle {
                 }
                 Keys.onReturnPressed: {
                     liste.currentIndex = index + 1
-                    console.warn("Enter")
+                    //console.warn("Enter")
                     if (liste.currentIndex == liste.count) {
                         python.call('Kasse.main.AddLinie', [], function() {});
                         python.call('Kasse.main.GetLieferschein', [], function() {});
                     }
                 }
                 onActiveFocusChanged: {
-                    console.warn("Focus Changed")
-                    console.warn(liste.currentIndex)
+                    //console.warn("Focus Changed")
+                    //console.warn(liste.currentIndex)
                     textBarcode.forceActiveFocus()
                     textBarcode.selectAll()
                 }
@@ -103,6 +103,10 @@ Rectangle {
                     id: buttonOption
                     text: "X"
                     y: parent.height / 2 - height / 2
+                    onClicked: {
+                        liste.currentIndex = itemListe.currentIndex;
+                        python.call('Kasse.main.LinieEntfernen', [liste.currentIndex], function() {});
+                    }
                 }
                 TextField {
                     id: textAnzahl

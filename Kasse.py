@@ -89,6 +89,29 @@ class Main:
         
         while not libs.send.SetLieferschein(DATA):
             self.busy2(False)
+
+    def LinieEntfernen(self, linie):
+        global DATA
+        print("LinieEntfernen " + str(linie))
+
+        self.busy(True)
+
+        listdata = DATA["linien"].split("|")
+        del listdata[-1]
+        DATA["linien"] = "|".join(listdata)
+        
+        for mode in ["anzahl", "bcode", "name", "preis"]:
+            listdata = DATA[mode].split("|")
+            print("remove listdata:" + str(linie) + ":" + str(mode) + ":" + str(listdata))
+            del listdata[linie]
+            DATA[mode] = "|".join(listdata)
+
+        while not libs.send.SetLieferschein(DATA):
+            self.busy2(True) 
+
+        self.GetLieferschein()
+        self.busy(False)
+
  
     def GetLieferschein(self):
         global DATA
@@ -101,9 +124,9 @@ class Main:
         Antwort = []
         for linie in DATA["linien"].split("|"):
             linie = int(linie)
-            print("linie: " + str(linie))
+            #print("linie: " + str(linie))
             Antwort.append({"linie":linie, "anzahl":DATA["anzahl"].split("|")[linie], "bcode":DATA["bcode"].split("|")[linie], "name":DATA["name"].split("|")[linie], "preis":DATA["preis"].split("|")[linie]})
-            print("linie " + str(linie))        
+            #print("linie " + str(linie))        
         pyotherside.send("antwortGetLieferschein", Antwort)
         self.busy2(False)
 
