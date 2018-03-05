@@ -27,6 +27,17 @@ Rectangle {
         liste.currentIndex = variable.listeIndex
     }
 
+    function busy(status) {
+        busyindicator.visible = status
+    }
+
+    BusyIndicator {
+        id: busyindicator
+        running: image.status === Image.Loadings
+        x: window.width / 2
+        y: window.height / 2
+    }
+
     Label {
         id: labelTitle1
         text: "Anzahl"
@@ -87,7 +98,6 @@ Rectangle {
                 }
                 Keys.onReturnPressed: {
                     liste.currentIndex = index + 1
-                    //console.warn("Enter")
                     if (liste.currentIndex == liste.count) {
                         python.call('Kasse.main.AddLinie', [], function() {});
                         python.call('Kasse.main.GetLieferschein', [], function() {});
@@ -219,6 +229,7 @@ Rectangle {
             addImportPath(Qt.resolvedUrl('.'));
             importModule('Kasse', function () {});
 
+            setHandler("busy", busy);
             setHandler("antwortGetLieferschein", antwortGetLieferschein);
 
             call('Kasse.main.GetLieferschein', [], function() {});

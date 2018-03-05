@@ -7,21 +7,16 @@ import time
 try: import pyotherside
 except: True
 import libs.send
+import libs.BlueFunc
 
-os.system("export MIR_SOCKET=/var/run/mir_socket")
+#os.system("export MIR_SOCKET=/var/run/mir_socket")
 
-DATA = {}
-#DATA["datum"] = "0"
-#DATA["linien"] = []
-#DATA["anzahl"] = []
-#DATA["bcode"] = []
-#DATA["name"] = []
-#DATA["preis"] = []
-# str = "/".join(liste1)
+LastLieferschein = ""
 
 class Main:    
     def __init__(self):
         global DATA
+        global LastLieferschein
         print("init")
         #for user in os.listdir("/home/"):
         #    print(user)
@@ -53,24 +48,22 @@ class Main:
         os.system("git pull")
         self.busy(False)
 
-
-        #if DATA["linien"] == []:
-        #    self.AddLinie()
+        DATA = {}
+        LastLieferschein = str(libs.BlueFunc.BlueLoad("LastLieferschein", "DATA/DATA"))
+        print("LastLieferschein: " + str(LastLieferschein))
+        if LastLieferschein == "None": self.NeuerLieferschein()
+        
         self.GetLieferschein()   
 
     def busy(self, status):
         status = bool(status)
         print("busy = " + str(status))
         pyotherside.send("busy", status)
-    def busy2(self, status):
-        status = bool(status)
-        print("busy2 = " + str(status))
-        pyotherside.send("busy2", status)
        
     def AddLinie(self):
         global DATA
            
-        self.busy2(True)
+        self.busy(True)
 
         NeueLinie = "0"
         while True:
@@ -88,10 +81,11 @@ class Main:
 
         
         while not libs.send.SetLieferschein(DATA):
-            self.busy2(False)
+            self.busy(False)
 
     def LinieEntfernen(self, linie):
         global DATA
+        global LastLieferschein
         print("LinieEntfernen " + str(linie))
 
         self.busy(True)
@@ -107,20 +101,33 @@ class Main:
             DATA[mode] = "|".join(listdata)
 
         while not libs.send.SetLieferschein(DATA):
-            self.busy2(True) 
+            self.busy(True) 
 
         self.GetLieferschein()
         self.busy(False)
 
+    def NeuerLieferschein(self):
+        global DATA
+        global LastLieferschein
+
+        print("NeuerLieferschein")
+
+        self.busy(True)
+
+        DATA = libs.send.NeuerLieferschein()
+
+        LastLieferschein = DATA["identification"]
+        libs.BlueFunc.BlueSave("LastLieferschein", LastLieferschein, "DATA/DATA")
+        self.busy(False)
  
     def GetLieferschein(self):
         global DATA
+        global LastLieferschein
         print("GetLieferschein")
        
-        self.busy2(True)
+        self.busy(True)
  
-        DATA = libs.send.GetLieferschein("1")
-
+        DATA = libs.send.GetLieferschein(LastLieferschein)
         Antwort = []
         for linie in DATA["linien"].split("|"):
             linie = int(linie)
@@ -128,15 +135,16 @@ class Main:
             Antwort.append({"linie":linie, "anzahl":DATA["anzahl"].split("|")[linie], "bcode":DATA["bcode"].split("|")[linie], "name":DATA["name"].split("|")[linie], "preis":DATA["preis"].split("|")[linie]})
             #print("linie " + str(linie))        
         pyotherside.send("antwortGetLieferschein", Antwort)
-        self.busy2(False)
+        self.busy(False)
 
     def SetLieferschein(self, mode, linie, variable):
         global DATA
+        global LastLieferschein
         #antwort = ""
 
         print("SetLieferschein linie " + str(linie))
        
-        self.busy2(True)
+        self.busy(True)
  
         if mode == "anzahl":
             listdata = DATA[mode].split("|")
@@ -177,25 +185,9 @@ class Main:
             DATA[mode] = "|".join(listdata)
 
         while not libs.send.SetLieferschein(DATA):
-            self.busy2(True)        
+            self.busy(True)        
 
         self.GetLieferschein()
-        self.busy2(False)
-            
-    
-    def SearchArt(self, suche):
-        self.busy(True)
-        if not suche == "":
-            Antwort = []
-            IDList = libs.send.SearchArt({"suche": suche, "ort": "", "lieferant": ""})
-            for ID in IDList:
-                self.busy(True)
-                Dict = libs.send.GetArt(str(ID))
-                Antwort.append(Dict)
-                self.busy(False)
-            pyotherside.send("antwortSearchArt", Antwort) 
-            if len(IDList) == 0:
-                os.system("test_vibrator")
         self.busy(False)
 
     def isPhone(self):
@@ -206,13 +198,6 @@ class Main:
         print("isPhone: " + str(handy))
         self.busy(False)
     
-    def isPhone2(self):
-        if os.path.exists("/home/phablet"):
-            handy = True
-            pyotherside.send("ifPhone2", handy)
-        else: handy = False
-        print("isPhone2: " + str(handy))
-        self.busy2(False)
         
 main = Main()
 

@@ -71,6 +71,27 @@ def Barcode(Position, Bytes):#return String
     #    return {}
 
 
+def NeuerLieferschein():#return Dict
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Dict = {"mode":"NeuerLieferschein"}
+        sock.connect(SERVERSTOCK_IP)
+
+        #Debug("Send " + str(Dict))
+        data = json.dumps(Dict)  # data serialized
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        data = data.decode()
+        data = json.loads(data)
+        sock.close()
+        #Debug("Get " + str(data))
+
+        print("NeuerLieferschein() = " + str(data))
+        return data
+    except:
+        print("NeuerLieferschein() = ERROR")
+        return {}
 
 def GetLieferschein(ID):#return Dict
     try:

@@ -399,6 +399,25 @@ def SearchArt(Dict):# Give Dict with Search return List of IDs
     local_db.close()
     return Antwort
 
+def NeuerLieferschein():# return Dict
+    print("NeuerLieferschein")
+    FreierLieferschein = 0
+    lieferschein_db.connect()
+    while True:
+        query = Lieferschein.select().where(Lieferschein.identification == str(FreierLieferschein))
+        if not query.exists():
+            break
+        FreierLieferschein = FreierLieferschein + 1
+
+    ThisLieferschein = Lieferschein.create(linien="0", anzahl="1", bcode="", name="", preis="", identification=str(FreierLieferschein))
+    ThisLieferschein.save()
+
+    object = Lieferschein.get(Lieferschein.identification == str(FreierLieferschein))
+    Antwort = model_to_dict(object)
+
+    lieferschein_db.close()
+    return Antwort
+
 def GetLieferschein(Dict):# return Dict
     print("GetLieferschein")
     lieferschein_db.connect()
@@ -600,6 +619,9 @@ while True:
 
         if mode == "SearchArt":#return List of IDs
             Antwort = SearchArt(DATA)
+
+        if mode == "NeuerLieferschein":#return Dict
+            Antwort = NeuerLieferschein()
 
         if mode == "GetLieferschein":#return Dict
             Antwort = GetLieferschein(DATA)
