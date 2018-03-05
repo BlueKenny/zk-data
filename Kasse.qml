@@ -100,6 +100,8 @@ Rectangle {
                     x: window.width / 5 - width / 2
                     y: parent.height / 2 - height / 2
                     text: anzahl
+                    inputMethodHints: Qt.ImhDigitsOnly
+
                     focus: false
 
                     onAccepted: {
@@ -145,7 +147,7 @@ Rectangle {
 
                     onAccepted: {
                         deselect();
-                        python.call('Kasse.main.SetLieferschein', ["preis", liste.currentIndex, text], function(neuerName) {textName.text = neuerName});
+                        python.call('Kasse.main.SetLieferschein', ["preis", liste.currentIndex, text], function() {});
                     }
                 }
             }

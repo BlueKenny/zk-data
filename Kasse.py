@@ -124,16 +124,24 @@ class Main:
                 listdata = DATA[mode].split("|")
                 listdata[linie] = str(variable)
                 DATA[mode] = "|".join(listdata)
-                
-                artikel = libs.send.GetArt(str(variable))
-                
-                listdata = DATA["name"].split("|")
-                listdata[linie] = artikel["name_de"]
-                DATA["name"] = "|".join(listdata)
-                
-                listdata = DATA["preis"].split("|")
-                listdata[linie] = str(artikel["preisvk"])
-                DATA["preis"] = "|".join(listdata)
+                try:
+                    artikel = libs.send.GetArt(str(variable))
+                    
+                    listdata = DATA["name"].split("|")
+                    listdata[linie] = artikel["name_de"]
+                    DATA["name"] = "|".join(listdata)
+                    
+                    listdata = DATA["preis"].split("|")
+                    listdata[linie] = str(artikel["preisvk"])
+                    DATA["preis"] = "|".join(listdata)
+                except:
+                    listdata = DATA["name"].split("|")
+                    listdata[linie] = ""
+                    DATA["name"] = "|".join(listdata)
+                    
+                    listdata = DATA["preis"].split("|")
+                    listdata[linie] = ""
+                    DATA["preis"] = "|".join(listdata)
 
         if mode == "name":
             listdata = DATA[mode].split("|")
@@ -142,11 +150,22 @@ class Main:
 
         if mode == "preis":
             listdata = DATA[mode].split("|")
-            listdata[linie] = str(variable)
+            listdata[linie] = str(variable).replace(",", ".")
             DATA[mode] = "|".join(listdata)
+            #try:
+            #    float(listdata[linie])
+            #    farbe = "green"
+            #except:            
+            #    farbe = "red"
 
         while not libs.send.SetLieferschein(DATA):
-            self.busy2(False)
+            self.busy2(True)        
+
+        self.GetLieferschein()
+        self.busy2(False)
+
+        return "red"
+            
     
     def SearchArt(self, suche):
         self.busy(True)
