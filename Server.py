@@ -440,6 +440,12 @@ def SetLieferschein(Dict):# return Bool of sucess
     lieferschein_db.connect()
     try:
         Dict["lastchange"] = str(Timestamp())
+        if Dict["linien"] == "":
+            Dict["linien"] = "0"
+            Dict["anzahl"] = "1"
+            Dict["bcode"] = ""
+            Dict["name"] = ""
+            Dict["preis"] = "0.0"
         ThisArtikel = dict_to_model(Lieferschein, Dict)
         ThisArtikel.save()
         Antwort = True

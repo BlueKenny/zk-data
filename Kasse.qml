@@ -212,6 +212,10 @@ Rectangle {
         width: window.width / 5
         x: window.width / 2 - width / 2
         y: window.height * 0.9
+
+        onClicked: {
+            python.call('Kasse.main.Ok', [], function() {});
+        }
     }
 /*
     Button {

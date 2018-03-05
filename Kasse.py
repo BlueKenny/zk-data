@@ -59,7 +59,16 @@ class Main:
         status = bool(status)
         print("busy = " + str(status))
         pyotherside.send("busy", status)
-       
+      
+    def Ok(self):
+        global LastLieferschein
+        self.busy(True)
+        lf = libs.send.NeuerLieferschein()
+        LastLieferschein = lf["identification"]
+        libs.BlueFunc.BlueSave("LastLieferschein", LastLieferschein, "DATA/DATA")
+        self.GetLieferschein()
+        self.busy(False)
+ 
     def AddLinie(self):
         global DATA
            
@@ -128,6 +137,8 @@ class Main:
         self.busy(True)
  
         DATA = libs.send.GetLieferschein(LastLieferschein)
+        if DATA == {}:
+            self.NeuerLieferschein()
         Antwort = []
         for linie in DATA["linien"].split("|"):
             linie = int(linie)
