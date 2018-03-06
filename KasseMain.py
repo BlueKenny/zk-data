@@ -136,16 +136,17 @@ class Main:
        
         self.busy(True)
  
+        summeTotal = 0.0
         DATA = libs.send.GetLieferschein(LastLieferschein)
         if DATA == {}:
             self.NeuerLieferschein()
         Antwort = []
         for linie in DATA["linien"].split("|"):
             linie = int(linie)
-            #print("linie: " + str(linie))
             Antwort.append({"linie":linie, "anzahl":DATA["anzahl"].split("|")[linie], "bcode":DATA["bcode"].split("|")[linie], "name":DATA["name"].split("|")[linie], "preis":DATA["preis"].split("|")[linie]})
-            #print("linie " + str(linie))        
-        pyotherside.send("antwortGetLieferschein", Antwort)
+            summeTotal = summeTotal + float(DATA["preis"].split("|")[linie])    
+        summeTotal = str(summeTotal) + " €"
+        pyotherside.send("antwortGetLieferschein", Antwort, summeTotal, DATA["fertig"])
         self.busy(False)
 
     def SetLieferschein(self, mode, linie, variable):

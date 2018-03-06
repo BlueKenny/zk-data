@@ -65,6 +65,7 @@ class Lieferschein(Model):
     bcode = CharField(default="")
     name = CharField(default="")
     preis = CharField(default="")
+    fertig = BooleanField(default=False)
 
     class Meta:
         database = lieferschein_db
@@ -174,6 +175,9 @@ lieferschein_db.connect()
 
 try: lieferschein_db.create_tables([Lieferschein])
 except: print("Lieferschein table exists in lieferschein_db")
+
+try: migrate(lieferschein_migrator.add_column("Lieferschein", "fertig", BooleanField(default=False)))
+except: print("Lieferschein:fertig:existiert schon")
 
 lieferschein_db.close()
 

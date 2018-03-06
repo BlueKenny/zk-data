@@ -13,7 +13,7 @@ Rectangle {
         property int listeIndex: 0
     }
 
-    function antwortGetLieferschein(item) {
+    function antwortGetLieferschein(item, summe, fertig) {
         console.warn("antwortGetLieferschein")
         variable.listeIndex = liste.currentIndex
         console.warn("Current Index: " + variable.listeIndex)
@@ -23,6 +23,8 @@ Rectangle {
         }
         if (variable.listeIndex == -1) { variable.listeIndex = 0 }
         liste.currentIndex = variable.listeIndex
+        labelTotal.text = summe
+        checkBoxFinish.checked = fertig
     }
     Label {
         id: labelTitle1
@@ -191,6 +193,14 @@ Rectangle {
         delegate: contactDelegate
     }
 
+    Label {
+        id: labelTotal
+        text: "0.00 €"
+        font.pixelSize: window.height / 20
+        x: window.width / 2 - width / 2
+        y: window.height * 0.8
+
+    }
 
     Button {
         id: buttonOK
@@ -208,7 +218,7 @@ Rectangle {
         id: checkBoxFinish
         x: window.width / 3 * 2 - width / 2
         y: window.height * 0.9
-        height: window.height * 0.4
+        //height: window.height * 0.4
         text: "Fertig"
     }
 /*
