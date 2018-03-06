@@ -38,6 +38,11 @@ Rectangle {
         y: window.height / 2
     }
 
+    SwipeView {
+
+    }
+
+
     Label {
         id: labelTitle1
         text: "Anzahl"
@@ -120,7 +125,7 @@ Rectangle {
                 }
                 TextField {
                     id: textAnzahl
-                    font.pixelSize: parent.height * 0.4
+                    font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: window.width / 5 - width / 2
                     y: parent.height / 2 - height / 2
@@ -142,7 +147,7 @@ Rectangle {
                 }
                 TextField {
                     id: textBarcode
-                    font.pixelSize: parent.height * 0.4
+                    font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: window.width / 5 * 2 - width / 2
                     y: parent.height / 2 - height / 2
@@ -162,7 +167,7 @@ Rectangle {
                 }
                 TextField {
                     id: textName
-                    font.pixelSize: parent.height * 0.4
+                    font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: window.width / 5 * 3 - width / 2
                     y: parent.height / 2 - height / 2
@@ -181,7 +186,7 @@ Rectangle {
                 }
                 TextField {
                     id: textPreis
-                    font.pixelSize: parent.height * 0.4
+                    font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: window.width / 5 * 4 - width / 2
                     y: parent.height / 2 - height / 2
@@ -210,12 +215,20 @@ Rectangle {
         id: buttonOK
         text: "OK"
         width: window.width / 5
-        x: window.width / 2 - width / 2
+        x: window.width / 3 - width / 2
         y: window.height * 0.9
 
         onClicked: {
             python.call('Kasse.main.Ok', [], function() {});
         }
+    }
+
+    CheckBox {
+        id: checkBoxFinish
+        x: window.width / 3 * 2 - width / 2
+        y: window.height * 0.9
+        height: window.height * 0.4
+        text: "Fertig"
     }
 /*
     Button {
