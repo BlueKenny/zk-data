@@ -3,6 +3,7 @@ import io.thp.pyotherside 1.2
 import QtQuick.Controls 1.1//2.2
 
 Rectangle {
+    id: mainWindow
     height: 800
     width: 1200
 
@@ -22,7 +23,7 @@ Rectangle {
         id: view
 
         //currentIndex: 0
-        initialItem: frameKasse
+        initialItem: frameSelect//frameKasse
         anchors.fill: parent
 
         //Item {
@@ -32,8 +33,8 @@ Rectangle {
         }
         //Item {
         Component {
-            id: frameKasse
-            KasseMain {}
+            id: frameLieferschein
+            LieferscheinAnzeigen {}
         }
     }
 /*
