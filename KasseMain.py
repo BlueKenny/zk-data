@@ -18,34 +18,7 @@ class Main:
         global DATA
         global LastLieferschein
         print("init")
-        #for user in os.listdir("/home/"):
-        #    print(user)
-        User = os.popen("echo $USER").readlines()[0].rstrip()
-        
-        if os.path.exists("/home/phablet"): Desktop = "/home/phablet/.local/share/applications"
-        else: Desktop = os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip()
-        
-        file = Desktop + "/Kasse.desktop"
-        #os.system("rm " + file)
-        if not os.path.exists(file):
-            print("Write Desktop Entry")
-            print("User: " + str(User))
-            print("Desktop: " + str(Desktop))
-            print("file: " + str(file))
-            DesktopEntry = open(file, "a")
-            DesktopEntry.write("[Desktop Entry]\n")
-            DesktopEntry.write("Name=Kasse\n")
-            DesktopEntry.write("Path=/home/" + User + "/zk-data/\n")
-            DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Kasse.qml\n")
-            DesktopEntry.write("Terminal=false\n")
-            DesktopEntry.write("X-Ubuntu-Touch=true\n")
-            DesktopEntry.write("Type=Application\n")
-            DesktopEntry.write("StartupNotify=true\n")
-            DesktopEntry.write("Icon=None\n")
-             
-            os.system("chmod +x " + file)
             
-        os.system("git pull")
         self.busy(False)
 
         DATA = {}
