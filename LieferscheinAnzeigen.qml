@@ -119,10 +119,10 @@ Rectangle {
                 }
                 TextField {
                     id: textAnzahl
-                    height: itemListe.height * 0.4
-                    font.pixelSize: itemListe.height * 0.2
+                    height: vars.isPhone ? parent.height * 0.4 : parent.height * 0.8
+                    font.pixelSize: parent.height * 0.2
                     width: parent.width / 5
-                    x: vars.isPhone ? parent.width / 3 - width / 2 : parent.width / 5 - width / 2
+                    x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 - width / 2
                     y: vars.isPhone ? parent.height / 3 - height / 2 : parent.height / 2 - height / 2
                     text: anzahl
                     inputMethodHints: Qt.ImhDigitsOnly
@@ -142,7 +142,7 @@ Rectangle {
                 }
                 TextField {
                     id: textBarcode
-                    height: parent.height * 0.4
+                    height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 2 - width / 2
