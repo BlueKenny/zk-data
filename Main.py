@@ -51,6 +51,11 @@ class Main:
         os.system("git pull")
         self.busy(False)
 
+    def phone(self):
+        if os.path.exists("/home/phablet"):
+            return True
+        else:
+            return False
 
     def busy(self, status):
         status = bool(status)

@@ -15,6 +15,7 @@ ApplicationWindow {
         property string lieferscheinSuchenTextName: ""
         property bool lieferscheinSuchenCheckFertige: false
         property bool lieferscheinSuchenCheckEigene: true
+        property bool isPhone: false
     }
 
     function busy(status) {
@@ -54,6 +55,7 @@ ApplicationWindow {
             addImportPath(Qt.resolvedUrl('.'));
             importModule('Main', function () {});
 
+            call('Main.main.phone', function (status) {vars.isPhone = status});
             setHandler("busy", busy);
         }
     }

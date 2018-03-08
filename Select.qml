@@ -17,7 +17,7 @@ Rectangle {
     Button {
         id: buttonLieferschein
         text: "Lieferscheine"
-        width: window.width / 5
+        width: vars.isPhone ? window.width / 2 : window.width / 5
         height: window.height / 5
         x: window.width / 2 - width / 2
         y: window.height / 2 - height / 2
