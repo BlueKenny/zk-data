@@ -109,7 +109,7 @@ Rectangle {
                 Button {
                     id: buttonOption
                     text: "X"
-                    width: vars.isPhone ? parent.width / 20 : parent.width / 20
+                    width: vars.isPhone ? parent.width / 15 : parent.width / 20
                     height: parent.height * 0.8
                     y: parent.height / 2 - height / 2
                     onClicked: {
@@ -120,7 +120,7 @@ Rectangle {
                 TextField {
                     id: textAnzahl
                     height: parent.height * 0.4
-                    font.pixelSize: parent.height * 0.3
+                    font.pixelSize: parent.height * 0.2
                     width: window.width / 5
                     x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 - width / 2
                     y: vars.isPhone ? parent.height / 3 - height / 2 : parent.height / 2 - height / 2
