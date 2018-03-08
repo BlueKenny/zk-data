@@ -108,6 +108,7 @@ Rectangle {
                 Button {
                     id: buttonOption
                     text: "X"
+                    height: parent.height * 0.8
                     y: parent.height / 2 - height / 2
                     onClicked: {
                         liste.currentIndex = itemListe.currentIndex;
@@ -116,6 +117,7 @@ Rectangle {
                 }
                 TextField {
                     id: textAnzahl
+                    height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: window.width / 5 - width / 2
@@ -138,6 +140,7 @@ Rectangle {
                 }
                 TextField {
                     id: textBarcode
+                    height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: window.width / 5 * 2 - width / 2
@@ -158,6 +161,7 @@ Rectangle {
                 }
                 TextField {
                     id: textName
+                    height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: window.width / 5 * 3 - width / 2
@@ -177,6 +181,7 @@ Rectangle {
                 }
                 TextField {
                     id: textPreis
+                    height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: window.width / 5 * 4 - width / 2
