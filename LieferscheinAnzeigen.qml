@@ -119,7 +119,7 @@ Rectangle {
                 }
                 TextField {
                     id: textAnzahl
-                    height: vars.isPhone ? parent.height * 0.4 : parent.height * 0.8
+                    height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
                     font.pixelSize: parent.height * 0.2
                     width: parent.width / 5
                     x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 - width / 2
