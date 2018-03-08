@@ -4,7 +4,16 @@ import QtQuick.Controls 1.1//2.2
 
 Rectangle {
     id: window
-    anchors.fill: parent
+    height: mainWindow.height
+    width: mainWindow.width
+
+    Label {
+        id: labelSelectTitle
+        text: "Hauptmenu"
+        font.pixelSize: mainWindow.width / 50
+        x: mainWindow.width / 2 - width / 2
+    }
+
     Button {
         id: buttonLieferschein
         text: "Lieferscheine"
@@ -13,7 +22,7 @@ Rectangle {
         x: window.width / 2 - width / 2
         y: window.height / 2 - height / 2
         onClicked: {
-            view.push(frameLieferschein)
+            view.push(frameLieferscheinSuchen)
         }
     }
 }

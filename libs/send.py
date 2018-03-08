@@ -261,3 +261,25 @@ def SearchArt(Dict):# Give Dict with Search return List of IDs
     except:
         print("SearchArt(" + str(Dict) + ") = ERROR")
         return []
+
+def SearchLieferschein(Dict):# Give Dict with Search return List of IDs
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect(SERVERSTOCK_IP)
+
+        Dict["mode"]="SearchLieferschein"
+        data = json.dumps(Dict)
+
+        #Debug("Send " + str(data))
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        data = data.decode()
+        data = json.loads(data)
+        sock.close()
+        #Debug("Get " + str(data))
+        print("SearchLieferschein(" + str(Dict) + ") = " + str(data))
+        return data
+    except:
+        print("SearchLieferschein(" + str(Dict) + ") = ERROR")
+        return []

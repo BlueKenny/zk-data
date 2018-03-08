@@ -27,6 +27,14 @@ Rectangle {
         labelTotal.text = summe
         checkBoxFinish.checked = fertig
     }
+
+    Label {
+        id: labelLieferscheinAnzeigenTitle
+        text: "Lieferschein"
+        font.pixelSize: mainWindow.width / 50
+        x: mainWindow.width / 2 - width / 2
+    }
+
     Label {
         id: labelTitle1
         text: "Anzahl"
@@ -205,13 +213,14 @@ Rectangle {
 
     Button {
         id: buttonOK
-        text: "OK"
+        text: "Züruck"
         width: window.width / 5
         x: window.width / 3 - width / 2
         y: window.height * 0.9
 
         onClicked: {
-            python.call('LieferscheinAnzeigen.main.Ok', [], function() {});
+            //python.call('LieferscheinAnzeigen.main.Ok', [], function() {});
+            view.push(frameLieferscheinSuchen)
         }
     }
 

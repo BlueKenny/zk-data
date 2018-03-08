@@ -14,8 +14,8 @@ Rectangle {
     BusyIndicator {
         id: busyindicator
         running: true //image.status === Image.Loadings
-        x: parent.width / 2
-        y: parent.height / 2
+        x: mainWindow.width / 2
+        y: mainWindow.height / 2
     }
 
     //SwipeView {
@@ -33,8 +33,12 @@ Rectangle {
         }
         //Item {
         Component {
-            id: frameLieferschein
+            id: frameLieferscheinAnzeigen
             LieferscheinAnzeigen {}
+        }
+        Component {
+            id: frameLieferscheinSuchen
+            LieferscheinSuchen {}
         }
     }
 /*

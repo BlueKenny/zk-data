@@ -66,6 +66,8 @@ class Lieferschein(Model):
     name = CharField(default="")
     preis = CharField(default="")
     fertig = BooleanField(default=False)
+    user = CharField(default = "")
+    total = FloatField(default="0.0")
 
     class Meta:
         database = lieferschein_db
@@ -178,6 +180,10 @@ except: print("Lieferschein table exists in lieferschein_db")
 
 try: migrate(lieferschein_migrator.add_column("Lieferschein", "fertig", BooleanField(default=False)))
 except: print("Lieferschein:fertig:existiert schon")
+try: migrate(lieferschein_migrator.add_column("Lieferschein", "user", CharField(default="")))
+except: print("Lieferschein:user:existiert schon")
+try: migrate(lieferschein_migrator.add_column("Lieferschein", "total", FloatField(default=0.0)))
+except: print("Lieferschein:total:existiert schon")
 
 lieferschein_db.close()
 
@@ -401,6 +407,35 @@ def SearchArt(Dict):# Give Dict with Search return List of IDs
                 Count = Count + 1
         break
     local_db.close()
+    return Antwort
+
+def SearchLieferschein(Dict):# Give Dict with Search return List of IDs 
+    print("SearchLieferschein")
+    for key, var in Dict.items():
+        print(str(key) + ": " + str(var))
+
+    lieferschein_db.connect()
+    
+    query = Lieferschein.select()
+
+    if not Dict["identification"] == "":
+        query = Lieferschein.select().where(Lieferschein.identification == Dict["identification"])
+
+    
+    #query = Artikel.select().where((Artikel.identification == str(Dict["suche"])) | (Artikel.artikel == str(Dict["suche"])) | (Artikel.artikel2 == str(Dict["suche"])) | (Artikel.artikel3 == str(Dict["suche"])) | (Artikel.artikel4 == str(Dict["suche"])))
+        
+
+    Antwort = []
+    while True:
+        Count = 1
+        for ID in query:
+            Antwort.append(str(ID.identification))
+            if Count == INDEXLIMIT:
+                break
+            else:
+                Count = Count + 1
+        break
+    lieferschein_db.close()
     return Antwort
 
 def NeuerLieferschein():# return Dict
@@ -630,11 +665,14 @@ while True:
         if mode == "SearchArt":#return List of IDs
             Antwort = SearchArt(DATA)
 
+        if mode == "GetLieferschein":#return Dict
+            Antwort = GetLieferschein(DATA)
+
         if mode == "NeuerLieferschein":#return Dict
             Antwort = NeuerLieferschein()
 
-        if mode == "GetLieferschein":#return Dict
-            Antwort = GetLieferschein(DATA)
+        if mode == "SearchLieferschein":#return List of IDs
+            Antwort = SearchLieferschein(DATA)
 
         if mode == "SetLieferschein":#return Bool of sucess
             Antwort = SetLieferschein(DATA)
