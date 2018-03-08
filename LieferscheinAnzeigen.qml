@@ -143,8 +143,8 @@ Rectangle {
                     height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
-                    x: window.width / 5 * 2 - width / 2
-                    y: vars.isPhone ? parent.height / 3 * 2 - height / 2 : parent.height / 2 - height / 2
+                    x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 2 - width / 2
+                    y: vars.isPhone ? parent.height / 3 - height / 2 : parent.height / 2 - height / 2
                     text: bcode
                     inputMethodHints: Qt.ImhDigitsOnly
                     horizontalAlignment: TextEdit.AlignHCenter
@@ -164,7 +164,7 @@ Rectangle {
                     height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
-                    x: window.width / 5 * 3 - width / 2
+                    x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 * 3 - width / 2
                     y: vars.isPhone ? parent.height / 3 * 2 - height / 2 : parent.height / 2 - height / 2
                     text: name
                     horizontalAlignment: TextEdit.AlignHCenter
@@ -184,7 +184,7 @@ Rectangle {
                     height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
-                    x: window.width / 5 * 4 - width / 2
+                    x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 4 - width / 2
                     y: vars.isPhone ? parent.height / 3 * 2 - height / 2 : parent.height / 2 - height / 2
                     text: preis
                     inputMethodHints: Qt.ImhDigitsOnly
