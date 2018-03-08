@@ -55,7 +55,7 @@ ApplicationWindow {
             addImportPath(Qt.resolvedUrl('.'));
             importModule('Main', function () {});
 
-            call('Main.main.phone', function (status) {vars.isPhone = status});
+            call('Main.main.phone', [], function (boolStatus) {vars.isPhone = boolStatus});
             setHandler("busy", busy);
         }
     }

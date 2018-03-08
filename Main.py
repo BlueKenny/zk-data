@@ -57,7 +57,7 @@ class Main:
             return True
         else:
             print("phone False")
-            return False
+            return True
 
     def busy(self, status):
         status = bool(status)
