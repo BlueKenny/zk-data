@@ -53,8 +53,10 @@ class Main:
 
     def phone(self):
         if os.path.exists("/home/phablet"):
+            print("phone True")
             return True
         else:
+            print("phone False")
             return False
 
     def busy(self, status):
