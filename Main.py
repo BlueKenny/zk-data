@@ -45,7 +45,7 @@ class Main:
                 DesktopEntry.write("X-Ubuntu-Touch=true\n")
                 DesktopEntry.write("Type=Application\n")
                 DesktopEntry.write("StartupNotify=true\n")
-                DesktopEntry.write("Icon=None\n")
+                DesktopEntry.write("Icon=/home/" + User + "/zk-data/DATA/icon.png\n")
                  
                 os.system("chmod +x " + file)
             
