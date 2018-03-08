@@ -86,9 +86,19 @@ Rectangle {
         checked: true
     }
 
+    Button {
+        id: buttonLieferscheinSuchenNeu
+        text: "Neuer Lieferschein"
+        x: mainWindow.width / 2 - width / 2
+        y: mainWindow.height / 20 * 5
+        onClicked: {
+            python.call("LieferscheinSuchen.main.LastLieferschein", [""], function() {});
+            view.push(frameLieferscheinAnzeigen)
+        }
+    }
     ListView {
         id: listLieferscheinSuchen
-        y: mainWindow.height / 20 * 5
+        y: mainWindow.height / 20 * 6
         height: (mainWindow.height / 20) * 14
         width: mainWindow.width
 
