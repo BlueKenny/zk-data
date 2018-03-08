@@ -120,7 +120,7 @@ Rectangle {
                 TextField {
                     id: textAnzahl
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
-                    font.pixelSize: parent.height * 0.2
+                    font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
                     width: parent.width / 5
                     x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 - width / 2
                     y: vars.isPhone ? parent.height / 4 - height / 2 : parent.height / 2 - height / 2
@@ -143,7 +143,7 @@ Rectangle {
                 TextField {
                     id: textBarcode
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
-                    font.pixelSize: parent.height * 0.3
+                    font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
                     width: vars.isPhone ? window.width / 10 : window.width / 5
                     x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 2 - width / 2
                     y: vars.isPhone ? parent.height / 4 - height / 2 : parent.height / 2 - height / 2
@@ -164,7 +164,7 @@ Rectangle {
                 TextField {
                     id: textName
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
-                    font.pixelSize: parent.height * 0.3
+                    font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
                     width: window.width / 5
                     x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 * 3 - width / 2
                     y: vars.isPhone ? parent.height / 4 * 3 - height / 2 : parent.height / 2 - height / 2
@@ -184,7 +184,7 @@ Rectangle {
                 TextField {
                     id: textPreis
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
-                    font.pixelSize: parent.height * 0.3
+                    font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
                     width: window.width / 5
                     x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 4 - width / 2
                     y: vars.isPhone ? parent.height / 4 * 3 - height / 2 : parent.height / 2 - height / 2
