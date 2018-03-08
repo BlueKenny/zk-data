@@ -19,28 +19,35 @@ class Main:
         #    print(user)
         User = os.popen("echo $USER").readlines()[0].rstrip()
         
-        if os.path.exists("/home/phablet"): Desktop = "/home/phablet/.local/share/applications"
-        else: Desktop = os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip()
+        Places = []
+        if os.path.exists("/home/phablet"):
+            Places.append("/home/phablet/.local/share/applications")
+            Places.append("/home/phablet/.config/autostart")
+        else:
+            Places.append(os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip())
+            Places.append(os.popen("echo $HOME").readlines()[0].rstrip() + "/.config/autostart")
+            Places.append(os.popen("echo $HOME").readlines()[0].rstrip() + "/.local/share/applications")
         
-        file = Desktop + "/zk-data.desktop"
-        #os.system("rm " + file)
-        if not os.path.exists(file):
-            print("Write Desktop Entry")
-            print("User: " + str(User))
-            print("Desktop: " + str(Desktop))
-            print("file: " + str(file))
-            DesktopEntry = open(file, "a")
-            DesktopEntry.write("[Desktop Entry]\n")
-            DesktopEntry.write("Name=ZK-DATA\n")
-            DesktopEntry.write("Path=/home/" + User + "/zk-data/\n")
-            DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Main.qml\n")
-            DesktopEntry.write("Terminal=false\n")
-            DesktopEntry.write("X-Ubuntu-Touch=true\n")
-            DesktopEntry.write("Type=Application\n")
-            DesktopEntry.write("StartupNotify=true\n")
-            DesktopEntry.write("Icon=None\n")
-             
-            os.system("chmod +x " + file)
+        for Desktop in Places:
+            file = Desktop + "/zk-data.desktop"
+            #os.system("rm " + file)
+            if True:#if not os.path.exists(file):
+                print("Write Desktop Entry")
+                print("User: " + str(User))
+                print("Desktop: " + str(Desktop))
+                print("file: " + str(file))
+                DesktopEntry = open(file, "a")
+                DesktopEntry.write("[Desktop Entry]\n")
+                DesktopEntry.write("Name=ZK-DATA\n")
+                DesktopEntry.write("Path=/home/" + User + "/zk-data/\n")
+                DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Main.qml\n")
+                DesktopEntry.write("Terminal=false\n")
+                DesktopEntry.write("X-Ubuntu-Touch=true\n")
+                DesktopEntry.write("Type=Application\n")
+                DesktopEntry.write("StartupNotify=true\n")
+                DesktopEntry.write("Icon=None\n")
+                 
+                os.system("chmod +x " + file)
             
         os.system("git pull")
         self.busy(False)

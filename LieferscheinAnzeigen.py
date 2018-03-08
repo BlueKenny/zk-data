@@ -10,8 +10,6 @@ import libs.send
 import libs.BlueFunc
 import libs.RoundUp
 
-#os.system("export MIR_SOCKET=/var/run/mir_socket")
-
 LastLieferschein = ""
 
 class Main:    
