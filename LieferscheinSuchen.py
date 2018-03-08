@@ -26,16 +26,16 @@ class Main:
         Dict["identification"] = str(identification)
         Dict["kunde_id"] = str(kunde)
         Dict["fertig"] = bool(fertige)
-        #Dict["user"] = str(identification)
+        Dict["eigene"] = bool(eigene)
         
         listeDerElemente = libs.send.SearchLieferschein(Dict)
 
         Antwort = []    
-        for item in sorted(listeDerElemente, reverse=True):
+        for item in listeDerElemente:
             DATA = libs.send.GetLieferschein(str(item))
             Antwort.append(DATA)
-        pyotherside.send("antwortSearchLieferscheine", Antwort)
-    
+        pyotherside.send("antwortSearchLieferscheine", Antwort)    
+
     def busy(self, status):
         status = bool(status)
         print("busy = " + str(status))

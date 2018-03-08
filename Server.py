@@ -415,12 +415,27 @@ def SearchLieferschein(Dict):# Give Dict with Search return List of IDs
         print(str(key) + ": " + str(var))
 
     lieferschein_db.connect()
-    
-    query = Lieferschein.select()
 
     if not Dict["identification"] == "":
         query = Lieferschein.select().where(Lieferschein.identification == Dict["identification"])
+    else:
+        query = Lieferschein.select()
+    
+    if not Dict["kunde_id"] == "":
+        query2 = Lieferschein.select().where(Lieferschein.kunde_id == Dict["kunde_id"])
+    else:
+        query2 = Lieferschein.select()
 
+    if Dict["fertig"] == False:
+        query3 = Lieferschein.select().where(Lieferschein.fertig == Dict["fertig"])
+    else:
+        query3 = Lieferschein.select()
+
+    if Dict["eigene"] == True:
+        query4 = Lieferschein.select().where(Lieferschein.user == str(ipname[0]))
+    else:
+        query4 = Lieferschein.select()
+     
     
     #query = Artikel.select().where((Artikel.identification == str(Dict["suche"])) | (Artikel.artikel == str(Dict["suche"])) | (Artikel.artikel2 == str(Dict["suche"])) | (Artikel.artikel3 == str(Dict["suche"])) | (Artikel.artikel4 == str(Dict["suche"])))
         
@@ -429,11 +444,12 @@ def SearchLieferschein(Dict):# Give Dict with Search return List of IDs
     while True:
         Count = 1
         for ID in query:
-            Antwort.append(str(ID.identification))
-            if Count == INDEXLIMIT*2:
-                break
-            else:
-                Count = Count + 1
+            if ID in query2 and ID in query3 and ID in query4:
+                Antwort.append(str(ID.identification))
+                if Count == INDEXLIMIT*2:
+                    break
+                else:
+                    Count = Count + 1
         break
     lieferschein_db.close()
     return Antwort
@@ -448,7 +464,7 @@ def NeuerLieferschein():# return Dict
             break
         FreierLieferschein = FreierLieferschein + 1
 
-    ThisLieferschein = Lieferschein.create(linien="0", anzahl="1", bcode="", name="", preis="0.0", identification=str(FreierLieferschein))
+    ThisLieferschein = Lieferschein.create(linien="0", anzahl="1", bcode="", name="", preis="0.0", user=str(ipname[0]) ,identification=str(FreierLieferschein))
     ThisLieferschein.save()
 
     object = Lieferschein.get(Lieferschein.identification == str(FreierLieferschein))

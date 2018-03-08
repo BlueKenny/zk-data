@@ -41,7 +41,7 @@ Rectangle {
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20
         onAccepted: {
-        python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.state, checkLieferscheinSuchenEigene.state], function() {});
+            python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
         }
     }
 
@@ -59,6 +59,9 @@ Rectangle {
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20 * 2
         enabled: false
+        onAccepted: {
+            python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
+        }
     }
 
     Label {
@@ -71,6 +74,9 @@ Rectangle {
         id: checkLieferscheinSuchenFertige
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20 * 3
+        onCheckedChanged: {
+            python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
+        }
     }
 
     Label {
@@ -84,6 +90,9 @@ Rectangle {
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20 * 4
         checked: true
+        onCheckedChanged: {
+            python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
+        }
     }
 
     Button {
@@ -144,7 +153,7 @@ Rectangle {
             setHandler("antwortSearchLieferscheine", antwortSearchLieferscheine);
             setHandler("busy", busy);
 
-            call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.state, checkLieferscheinSuchenEigene.state], function() {});
+            call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
         }
     }
 }
