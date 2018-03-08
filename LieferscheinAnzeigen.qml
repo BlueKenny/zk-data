@@ -44,21 +44,21 @@ Rectangle {
     Label {
         id: labelTitle2
         text: "Barcode"
-        font.pixelSize: window.height / 10 * 0.4
+        font.pixelSize: labelLieferscheinAnzeigenTitle.font.pixelSize
         x: window.width / 5 * 2 - width / 2
         y: window.height / 10
     }
     Label {
         id: labelTitle3
         text: "Name"
-        font.pixelSize: window.height / 10 * 0.4
+        font.pixelSize: labelLieferscheinAnzeigenTitle.font.pixelSize
         x: window.width / 5 * 3 - width / 2
         y: window.height / 10
     }
     Label {
         id: labelTitle4
         text: "Preis"
-        font.pixelSize: window.height / 10 * 0.4
+        font.pixelSize: labelLieferscheinAnzeigenTitle.font.pixelSize
         x: window.width / 5 * 4 - width / 2
         y: window.height / 10
     }
