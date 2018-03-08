@@ -8,6 +8,7 @@ try: import pyotherside
 except: True
 import libs.send
 import libs.BlueFunc
+import libs.RoundUp
 
 #os.system("export MIR_SOCKET=/var/run/mir_socket")
 
@@ -120,9 +121,9 @@ class Main:
             Antwort.append({"linie":linie, "anzahl":DATA["anzahl"].split("|")[linie], "bcode":DATA["bcode"].split("|")[linie], "name":DATA["name"].split("|")[linie], "preis":DATA["preis"].split("|")[linie]})
             #try: summeTotal = summeTotal + float(DATA["anzahl"].split("|")[linie])*float(DATA["preis"].split("|")[linie])
             #except: True
-        summeTotal = float(DATA["total"])
+        #summeTotal = float(DATA["total"])
         #DATA["total"] = summeTotal   
-        summeTotal = str(summeTotal) + " €"
+        summeTotal = str(DATA["total"]) + " €"
         pyotherside.send("antwortGetLieferschein", Antwort, summeTotal, DATA["fertig"])
         self.busy(False)
 
@@ -178,7 +179,7 @@ class Main:
             linie = int(linie)
             try: summeTotal = summeTotal + float(DATA["anzahl"].split("|")[linie])*float(DATA["preis"].split("|")[linie])
             except: True
-        summeTotal = float(summeTotal)
+        summeTotal = libs.RoundUp.RoundUp05(summeTotal)
         DATA["total"] = summeTotal 
 
         while not libs.send.SetLieferschein(DATA):
