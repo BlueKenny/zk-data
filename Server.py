@@ -430,7 +430,7 @@ def SearchLieferschein(Dict):# Give Dict with Search return List of IDs
         Count = 1
         for ID in query:
             Antwort.append(str(ID.identification))
-            if Count == INDEXLIMIT:
+            if Count == INDEXLIMIT*2:
                 break
             else:
                 Count = Count + 1
