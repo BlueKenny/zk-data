@@ -88,7 +88,7 @@ Rectangle {
                 id: itemListe
                 property int currentIndex: index // store item index
                 width: window.width
-                height: vars.isPhone ? window.height/5 : window.height/10
+                height: vars.isPhone ? window.height/4 : window.height/10
                 MouseArea {
                     anchors.fill: parent
                     onClicked: liste.currentIndex = index
@@ -109,7 +109,7 @@ Rectangle {
                 Button {
                     id: buttonOption
                     text: "X"
-                    width: vars.isPhone ? parent.width / 15 : parent.width / 20
+                    width: vars.isPhone ? parent.width / 10 : parent.width / 20
                     height: parent.height * 0.8
                     y: parent.height / 2 - height / 2
                     onClicked: {
@@ -121,8 +121,8 @@ Rectangle {
                     id: textAnzahl
                     height: parent.height * 0.4
                     font.pixelSize: parent.height * 0.2
-                    width: window.width / 5
-                    x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 - width / 2
+                    width: parent.width / 5
+                    x: vars.isPhone ? parent.width / 3 - width / 2 : parent.width / 5 - width / 2
                     y: vars.isPhone ? parent.height / 3 - height / 2 : parent.height / 2 - height / 2
                     text: anzahl
                     inputMethodHints: Qt.ImhDigitsOnly
