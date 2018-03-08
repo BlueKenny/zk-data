@@ -40,6 +40,7 @@ Rectangle {
         width: mainWindow.width / 10
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20
+        enabled: false
         onAccepted: {
             vars.lieferscheinSuchenTextIdentification = text
             python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});

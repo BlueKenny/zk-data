@@ -8,4 +8,4 @@ while True:
     time.sleep(1)
     if platform.system() == "Linux": os.system("python3 ./Server.py")
     if platform.system() == "Windows": os.system("Server.py")
-    time.sleep(3)
+    time.sleep(1)

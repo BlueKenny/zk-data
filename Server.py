@@ -436,20 +436,16 @@ def SearchLieferschein(Dict):# Give Dict with Search return List of IDs
     else:
         query4 = Lieferschein.select()
      
-    
-    #query = Artikel.select().where((Artikel.identification == str(Dict["suche"])) | (Artikel.artikel == str(Dict["suche"])) | (Artikel.artikel2 == str(Dict["suche"])) | (Artikel.artikel3 == str(Dict["suche"])) | (Artikel.artikel4 == str(Dict["suche"])))
-        
-
     Antwort = []
     while True:
         Count = 1
         for ID in query:
             if ID in query2 and ID in query3 and ID in query4:
                 Antwort.append(str(ID.identification))
-                if Count == INDEXLIMIT*2:
-                    break
-                else:
-                    Count = Count + 1
+                #if Count == INDEXLIMIT:
+                #    break
+                #else:
+                #    Count = Count + 1
         break
     lieferschein_db.close()
     return Antwort
