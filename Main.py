@@ -21,7 +21,7 @@ class Main:
         Places = []
         if os.path.exists("/home/phablet"):
             Places.append("/home/phablet/.local/share/applications")
-            Places.append("/home/phablet/.config/autostart")
+            #Places.append("/home/phablet/.config/autostart")
         else:
             Places.append(os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip())
             Places.append(os.popen("echo $HOME").readlines()[0].rstrip() + "/.config/autostart")
