@@ -22,9 +22,6 @@ class Main:
         self.busy(False)
 
         DATA = {}
-        LastLieferschein = str(libs.BlueFunc.BlueLoad("LastLieferschein", "DATA/DATA"))
-        print("LastLieferschein: " + str(LastLieferschein))
-        if LastLieferschein == "None": self.NeuerLieferschein()
         
         self.GetLieferschein()   
 
@@ -109,6 +106,10 @@ class Main:
        
         self.busy(True)
  
+        LastLieferschein = str(libs.BlueFunc.BlueLoad("LastLieferschein", "DATA/DATA"))
+        print("LastLieferschein: " + str(LastLieferschein))
+        if LastLieferschein == "None": self.NeuerLieferschein()
+
         summeTotal = 0.0
         DATA = libs.send.GetLieferschein(LastLieferschein)
         if DATA == {}:
@@ -117,7 +118,8 @@ class Main:
         for linie in DATA["linien"].split("|"):
             linie = int(linie)
             Antwort.append({"linie":linie, "anzahl":DATA["anzahl"].split("|")[linie], "bcode":DATA["bcode"].split("|")[linie], "name":DATA["name"].split("|")[linie], "preis":DATA["preis"].split("|")[linie]})
-            summeTotal = summeTotal + float(DATA["preis"].split("|")[linie])
+            try: summeTotal = summeTotal + float(DATA["preis"].split("|")[linie])
+            except: True
         summeTotal = float(summeTotal)
         DATA["total"] = summeTotal   
         summeTotal = str(summeTotal) + " €"

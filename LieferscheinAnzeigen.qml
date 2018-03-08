@@ -5,9 +5,8 @@ import QtQuick.Controls 1.1//2.0
 
 Rectangle {
     id: window
-    anchors.fill: parent
-    //width: parent.width
-    //height: parent.height
+    width: mainWindow.width
+    height: mainWindow.height
 
     Item {
         id: variable
@@ -15,9 +14,9 @@ Rectangle {
     }
 
     function antwortGetLieferschein(item, summe, fertig) {
-        console.warn("antwortGetLieferschein")
+        //console.warn("antwortGetLieferschein")
         variable.listeIndex = liste.currentIndex
-        console.warn("Current Index: " + variable.listeIndex)
+        //console.warn("Current Index: " + variable.listeIndex)
         contactModel.clear();
         for (var i=0; i<item.length; i++) {
             contactModel.append(item[i]);
