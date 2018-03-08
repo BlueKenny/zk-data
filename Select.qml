@@ -10,7 +10,7 @@ Rectangle {
     Label {
         id: labelSelectTitle
         text: "Hauptmenu"
-        font.pixelSize: mainWindow.width / 50
+        font.pixelSize: vars.isPhone ? mainWindow.width / 20 : mainWindow.width / 50
         x: mainWindow.width / 2 - width / 2
     }
 
