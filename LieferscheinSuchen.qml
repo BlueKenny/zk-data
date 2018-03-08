@@ -128,12 +128,12 @@ Rectangle {
             Item {
                 id: itemListe
                 width: listLieferscheinSuchen.width
-                height: listLieferscheinSuchen.height / 12
+                height: vars.isPhone ? listLieferscheinSuchen.height / 8 : listLieferscheinSuchen.height / 12
 
                 Label {
                     id: labelLieferscheinSucheListeEintrag
                     text: identification + ", Kunde: " + kunde_id + ", Preis: " + total + "€"
-                    font.pixelSize: listLieferscheinSuchen.width / 40
+                    font.pixelSize: vars.isPhone ? listLieferscheinSuchen.width / 25 : listLieferscheinSuchen.width / 40
                     x: listLieferscheinSuchen.width / 2 - width / 2
                     color: fertig ? "blue" : "red"
 
