@@ -30,14 +30,14 @@ Rectangle {
     Label {
         id: labelLieferscheinAnzeigenTitle
         text: "Lieferschein: "
-        font.pixelSize: mainWindow.width / 50
+        font.pixelSize: vars.isPhone ? mainWindow.width / 20 : mainWindow.width / 50
         x: mainWindow.width / 2 - width / 2
     }
 
     Label {
         id: labelTitle1
         text: "Anzahl"
-        font.pixelSize: window.height / 10 * 0.4
+        font.pixelSize: labelLieferscheinAnzeigenTitle.font.pixelSize
         x: window.width / 5 - width / 2
         y: window.height / 10
     }
