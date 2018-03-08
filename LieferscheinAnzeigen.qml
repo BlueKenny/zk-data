@@ -229,6 +229,9 @@ Rectangle {
         y: window.height * 0.9
         //height: window.height * 0.4
         text: "Fertig"
+        onCheckedChanged: {
+            python.call("LieferscheinAnzeigen.main.Fertig", [checkBoxFinish.checked], function() {});
+        }
     }
 /*
     Button {

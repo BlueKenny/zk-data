@@ -18,7 +18,7 @@ class Main:
     def LastLieferschein(self, text):
         text = text.split(", Kunde: ")[0]
         print("LastLieferschein " + str(text))
-        libs.BlueFunc.BlueSave("LastLieferschein", text, "DATA/DATA")
+        libs.BlueFunc.BlueSave("LastLieferschein", text, "DATA/DATA")    
 
     def GetLieferscheine(self, identification, kunde, fertige, eigene):
         print("Lieferscheine")

@@ -179,6 +179,12 @@ class Main:
         self.GetLieferschein()
         self.busy(False)
 
+    def Fertig(self, status):
+        global DATA
+        print("Fertig")
+        DATA["fertig"] = status
+        libs.send.SetLieferschein(DATA)
+
     def isPhone(self):
         if os.path.exists("/home/phablet"):
             handy = True
