@@ -9,6 +9,14 @@ ApplicationWindow {
     width: 2000
     title: qsTr("ZK-DATA")
 
+    Item {
+        id: vars
+        property string lieferscheinSuchenTextIdentification: ""
+        property string lieferscheinSuchenTextName: ""
+        property bool lieferscheinSuchenCheckFertige: false
+        property bool lieferscheinSuchenCheckEigene: true
+    }
+
     function busy(status) {
         busyindicator.visible = status
     }
@@ -39,16 +47,6 @@ ApplicationWindow {
             LieferscheinSuchen {}
         }
     }
-/*
-    PageIndicator {
-        id: indicator
-
-        count: view.count
-        currentIndex: view.currentIndex
-
-        anchors.bottom: view.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-    }*/
 
     Python {
         id: python

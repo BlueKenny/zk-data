@@ -36,11 +36,12 @@ Rectangle {
     }
     TextField {
         id: textLieferscheinSuchenIdentification
-        text: ""
+        text: vars.lieferscheinSuchenTextIdentification
         width: mainWindow.width / 10
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20
         onAccepted: {
+            vars.lieferscheinSuchenTextIdentification = text
             python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
         }
     }
@@ -54,12 +55,13 @@ Rectangle {
     }
     TextField {
         id: textLieferscheinSuchenName
-        text: ""
+        text: vars.lieferscheinSuchenTextName
         width: mainWindow.width / 10
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20 * 2
         enabled: false
         onAccepted: {
+            vars.lieferscheinSuchenTextName = text
             python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
         }
     }
@@ -74,7 +76,9 @@ Rectangle {
         id: checkLieferscheinSuchenFertige
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20 * 3
+        checked: vars.lieferscheinSuchenCheckFertige
         onCheckedChanged: {
+            vars.lieferscheinSuchenCheckFertige = checkLieferscheinSuchenFertige.checked
             python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
         }
     }
@@ -89,8 +93,9 @@ Rectangle {
         id: checkLieferscheinSuchenEigene
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20 * 4
-        checked: true
+        checked: vars.lieferscheinSuchenCheckEigene
         onCheckedChanged: {
+            vars.lieferscheinSuchenCheckEigene = checkLieferscheinSuchenEigene.checked
             python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
         }
     }
