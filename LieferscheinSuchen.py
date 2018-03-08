@@ -31,7 +31,7 @@ class Main:
         listeDerElemente = libs.send.SearchLieferschein(Dict)
 
         Antwort = []    
-        for item in listeDerElemente:
+        for item in sorted(listeDerElemente, reverse=True):
             DATA = libs.send.GetLieferschein(str(item))
             Antwort.append(DATA)
         pyotherside.send("antwortSearchLieferscheine", Antwort)
