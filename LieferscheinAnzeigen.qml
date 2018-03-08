@@ -87,7 +87,8 @@ Rectangle {
             Item {
                 id: itemListe
                 property int currentIndex: index // store item index
-                width: window.width; height: window.height/10
+                width: window.width
+                height: vars.isPhone ? window.height/5 : window.height/10
                 MouseArea {
                     anchors.fill: parent
                     onClicked: liste.currentIndex = index
@@ -109,7 +110,7 @@ Rectangle {
                     id: buttonOption
                     text: "X"
                     height: parent.height * 0.8
-                    y: vars.isPhone ? parent.height / 3 - height / 2 : parent.height / 2 - height / 2
+                    y: parent.height / 2 - height / 2
                     onClicked: {
                         liste.currentIndex = itemListe.currentIndex;
                         python.call('LieferscheinAnzeigen.main.LinieEntfernen', [liste.currentIndex], function() {});
