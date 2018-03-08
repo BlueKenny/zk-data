@@ -133,7 +133,7 @@ Rectangle {
                 Label {
                     id: labelLieferscheinSucheListeEintrag
                     text: identification + ", Kunde: " + kunde_id + ", Preis: " + total + "€"
-                    font.pixelSize: vars.isPhone ? listLieferscheinSuchen.width / 25 : listLieferscheinSuchen.width / 40
+                    font.pixelSize: vars.isPhone ? listLieferscheinSuchen.width / 15 : listLieferscheinSuchen.width / 40
                     x: listLieferscheinSuchen.width / 2 - width / 2
                     color: fertig ? "blue" : "red"
 
