@@ -2,10 +2,12 @@ import QtQuick 2.2
 import io.thp.pyotherside 1.2
 import QtQuick.Controls 1.1//2.2
 
-Rectangle {
+//Rectangle {
+ApplicationWindow {
     id: mainWindow
-    height: 800
-    width: 1200
+    height: 2000
+    width: 2000
+    title: qsTr("ZK-DATA")
 
     function busy(status) {
         busyindicator.visible = status
@@ -18,20 +20,16 @@ Rectangle {
         y: mainWindow.height / 2
     }
 
-    //SwipeView {
     StackView {
         id: view
 
-        //currentIndex: 0
         initialItem: frameSelect//frameKasse
         anchors.fill: parent
 
-        //Item {
         Component {
             id: frameSelect
             Select {}
         }
-        //Item {
         Component {
             id: frameLieferscheinAnzeigen
             LieferscheinAnzeigen {}

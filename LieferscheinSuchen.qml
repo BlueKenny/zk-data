@@ -97,9 +97,12 @@ Rectangle {
 
     Button {
         id: buttonLieferscheinSuchenNeu
-        text: "Neuer Lieferschein"
+        text: "Neu"
         x: mainWindow.width / 2 - width / 2
         y: mainWindow.height / 20 * 5
+        height: mainWindow.height / 15
+        width: mainWindow.width / 5
+
         onClicked: {
             python.call("LieferscheinSuchen.main.LastLieferschein", [""], function() {});
             view.push(frameLieferscheinAnzeigen)
@@ -107,7 +110,7 @@ Rectangle {
     }
     ListView {
         id: listLieferscheinSuchen
-        y: mainWindow.height / 20 * 6
+        y: mainWindow.height / 20 * 7
         height: (mainWindow.height / 20) * 14
         width: mainWindow.width
 
@@ -124,7 +127,7 @@ Rectangle {
                 Label {
                     id: labelLieferscheinSucheListeEintrag
                     text: identification + ", Kunde: " + kunde_id + ", Preis: " + total + "€"
-                    font.pixelSize: listLieferscheinSuchen.width / 30
+                    font.pixelSize: listLieferscheinSuchen.width / 40
                     x: listLieferscheinSuchen.width / 2 - width / 2
                     color: fertig ? "blue" : "red"
 

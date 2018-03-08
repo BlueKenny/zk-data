@@ -84,19 +84,19 @@ class Main:
         self.GetLieferschein()
         self.busy(False)
 
-    #def NeuerLieferschein(self):
-    #    global DATA
-    #    global LastLieferschein
+    def NeuerLieferschein(self):
+        global DATA
+        global LastLieferschein
 
-    #    print("NeuerLieferschein")
+        print("NeuerLieferschein")
 
-    #    self.busy(True)
+        self.busy(True)
 
-    #    DATA = libs.send.NeuerLieferschein()
+        DATA = libs.send.NeuerLieferschein()
 
-    #    LastLieferschein = DATA["identification"]
-    #    libs.BlueFunc.BlueSave("LastLieferschein", LastLieferschein, "DATA/DATA")
-    #    self.busy(False)
+        LastLieferschein = DATA["identification"]
+        libs.BlueFunc.BlueSave("LastLieferschein", LastLieferschein, "DATA/DATA")
+        self.busy(False)
  
     def GetLieferschein(self):
         global DATA
@@ -111,8 +111,8 @@ class Main:
 
         summeTotal = 0.0
         DATA = libs.send.GetLieferschein(LastLieferschein)
-        #if DATA == {}:
-        #    self.NeuerLieferschein()
+        if DATA == {}:
+            self.NeuerLieferschein()
         Antwort = []
         for linie in DATA["linien"].split("|"):
             linie = int(linie)

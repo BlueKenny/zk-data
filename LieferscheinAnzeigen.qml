@@ -24,7 +24,7 @@ Rectangle {
         if (variable.listeIndex == -1) { variable.listeIndex = 0 }
         liste.currentIndex = variable.listeIndex
         labelTotal.text = summe
-        checkBoxFinish.checked = fertig
+        switchFinish.checked = fertig
     }
 
     Label {
@@ -213,9 +213,10 @@ Rectangle {
     Button {
         id: buttonOK
         text: "Züruck"
+        height: window.height / 15
         width: window.width / 5
-        x: window.width / 3 - width / 2
-        y: window.height * 0.9
+        //x: window.width / 3 - width / 2
+        //y: window.height * 0.9
 
         onClicked: {
             //python.call('LieferscheinAnzeigen.main.Ok', [], function() {});
@@ -223,14 +224,20 @@ Rectangle {
         }
     }
 
-    CheckBox {
-        id: checkBoxFinish
-        x: window.width / 3 * 2 - width / 2
-        y: window.height * 0.9
-        //height: window.height * 0.4
+    Label {
         text: "Fertig"
-        onCheckedChanged: {
-            python.call("LieferscheinAnzeigen.main.Fertig", [checkBoxFinish.checked], function() {});
+        font.pixelSize: window.width / 50
+        x: window.width / 11 * 5 - width / 2
+        y: window.height * 0.9
+    }
+
+    Switch {
+        id: switchFinish
+        x: window.width / 11 * 6 - width / 2
+        y: window.height * 0.9
+
+        onClicked: {
+            python.call("LieferscheinAnzeigen.main.Fertig", [switchFinish.checked], function() {});
         }
     }
     Python {
