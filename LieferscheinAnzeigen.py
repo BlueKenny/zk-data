@@ -30,14 +30,14 @@ class Main:
         print("busy = " + str(status))
         pyotherside.send("busy", status)
       
-    def Ok(self):
-        global LastLieferschein
-        self.busy(True)
-        lf = libs.send.NeuerLieferschein()
-        LastLieferschein = lf["identification"]
-        libs.BlueFunc.BlueSave("LastLieferschein", LastLieferschein, "DATA/DATA")
-        self.GetLieferschein()
-        self.busy(False)
+    #def Ok(self):
+    #    global LastLieferschein
+    #    self.busy(True)
+    #    lf = libs.send.NeuerLieferschein()
+    #    LastLieferschein = lf["identification"]
+    #    libs.BlueFunc.BlueSave("LastLieferschein", LastLieferschein, "DATA/DATA")
+    #    self.GetLieferschein()
+    #    self.busy(False)
  
     def AddLinie(self):
         global DATA
@@ -85,19 +85,19 @@ class Main:
         self.GetLieferschein()
         self.busy(False)
 
-    def NeuerLieferschein(self):
-        global DATA
-        global LastLieferschein
+    #def NeuerLieferschein(self):
+    #    global DATA
+    #    global LastLieferschein
 
-        print("NeuerLieferschein")
+    #    print("NeuerLieferschein")
 
-        self.busy(True)
+    #    self.busy(True)
 
-        DATA = libs.send.NeuerLieferschein()
+    #    DATA = libs.send.NeuerLieferschein()
 
-        LastLieferschein = DATA["identification"]
-        libs.BlueFunc.BlueSave("LastLieferschein", LastLieferschein, "DATA/DATA")
-        self.busy(False)
+    #    LastLieferschein = DATA["identification"]
+    #    libs.BlueFunc.BlueSave("LastLieferschein", LastLieferschein, "DATA/DATA")
+    #    self.busy(False)
  
     def GetLieferschein(self):
         global DATA
@@ -112,8 +112,8 @@ class Main:
 
         summeTotal = 0.0
         DATA = libs.send.GetLieferschein(LastLieferschein)
-        if DATA == {}:
-            self.NeuerLieferschein()
+        #if DATA == {}:
+        #    self.NeuerLieferschein()
         Antwort = []
         for linie in DATA["linien"].split("|"):
             linie = int(linie)
@@ -121,7 +121,7 @@ class Main:
             try: summeTotal = summeTotal + float(DATA["anzahl"].split("|")[linie])*float(DATA["preis"].split("|")[linie])
             except: True
         summeTotal = float(summeTotal)
-        DATA["total"] = summeTotal   
+        #DATA["total"] = summeTotal   
         summeTotal = str(summeTotal) + " €"
         pyotherside.send("antwortGetLieferschein", Antwort, summeTotal, DATA["fertig"])
         self.busy(False)
@@ -172,6 +172,14 @@ class Main:
             listdata = DATA[mode].split("|")
             listdata[linie] = str(variable).replace(",", ".")
             DATA[mode] = "|".join(listdata)
+
+        summeTotal = 0.0
+        for linie in DATA["linien"].split("|"):
+            linie = int(linie)
+            try: summeTotal = summeTotal + float(DATA["anzahl"].split("|")[linie])*float(DATA["preis"].split("|")[linie])
+            except: True
+        summeTotal = float(summeTotal)
+        DATA["total"] = summeTotal 
 
         while not libs.send.SetLieferschein(DATA):
             self.busy(True)        
