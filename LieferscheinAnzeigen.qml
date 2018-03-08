@@ -142,7 +142,7 @@ Rectangle {
                 }
                 TextField {
                     id: textBarcode
-                    height: parent.height * 0.8
+                    height: vars.isPhone ? parent.height * 0.4 : parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 2 - width / 2
@@ -163,7 +163,7 @@ Rectangle {
                 }
                 TextField {
                     id: textName
-                    height: parent.height * 0.8
+                    height: vars.isPhone ? parent.height * 0.4 : parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 * 3 - width / 2
@@ -183,7 +183,7 @@ Rectangle {
                 }
                 TextField {
                     id: textPreis
-                    height: parent.height * 0.8
+                    height: vars.isPhone ? parent.height * 0.4 : parent.height * 0.8
                     font.pixelSize: parent.height * 0.3
                     width: window.width / 5
                     x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 4 - width / 2
