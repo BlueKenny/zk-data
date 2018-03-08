@@ -126,7 +126,7 @@ Rectangle {
                     text: identification + ", Kunde: " + kunde_id + ", Preis: " + total + "€"
                     font.pixelSize: listLieferscheinSuchen.width / 30
                     x: listLieferscheinSuchen.width / 2 - width / 2
-                    color: fertig ? "green" : "red"
+                    color: fertig ? "blue" : "red"
 
                     MouseArea {
                         anchors.fill: labelLieferscheinSucheListeEintrag

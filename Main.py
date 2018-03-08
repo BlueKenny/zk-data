@@ -4,8 +4,7 @@ import os
 import threading
 import time
 
-try: import pyotherside
-except: True
+import pyotherside
 import libs.send
 import libs.BlueFunc
 
