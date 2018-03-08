@@ -24,7 +24,7 @@ Rectangle {
     Label {
         id: labelLieferscheinSuchenTitle
         text: "Lieferscheine Suchen"
-        font.pixelSize: mainWindow.width / 50
+        font.pixelSize: vars.isPhone ? mainWindow.width / 30 : mainWindow.width / 50
         x: mainWindow.width / 2 - width / 2
     }
 
