@@ -118,9 +118,9 @@ class Main:
         for linie in DATA["linien"].split("|"):
             linie = int(linie)
             Antwort.append({"linie":linie, "anzahl":DATA["anzahl"].split("|")[linie], "bcode":DATA["bcode"].split("|")[linie], "name":DATA["name"].split("|")[linie], "preis":DATA["preis"].split("|")[linie]})
-            try: summeTotal = summeTotal + float(DATA["anzahl"].split("|")[linie])*float(DATA["preis"].split("|")[linie])
-            except: True
-        summeTotal = float(summeTotal)
+            #try: summeTotal = summeTotal + float(DATA["anzahl"].split("|")[linie])*float(DATA["preis"].split("|")[linie])
+            #except: True
+        summeTotal = float(DATA["total"])
         #DATA["total"] = summeTotal   
         summeTotal = str(summeTotal) + " €"
         pyotherside.send("antwortGetLieferschein", Antwort, summeTotal, DATA["fertig"])
@@ -186,6 +186,10 @@ class Main:
 
         self.GetLieferschein()
         self.busy(False)
+
+    def GetIdentification(self):
+        global DATA
+        return DATA["identification"]
 
     def Fertig(self, status):
         global DATA

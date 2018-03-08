@@ -29,7 +29,7 @@ Rectangle {
 
     Label {
         id: labelLieferscheinAnzeigenTitle
-        text: "Lieferschein"
+        text: "Lieferschein: "
         font.pixelSize: mainWindow.width / 50
         x: mainWindow.width / 2 - width / 2
     }
@@ -233,16 +233,6 @@ Rectangle {
             python.call("LieferscheinAnzeigen.main.Fertig", [checkBoxFinish.checked], function() {});
         }
     }
-/*
-    Button {
-        id: buttonAdd
-        text: "Neue linie"
-        width: parent.width / 5
-        x: parent.width * 0.8 - width
-        y: parent.height * 0.9
-    }*/
-
-
     Python {
         id: python
         Component.onCompleted: {
@@ -253,6 +243,7 @@ Rectangle {
             setHandler("antwortGetLieferschein", antwortGetLieferschein);
 
             call('LieferscheinAnzeigen.main.GetLieferschein', [], function() {});
+            call('LieferscheinAnzeigen.main.GetIdentification', [], function(lieferscheinNummer) {labelLieferscheinAnzeigenTitle.text = "Lieferschein: " + lieferscheinNummer});
         }
     }
 }
