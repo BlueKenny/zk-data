@@ -217,6 +217,8 @@ class Main:
                 dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_preis", "")
                 dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_total", "")
 
+        dateiZumDrucken = dateiZumDrucken.replace("end_total", DATA["total"])
+
         open("DATA/lieferscheinTMP", "w").write(dateiZumDrucken)
         os.system("lpr -P theke DATA/lieferscheinTMP")
         #print(dateiZumDrucken)
