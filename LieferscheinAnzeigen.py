@@ -205,7 +205,7 @@ class Main:
         dateiZumDrucken = dateiZumDrucken.replace("kunde_name", "name")
         dateiZumDrucken = dateiZumDrucken.replace("kunde_adresse", "adresse")
 
-        for x in range(0, 2):
+        for x in range(0, 5):
             try:
                 dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_anzahl", DATA["anzahl"].split("|")[x] + "x")
                 dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_name", DATA["name"].split("|")[x])
