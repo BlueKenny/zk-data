@@ -218,8 +218,8 @@ class Main:
                 dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_total", "")
 
         open("DATA/lieferscheinTMP", "w").write(dateiZumDrucken)
-        #os.system("lpr -P theke DATA/lieferscheinTMP")
-        print(dateiZumDrucken)
+        os.system("lpr -P theke DATA/lieferscheinTMP")
+        #print(dateiZumDrucken)
 
     def isPhone(self):
         if os.path.exists("/home/phablet"):
