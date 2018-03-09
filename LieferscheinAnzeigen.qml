@@ -247,6 +247,17 @@ Rectangle {
             python.call("LieferscheinAnzeigen.main.Fertig", [switchFinish.checked], function() {});
         }
     }
+    Button {
+        text: "Drucken"
+        height: window.height / 15
+        width: window.width / 5
+        x: window.width / 11 * 9 - width / 2
+        y: window.height * 0.9
+
+        onClicked: {
+            python.call("LieferscheinAnzeigen.main.Drucken", [], function() {});
+        }
+    }
     Python {
         id: python
         Component.onCompleted: {

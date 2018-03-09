@@ -196,6 +196,9 @@ class Main:
         DATA["fertig"] = status
         libs.send.SetLieferschein(DATA)
 
+    def Drucken(self):
+        os.system("lpr -P theke DATA/lieferschein")
+
     def isPhone(self):
         if os.path.exists("/home/phablet"):
             handy = True
