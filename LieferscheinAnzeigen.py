@@ -197,7 +197,29 @@ class Main:
         libs.send.SetLieferschein(DATA)
 
     def Drucken(self):
-        os.system("lpr -P theke DATA/lieferschein")
+        global DATA
+        dateiZumDrucken = open("DATA/lieferschein", "r").read()
+
+        dateiZumDrucken = dateiZumDrucken.replace("datum", DATA["datum"])
+        dateiZumDrucken = dateiZumDrucken.replace("kunde_tel1", "tel1")
+        dateiZumDrucken = dateiZumDrucken.replace("kunde_name", "name")
+        dateiZumDrucken = dateiZumDrucken.replace("kunde_adresse", "adresse")
+
+        for x in range(0, 2):
+            try:
+                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_anzahl", DATA["anzahl"].split("|")[x] + "x")
+                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_name", DATA["name"].split("|")[x])
+                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_preis", DATA["preis"].split("|")[x] + "€")
+                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_total", float(DATA["anzahl"].split("|")[x]) * float(DATA["preis"].split("|")[x]) + "€")
+            except:
+                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_anzahl", "")
+                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_name", "")
+                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_preis", "")
+                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_total", "")
+
+        open("DATA/lieferscheinTMP", "w").write(dateiZumDrucken)
+        #os.system("lpr -P theke DATA/lieferscheinTMP")
+        print(dateiZumDrucken)
 
     def isPhone(self):
         if os.path.exists("/home/phablet"):
