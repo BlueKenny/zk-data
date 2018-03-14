@@ -21,6 +21,15 @@ Rectangle {
         //checkBoxFinish.checked = fertig
     }
 
+    Button {
+        text: "Hauptmenu"
+        height: mainWindow.height / 15
+        width: mainWindow.width / 5
+        onClicked: {
+            view.push(frameSelect)
+        }
+    }
+
     Label {
         id: labelLieferscheinSuchenTitle
         text: "Lieferscheine Suchen"

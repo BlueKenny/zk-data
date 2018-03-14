@@ -20,9 +20,21 @@ Rectangle {
         width: vars.isPhone ? window.width / 2 : window.width / 5
         height: window.height / 5
         x: window.width / 2 - width / 2
-        y: window.height / 2 - height / 2
+        y: window.height / 5 - height / 2
         onClicked: {
             view.push(frameLieferscheinSuchen)
+        }
+    }
+
+    Button {
+        id: buttonKunden
+        text: "Kunden"
+        width: vars.isPhone ? window.width / 2 : window.width / 5
+        height: window.height / 5
+        x: window.width / 2 - width / 2
+        y: window.height / 5 * 3 - height / 2
+        onClicked: {
+            view.push(frameKundenSuchen)
         }
     }
 }

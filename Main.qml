@@ -13,6 +13,7 @@ ApplicationWindow {
         id: vars
         property string lieferscheinSuchenTextIdentification: ""
         property string lieferscheinSuchenTextName: ""
+        property string kundenSuchenTextIdentification: ""
         property bool lieferscheinSuchenCheckFertige: false
         property bool lieferscheinSuchenCheckEigene: true
         property bool isPhone: false
@@ -46,6 +47,10 @@ ApplicationWindow {
         Component {
             id: frameLieferscheinSuchen
             LieferscheinSuchen {}
+        }
+        Component {
+            id: frameKundenSuchen
+            KundenSuchen {}
         }
     }
 
