@@ -68,7 +68,7 @@ Rectangle {
     }
 
     Label {
-        text: "Auch fertige lieferscheine anzeigen"
+        text: "Auch fertige Lieferscheine anzeigen"
         font.pixelSize: mainWindow.width / 50
         x: mainWindow.width / 3 - width / 2
         y: mainWindow.height / 20 * 3
@@ -85,7 +85,7 @@ Rectangle {
     }
 
     Label {
-        text: "Nur die eigenen lieferscheine anzeigen"
+        text: "Nur die eigenen Lieferscheine anzeigen"
         font.pixelSize: mainWindow.width / 50
         x: mainWindow.width / 3 - width / 2
         y: mainWindow.height / 20 * 4

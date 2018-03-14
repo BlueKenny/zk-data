@@ -489,19 +489,102 @@ def SetLieferschein(Dict):# return Bool of sucess
     id = str(Dict["identification"])
     print("id: " + str(id))
     lieferschein_db.connect()
-    try:
+    if True:#try:
         Dict["lastchange"] = str(Timestamp())
-        if Dict["linien"] == "":
+        if Dict["linien"] == "":#wenn er leer ist
             Dict["linien"] = "0"
             Dict["anzahl"] = "1"
             Dict["bcode"] = ""
             Dict["name"] = ""
             Dict["preis"] = "0.0"
+        if not Dict["bcode"].split("|")[-1] == "":
+            Dict["linien"] = Dict["linien"] + "|" + str(int(Dict["linien"].split("|")[-1]) + 1)
+            Dict["anzahl"] = Dict["anzahl"] + "|1"
+            Dict["bcode"] = Dict["bcode"] + "|"
+            Dict["name"] = Dict["name"] + "|"
+            Dict["preis"] = Dict["preis"] + "|0.0"
+        # Linien zusammen setzen
+        NeuerDict = Dict.copy()
+        NeuerDict["linien"] = []
+        NeuerDict["anzahl"] = []
+        NeuerDict["bcode"] = []
+        NeuerDict["name"] = []
+        NeuerDict["preis"] = []
+        for linie in Dict["linien"].split("|"):# für jede linie im Dict
+            linie = int(linie)
+            if Dict["bcode"].split("|")[linie] in NeuerDict["bcode"]:# wenn schon im Neuen dict
+                print("Schon im Dict " + str(linie))
+                NeuerDict["anzahl"][NeuerDict["bcode"].index(Dict["bcode"].split("|")[linie])] = str(int(NeuerDict["anzahl"][NeuerDict["bcode"].index(Dict["bcode"].split("|")[linie])]) + int(Dict["anzahl"].split("|")[linie]))
+            else:
+                print("Noch nicht im Dict " + str(linie))
+                try: NeuerDict["linien"].append(str(int(NeuerDict["linien"][-1]) + 1))
+                except: NeuerDict["linien"].append("0")
+                NeuerDict["anzahl"].append(str(Dict["anzahl"].split("|")[linie]))
+                NeuerDict["bcode"].append(str(Dict["bcode"].split("|")[linie]))
+                NeuerDict["name"].append(str(Dict["name"].split("|")[linie]))
+                NeuerDict["preis"].append(str(Dict["preis"].split("|")[linie]))
+        print("NeuerDict " + str(NeuerDict))
+        Dict["linien"] = "|".join(NeuerDict["linien"])
+        Dict["anzahl"] = "|".join(NeuerDict["anzahl"])
+        Dict["bcode"] = "|".join(NeuerDict["bcode"])
+        Dict["name"] = "|".join(NeuerDict["name"])
+        Dict["preis"] = "|".join(NeuerDict["preis"])
+
+        query = Lieferschein.select().where(Lieferschein.identification == Dict["identification"])
+        if query.exists():
+            object = Lieferschein.get(Lieferschein.identification == Dict["identification"])
+            AlterDict = model_to_dict(object)
+        else:
+            AlterDict = {}
+
+        FertigeBcodes = []
+        for NeuerBcode in Dict["bcode"].split("|"):
+            if not NeuerBcode == "" and not NeuerBcode in FertigeBcodes:
+                NeuePos = int(Dict["bcode"].split("|").index(NeuerBcode))
+                NeueAnzahl = 0.0
+                for eachLine in Dict["linien"].split("|"):
+                    eachLine = int(eachLine)
+                    if Dict["bcode"].split("|")[eachLine] == NeuerBcode:
+                        NeueAnzahl = NeueAnzahl + float(Dict["anzahl"].split("|")[eachLine])
+                AlteAnzahl = 0.0
+                for eachLine in AlterDict["linien"].split("|"):
+                    eachLine = int(eachLine)
+                    if AlterDict["bcode"].split("|")[eachLine] == NeuerBcode:
+                        AlteAnzahl = AlteAnzahl + float(AlterDict["anzahl"].split("|")[eachLine])
+                DiffAnzahl = NeueAnzahl - AlteAnzahl
+                FertigeBcodes.append(NeuerBcode)
+                if not str(DiffAnzahl) == "0.0":
+                    print(NeuerBcode + " " + str(DiffAnzahl))
+                    if "-" in str(DiffAnzahl): DiffAnzahl = str(DiffAnzahl).replace("-", "")
+                    else: DiffAnzahl = "-" + str(DiffAnzahl)
+                    AddArt({"identification":str(NeuerBcode), "add":str(DiffAnzahl)})
+                    
+   
+        for AlterBcode in AlterDict["bcode"].split("|"):
+            if not AlterBcode in Dict["bcode"].split("|") and not AlterBcode in FertigeBcodes:
+                NeueAnzahl = 0.0
+                for eachLine in Dict["linien"].split("|"):
+                    eachLine = int(eachLine)
+                    if Dict["bcode"].split("|")[eachLine] == AlterBcode:
+                        NeueAnzahl = NeueAnzahl + float(Dict["anzahl"].split("|")[eachLine])
+                AlteAnzahl = 0.0
+                for eachLine in AlterDict["linien"].split("|"):
+                    eachLine = int(eachLine)
+                    if AlterDict["bcode"].split("|")[eachLine] == AlterBcode:
+                        AlteAnzahl = AlteAnzahl + float(AlterDict["anzahl"].split("|")[eachLine])
+                DiffAnzahl = NeueAnzahl - AlteAnzahl
+                FertigeBcodes.append(AlterBcode)
+                if not str(DiffAnzahl) == "0.0":
+                    print(NeuerBcode + " " + str(DiffAnzahl))
+                    if "-" in str(DiffAnzahl): DiffAnzahl = str(DiffAnzahl).replace("-", "")
+                    else: DiffAnzahl = "-" + str(DiffAnzahl)
+                    AddArt({"identification":str(AlterBcode), "add":str(DiffAnzahl)})
+
         ThisArtikel = dict_to_model(Lieferschein, Dict)
         ThisArtikel.save()
         Antwort = True
-    except:
-        Antwort = False
+    #except:
+    #    Antwort = False
     
     lieferschein_db.close()
     return Antwort
@@ -510,7 +593,7 @@ def GetArt(Dict):# return Dict
     print("GetArt")
     local_db.connect()
 
-    try:
+    if True:
         bcode = str(Dict["identification"])
         query = Artikel.select().where(Artikel.identification == bcode)
         print("GetArt identification")
@@ -519,7 +602,7 @@ def GetArt(Dict):# return Dict
             Antwort = model_to_dict(object)
         else:
             Antwort = {}
-    except:
+    if False:
         barcode = int(Dict["barcode"])
         query = Artikel.select().where(Artikel.barcode == barcode)
         print("GetArt barcode")
@@ -568,10 +651,10 @@ def AddArt(Dict):# return Bool of sucess
     
     start = float(object.anzahl)
     if "-" in add:
-        add = int(add[1:])
-        object.anzahl = object.anzahl - add 
+        add = float(add[1:])
+        object.anzahl = object.anzahl - float(add)
     else:
-        object.anzahl = object.anzahl + int(add)
+        object.anzahl = object.anzahl + float(add)
         
     print("Anzahl " + str(object.anzahl))
     

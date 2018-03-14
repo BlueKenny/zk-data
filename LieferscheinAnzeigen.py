@@ -38,28 +38,15 @@ class Main:
     #    self.GetLieferschein()
     #    self.busy(False)
  
-    def AddLinie(self):
-        global DATA
+    #def AddLinie(self):
+    #    global DATA
            
-        self.busy(True)
-
-        NeueLinie = "0"
-        while True:
-            if not NeueLinie in DATA["linien"].split("|"):
-                break
-            NeueLinie = str(int(NeueLinie) + 1)
-
-        print("Neue linie: " + str(NeueLinie))
-    
-        DATA["linien"] = DATA["linien"] + "|" + str(NeueLinie)
-        DATA["anzahl"] = DATA["anzahl"] + "|1"
-        DATA["bcode"] = DATA["bcode"] + "|"
-        DATA["name"] = DATA["name"] + "|"
-        DATA["preis"] = DATA["preis"] + "|0.0"
-
+    #    self.busy(True)
         
-        while not libs.send.SetLieferschein(DATA):
-            self.busy(False)
+    #    while not libs.send.SetLieferschein(DATA):
+    #        self.busy(False)
+
+    #    self.GetLieferschein()
 
     def LinieEntfernen(self, linie):
         global DATA
@@ -145,6 +132,10 @@ class Main:
                 DATA[mode] = "|".join(listdata)
                 try:
                     artikel = libs.send.GetArt(str(variable))
+
+                    listdata = DATA["bcode"].split("|")
+                    listdata[linie] = artikel["identification"]
+                    DATA["bcode"] = "|".join(listdata)
                     
                     listdata = DATA["name"].split("|")
                     listdata[linie] = artikel["name_de"]
@@ -154,13 +145,19 @@ class Main:
                     listdata[linie] = str(artikel["preisvk"])
                     DATA["preis"] = "|".join(listdata)
                 except:
-                    listdata = DATA["name"].split("|")
+                    print("Error")
+
+                    listdata = DATA[mode].split("|")
                     listdata[linie] = ""
-                    DATA["name"] = "|".join(listdata)
+                    DATA[mode] = "|".join(listdata)
+
+                    #listdata = DATA["name"].split("|")
+                    #listdata[linie] = ""
+                    #DATA["name"] = "|".join(listdata)
                     
-                    listdata = DATA["preis"].split("|")
-                    listdata[linie] = ""
-                    DATA["preis"] = "|".join(listdata)
+                    #listdata = DATA["preis"].split("|")
+                    #listdata[linie] = ""
+                    #DATA["preis"] = "|".join(listdata)
 
         if mode == "name":
             listdata = DATA[mode].split("|")
@@ -180,8 +177,9 @@ class Main:
         summeTotal = libs.RoundUp.RoundUp05(summeTotal)
         DATA["total"] = summeTotal 
 
-        while not libs.send.SetLieferschein(DATA):
-            self.busy(True)        
+        #while not
+        libs.send.SetLieferschein(DATA)
+        #    self.busy(True)        
 
         self.GetLieferschein()
         self.busy(False)

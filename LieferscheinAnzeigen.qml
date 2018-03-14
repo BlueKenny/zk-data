@@ -15,14 +15,14 @@ Rectangle {
 
     function antwortGetLieferschein(item, summe, fertig) {
         //console.warn("antwortGetLieferschein")
-        variable.listeIndex = liste.currentIndex
+        //variable.listeIndex = liste.currentIndex
         //console.warn("Current Index: " + variable.listeIndex)
         contactModel.clear();
         for (var i=0; i<item.length; i++) {
             contactModel.append(item[i]);
         }
         if (variable.listeIndex == -1) { variable.listeIndex = 0 }
-        liste.currentIndex = variable.listeIndex
+        liste.currentIndex = liste.count - 1//variable.listeIndex
         labelTotal.text = summe
         switchFinish.checked = fertig
     }
@@ -96,7 +96,7 @@ Rectangle {
                 Keys.onReturnPressed: {
                     liste.currentIndex = index + 1
                     if (liste.currentIndex == liste.count) {
-                        python.call('LieferscheinAnzeigen.main.AddLinie', [], function() {});
+                        //python.call('LieferscheinAnzeigen.main.AddLinie', [], function() {});
                         python.call('LieferscheinAnzeigen.main.GetLieferschein', [], function() {});
                     }
                 }
