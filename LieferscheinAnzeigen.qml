@@ -11,6 +11,7 @@ Rectangle {
     Item {
         id: variable
         property int listeIndex: 0
+        property bool switchFinishChecked: false
     }
 
     function antwortGetLieferschein(item, summe, fertig) {
@@ -24,7 +25,8 @@ Rectangle {
         if (variable.listeIndex == -1) { variable.listeIndex = 0 }
         liste.currentIndex = liste.count - 1//variable.listeIndex
         labelTotal.text = summe
-        switchFinish.checked = fertig
+        variable.switchFinishChecked = fertig
+        switchFinish.text = variable.switchFinishChecked ? "Fertig" : "Nicht Fertig"
     }
 
     Label {
@@ -230,21 +232,26 @@ Rectangle {
             view.push(frameLieferscheinSuchen)
         }
     }
-
+/*
     Label {
         text: "Fertig"
         font.pixelSize: window.width / 50
         x: window.width / 11 * 5 - width / 2
         y: window.height * 0.9
-    }
+    }*/
 
-    Switch {
+    Button {
         id: switchFinish
-        x: window.width / 11 * 6 - width / 2
+        height: window.height / 15
+        width: window.width / 5
+        x: window.width / 11 * 5 - width / 2
         y: window.height * 0.9
+        text: variable.switchFinishChecked ? "Fertig" : "Nicht Fertig"
 
         onClicked: {
-            python.call("LieferscheinAnzeigen.main.Fertig", [switchFinish.checked], function() {});
+            variable.switchFinishChecked = variable.switchFinishChecked ? false : true
+            text = variable.switchFinishChecked ? "Fertig" : "Nicht Fertig"
+            python.call("LieferscheinAnzeigen.main.Fertig", [variable.switchFinishChecked], function() {});
         }
     }
     Button {
@@ -256,6 +263,7 @@ Rectangle {
 
         onClicked: {
             python.call("LieferscheinAnzeigen.main.Drucken", [], function() {});
+            switchFinish.text = variable.switchFinishChecked ? "Fertig" : "Nicht Fertig";
         }
     }
     Python {
