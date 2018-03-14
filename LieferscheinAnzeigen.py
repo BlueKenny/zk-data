@@ -218,7 +218,7 @@ class Main:
         dateiZumDrucken = dateiZumDrucken.replace("end_total", str(DATA["total"]))
 
         open("DATA/lieferscheinTMP", "w").write(dateiZumDrucken)
-        os.system("lpr -P theke DATA/lieferscheinTMP")
+        os.system("lpr -P drucker DATA/lieferscheinTMP")
         #print(dateiZumDrucken)
 
     def isPhone(self):
