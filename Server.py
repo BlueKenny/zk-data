@@ -593,7 +593,7 @@ def GetArt(Dict):# return Dict
     print("GetArt")
     local_db.connect()
 
-    if True:
+    try:
         bcode = str(Dict["identification"])
         query = Artikel.select().where(Artikel.identification == bcode)
         print("GetArt identification")
@@ -602,7 +602,7 @@ def GetArt(Dict):# return Dict
             Antwort = model_to_dict(object)
         else:
             Antwort = {}
-    if False:
+    except:
         barcode = int(Dict["barcode"])
         query = Artikel.select().where(Artikel.barcode == barcode)
         print("GetArt barcode")
