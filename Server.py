@@ -512,7 +512,7 @@ def SetLieferschein(Dict):# return Bool of sucess
         NeuerDict["preis"] = []
         for linie in Dict["linien"].split("|"):# für jede linie im Dict
             linie = int(linie)
-            if Dict["bcode"].split("|")[linie] in NeuerDict["bcode"]:# wenn schon im Neuen dict
+            if Dict["bcode"].split("|")[linie] in NeuerDict["bcode"] and not len(Dict["bcode"].split("|")[linie]) < 3:# wenn schon im Neuen dict
                 print("Schon im Dict " + str(linie))
                 NeuerDict["anzahl"][NeuerDict["bcode"].index(Dict["bcode"].split("|")[linie])] = str(int(NeuerDict["anzahl"][NeuerDict["bcode"].index(Dict["bcode"].split("|")[linie])]) + int(Dict["anzahl"].split("|")[linie]))
             else:
