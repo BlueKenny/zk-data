@@ -11,12 +11,12 @@ Rectangle {
         console.warn("antwortSearchLieferscheine")
         //variable.listeIndex = liste.currentIndex
         //console.warn("Current Index: " + variable.listeIndex)
+        listLieferscheinSuchen.currentIndex = 0
         contactModel.clear();
         for (var i=0; i<item.length; i++) {
             contactModel.append(item[i]);
         }
-        //if (variable.listeIndex == -1) { variable.listeIndex = 0 }
-        //liste.currentIndex = variable.listeIndex
+        listLieferscheinSuchen.currentIndex = listLieferscheinSuchen.count - 1//variable.listeIndex
         //labelTotal.text = summe
         //checkBoxFinish.checked = fertig
     }
@@ -126,6 +126,11 @@ Rectangle {
     ListView {
         id: listLieferscheinSuchen
         y: mainWindow.height / 20 * 7
+
+        focus: true
+        highlightMoveDuration: 0
+        highlight: Rectangle { visible: false ; color: "lightsteelblue"; width: window.width}
+
         height: (mainWindow.height / 20) * 13
         width: mainWindow.width
 
