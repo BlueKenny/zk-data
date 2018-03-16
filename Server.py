@@ -381,6 +381,39 @@ def Preisvorschlag():
                 BlueSave("LastChange", str(NewLastChange), ImportData)
                 local_db.close()
 
+
+def SearchKunden(Dict):# Give Dict with Search return List of IDs 
+    print("SearchKunden")
+    for key, var in Dict.items():
+        print(str(key) + ": " + str(var))
+
+    kunden_db.connect()
+
+    if not Dict["identification"] == "":
+        query = Kunden.select().where(Kunden.identification == Dict["identification"])
+    else:
+        query = Kunden.select()
+    
+    if not Dict["name"] == "":
+        query2 = Kunden.select().where(Kunden.name == Dict["name"])
+    else:
+        query2 = Kunden.select()
+     
+    Antwort = []
+    while True:
+        Count = 1
+        for ID in query:
+            if ID in query2:
+                Antwort.append(str(ID.identification))
+                #if Count == INDEXLIMIT:
+                #    break
+                #else:
+                #    Count = Count + 1
+        break
+    kunden_db.close()
+    return Antwort
+
+
 def SearchArt(Dict):# Give Dict with Search return List of IDs 
     print("SearchArt")
     for key, var in Dict.items():
@@ -756,6 +789,9 @@ while True:
         if mode == "GetBewegungIndex":# return Int of aktual bewegung
             print("GetBewegungIndex")
             Antwort = int(BeID)
+
+        if mode == "SearchKunden":#return List of IDs
+            Antwort = SearchKunden(DATA)
 
         if mode == "SearchArt":#return List of IDs
             Antwort = SearchArt(DATA)
