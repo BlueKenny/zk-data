@@ -205,10 +205,16 @@ class Main:
 
         for x in range(0, 30):
             try:
+                if str(DATA["bcode"].split("|")[x]) == "": # Fehler
+                    int("a")
+
                 dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", DATA["anzahl"].split("|")[x] + "x")
                 dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_name", DATA["name"].split("|")[x])
-                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", DATA["preis"].split("|")[x] + "€")
-                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_total", float(DATA["anzahl"].split("|")[x]) * float(DATA["preis"].split("|")[x]) + "€")
+                if str(DATA["bcode"].split("|")[x]) == "0" or str(DATA["bcode"].split("|")[x]) == "1":
+                    dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", "")
+                else:
+                    dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", DATA["preis"].split("|")[x] + "€")
+                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_total", str(float(DATA["anzahl"].split("|")[x]) * float(DATA["preis"].split("|")[x])) + "€")
             except:
                 dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", "")
                 dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_name", "")
