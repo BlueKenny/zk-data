@@ -203,17 +203,17 @@ class Main:
         dateiZumDrucken = dateiZumDrucken.replace("kunde_name", "name")
         dateiZumDrucken = dateiZumDrucken.replace("kunde_adresse", "adresse")
 
-        for x in range(0, 5):
+        for x in range(0, 30):
             try:
-                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_anzahl", DATA["anzahl"].split("|")[x] + "x")
-                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_name", DATA["name"].split("|")[x])
-                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_preis", DATA["preis"].split("|")[x] + "€")
-                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_total", float(DATA["anzahl"].split("|")[x]) * float(DATA["preis"].split("|")[x]) + "€")
+                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", DATA["anzahl"].split("|")[x] + "x")
+                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_name", DATA["name"].split("|")[x])
+                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", DATA["preis"].split("|")[x] + "€")
+                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_total", float(DATA["anzahl"].split("|")[x]) * float(DATA["preis"].split("|")[x]) + "€")
             except:
-                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_anzahl", "")
-                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_name", "")
-                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_preis", "")
-                dateiZumDrucken = dateiZumDrucken.replace(str(x) + "_total", "")
+                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", "")
+                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_name", "")
+                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", "")
+                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_total", "")
 
         dateiZumDrucken = dateiZumDrucken.replace("end_total", str(DATA["total"]))
 
