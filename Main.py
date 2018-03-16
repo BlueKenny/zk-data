@@ -41,7 +41,7 @@ class Main:
                 DesktopEntry.write("[Desktop Entry]\n")
                 DesktopEntry.write("Name=ZK-DATA\n")
                 DesktopEntry.write("Path=/home/" + User + "/zk-data/\n")
-                if User == "raspberry":
+                if User == "pi":# für raspberry
                     DesktopEntry.write("Exec=qmlscene -qt=qt5-arm-linux-gnueabihf /home/" + User + "/zk-data/Main.qml\n")
                 else:
                     DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Main.qml\n")
