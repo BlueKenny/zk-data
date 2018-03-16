@@ -41,7 +41,10 @@ class Main:
                 DesktopEntry.write("[Desktop Entry]\n")
                 DesktopEntry.write("Name=ZK-DATA\n")
                 DesktopEntry.write("Path=/home/" + User + "/zk-data/\n")
-                DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Main.qml\n")
+                if User == "raspberry":
+                    DesktopEntry.write("Exec=qmlscene -qt=qt5-arm-linux-gnueabihf /home/" + User + "/zk-data/Main.qml\n")
+                else:
+                    DesktopEntry.write("Exec=qmlscene /home/" + User + "/zk-data/Main.qml\n")
                 DesktopEntry.write("Terminal=false\n")
                 DesktopEntry.write("X-Ubuntu-Touch=true\n")
                 DesktopEntry.write("Type=Application\n")
