@@ -126,7 +126,7 @@ Rectangle {
     ListView {
         id: listLieferscheinSuchen
         y: mainWindow.height / 20 * 7
-        height: (mainWindow.height / 20) * 14
+        height: (mainWindow.height / 20) * 13
         width: mainWindow.width
 
         ListModel {

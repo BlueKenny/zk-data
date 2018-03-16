@@ -90,7 +90,7 @@ Rectangle {
                 id: itemListe
                 property int currentIndex: index // store item index
                 width: window.width
-                height: vars.isPhone ? window.height/4 : window.height/10
+                height: vars.isPhone ? window.height/6 : window.height/10
                 MouseArea {
                     anchors.fill: parent
                     onClicked: liste.currentIndex = index
@@ -125,7 +125,7 @@ Rectangle {
                     font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
                     width: parent.width / 5
                     x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 - width / 2
-                    y: vars.isPhone ? parent.height / 4 - height / 2 : parent.height / 2 - height / 2
+                    y: vars.isPhone ? parent.height / 6 * 2 - height / 2 : parent.height / 2 - height / 2
                     text: anzahl
                     inputMethodHints: Qt.ImhDigitsOnly
                     horizontalAlignment: TextEdit.AlignHCenter
@@ -146,9 +146,9 @@ Rectangle {
                     id: textBarcode
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
                     font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
-                    width: vars.isPhone ? window.width / 2 : window.width / 5
+                    width: vars.isPhone ? window.width / 3 : window.width / 5
                     x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 2 - width / 2
-                    y: vars.isPhone ? parent.height / 4 - height / 2 : parent.height / 2 - height / 2
+                    y: vars.isPhone ? parent.height / 6 * 2 - height / 2 : parent.height / 2 - height / 2
                     text: bcode
                     inputMethodHints: Qt.ImhDigitsOnly
                     horizontalAlignment: TextEdit.AlignHCenter
@@ -167,9 +167,9 @@ Rectangle {
                     id: textName
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
                     font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
-                    width: vars.isPhone ? window.width / 2 : window.width / 5
+                    width: vars.isPhone ? window.width / 3 : window.width / 5
                     x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 * 3 - width / 2
-                    y: vars.isPhone ? parent.height / 4 * 3 - height / 2 : parent.height / 2 - height / 2
+                    y: vars.isPhone ? parent.height / 6 * 4 - height / 2 : parent.height / 2 - height / 2
                     text: name
                     horizontalAlignment: TextEdit.AlignHCenter
 
@@ -189,7 +189,7 @@ Rectangle {
                     font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
                     width: window.width / 5
                     x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 4 - width / 2
-                    y: vars.isPhone ? parent.height / 4 * 3 - height / 2 : parent.height / 2 - height / 2
+                    y: vars.isPhone ? parent.height / 6 * 4 - height / 2 : parent.height / 2 - height / 2
                     text: preis
                     inputMethodHints: Qt.ImhDigitsOnly
                     horizontalAlignment: TextEdit.AlignHCenter
