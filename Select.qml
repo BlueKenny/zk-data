@@ -19,10 +19,22 @@ Rectangle {
         text: "Lieferscheine"
         width: vars.isPhone ? window.width / 2 : window.width / 5
         height: window.height / 5
-        x: window.width / 2 - width / 2
+        x: window.width / 3 - width / 2
         y: window.height / 5 - height / 2
         onClicked: {
             view.push(frameLieferscheinSuchen)
+        }
+    }
+
+    Button {
+        id: buttonStock
+        text: "Stock"
+        width: vars.isPhone ? window.width / 2 : window.width / 5
+        height: window.height / 5
+        x: window.width / 3 * 2 - width / 2
+        y: window.height / 5 - height / 2
+        onClicked: {
+            view.push(frameStock)
         }
     }
 
@@ -31,7 +43,7 @@ Rectangle {
         text: "Kunden"
         width: vars.isPhone ? window.width / 2 : window.width / 5
         height: window.height / 5
-        x: window.width / 2 - width / 2
+        x: window.width / 3 - width / 2
         y: window.height / 5 * 3 - height / 2
         onClicked: {
             view.push(frameKundenSuchen)

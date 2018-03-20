@@ -22,54 +22,31 @@ import json
 if BlueLoad("SERVERSTOCK", DIR + "DATA/DATA") == None: BlueSave("SERVERSTOCK", "127.0.0.1", DIR + "DATA/DATA")
 
 SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 10000)
+#####           BILDER
+
+def SendBild(bild):
+    s = socket.socket()         # Create a socket object
+    host = socket.gethostname() # Get local machine name
+    port = 12345                 # Reserve a port for your service.
+
+    s.connect((SERVERSTOCK_IP, port))
+    os.system("ls")
+    print("Bild ist " + str(bild))
+    f = open(bild, "rb")
+
+    s.send((host + "-" + bild).encode())
+    print('Sending...')
+    l = f.read(1024)
+    while (l):
+        print('Sending...')
+        s.send(l)
+        l = f.read(1024)
+    f.close()
+    print("Done Sending")
+    s.close                     # Close the socket when done
 
 
 ##############          STOCK
-
-def GetBarcode(image):#return String
-    #with open(image, 'rb') as infile:
-    #    while True:
-    #        chunk = infile.read(1024)
-    #        if not chunk: break
-    with open(image, "rb") as imageFile:
-        data = base64.b64encode(imageFile.read())
-        #data = imageFile.read()
-
-    Data = [data[i:i+2048] for i in range(0, len(data), 2048)]
-    #print(Data)
-    
-    index = 0
-    for eachData in Data:
-        eachData = eachData.decode("utf-8")
-        antwort = Barcode(index, eachData)
-        #print("eachData: " + str(eachData))
-        index = index + 1
-
-    #chunk_file.close()
-    return antwort
-
-def Barcode(Position, Bytes):#return String
-    while True:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        Dict = {"mode":"GetBarcode"}
-        sock.connect(SERVERSTOCK_IP)
-        Dict["bytes"] = Bytes
-        Dict["position"] = Position
-
-        data = json.dumps(Dict)  # data serialized
-        data = data.encode()
-        sock.sendto(data, SERVERSTOCK_IP)
-        data = sock.recv(2048)
-        data = data.decode()
-        data = json.loads(data)
-        sock.close()
-
-        print("GetBarcode(" + str(Position) + ", " + str(Bytes) + ") = " + str(data))
-        return data
-    #except:
-    #    print("GetArt(...) = ERROR")
-    #    return {}
-
 
 def NeuerLieferschein():#return Dict
     try:

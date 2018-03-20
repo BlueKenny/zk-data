@@ -77,6 +77,10 @@ ApplicationWindow {
             id: frameKundenSuchen
             KundenSuchen {}
         }
+        Component {
+            id: frameStock
+            Stock {}
+        }
     }
 
     Python {
