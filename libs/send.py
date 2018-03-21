@@ -22,14 +22,13 @@ import json
 if BlueLoad("SERVERSTOCK", DIR + "DATA/DATA") == None: BlueSave("SERVERSTOCK", "127.0.0.1", DIR + "DATA/DATA")
 
 SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 10000)
+SERVERIMAGE_IP = = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 12345)
 #####           BILDER
 
 def SendBild(bild):
     s = socket.socket()         # Create a socket object
     host = socket.gethostname() # Get local machine name
-    port = 12345                 # Reserve a port for your service.
-
-    s.connect((SERVERSTOCK_IP, port))
+    s.connect((SERVERIMAGE_IP, port))
     print("Bild ist " + str(bild))
     f = open(bild, "rb")
 
