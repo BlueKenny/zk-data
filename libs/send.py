@@ -22,7 +22,7 @@ import json
 if BlueLoad("SERVERSTOCK", DIR + "DATA/DATA") == None: BlueSave("SERVERSTOCK", "127.0.0.1", DIR + "DATA/DATA")
 
 SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 10000)
-SERVERIMAGE_IP = = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 12345)
+SERVERIMAGE_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 12345)
 #####           BILDER
 
 def SendBild(bild):
