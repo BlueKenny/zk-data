@@ -8,16 +8,14 @@ try: import pyotherside
 except: True
 import libs.send
 
-os.system("export MIR_SOCKET=/var/run/mir_socket")
-
 class Main:    
     def __init__(self):
         print("init")
-        self.busy(False)
+        #self.busy(False)
         self.ScanForSearch()
     
     def ScanForSearch(self):
-        self.busy(True)
+        #self.busy(True)
 
         if True:
             libs.send.SendBild("/home/phablet/Pictures/scan.jpg")
@@ -29,9 +27,9 @@ class Main:
             os.system("test_vibrator")
 
         os.system("test_vibrator")
-        pyotherside.send("antwortScanForSearch", barcode)
+        #pyotherside.send("antwortScanForSearch", barcode)
 
-        self.busy(False)
+        #self.busy(False)
     
     def busy(self, status):
         status = bool(status)
