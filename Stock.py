@@ -12,7 +12,6 @@ class Main:
     def __init__(self):
         print("init")
         #self.busy(False)
-        self.ScanForSearch()
     
     def ScanForSearch(self):
         #self.busy(True)
