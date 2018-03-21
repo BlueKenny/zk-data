@@ -19,6 +19,7 @@ class Main:
 
         if True:
             libs.send.SendBild("/home/phablet/Pictures/scan.jpg")
+            os.remove("/home/phablet/Pictures/scan.jpg")
             #libs.send.GetBarcode("/home/phablet/Pictures/scan.jpg")
             barcode = "ok"
             print("barcode: " + str(barcode))
