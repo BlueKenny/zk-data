@@ -30,7 +30,6 @@ def SendBild(bild):
     port = 12345                 # Reserve a port for your service.
 
     s.connect((SERVERSTOCK_IP, port))
-    os.system("ls")
     print("Bild ist " + str(bild))
     f = open(bild, "rb")
 
