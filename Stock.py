@@ -46,12 +46,12 @@ class Main:
     def ScanForSearch(self):
         self.busy(True)
 
-        try:
+        if True:
             libs.send.SendBild("/home/phablet/Pictures/scan.jpg")
             #libs.send.GetBarcode("/home/phablet/Pictures/scan.jpg")
             barcode = "ok"
             print("barcode: " + str(barcode))
-        except:
+        if False:
             barcode = "nichts"
             os.system("test_vibrator")
 
