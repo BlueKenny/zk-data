@@ -17,7 +17,7 @@ else:
 	from .debug import *
 
 BlueMkDir(DIR + "DATA")
-import json
+import json 
 
 if BlueLoad("SERVERSTOCK", DIR + "DATA/DATA") == None: BlueSave("SERVERSTOCK", "127.0.0.1", DIR + "DATA/DATA")
 
