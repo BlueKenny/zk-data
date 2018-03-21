@@ -28,7 +28,7 @@ SERVERIMAGE_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 12345)
 def SendBild(bild):
     s = socket.socket()         # Create a socket object
     host = socket.gethostname() # Get local machine name
-    s.connect((SERVERIMAGE_IP, port))
+    s.connect(SERVERIMAGE_IP)
     print("Bild ist " + str(bild))
     f = open(bild, "rb")
 
