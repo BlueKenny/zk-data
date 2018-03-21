@@ -29,10 +29,11 @@ def SendBild(bild):
     s = socket.socket()         # Create a socket object
     host = socket.gethostname() # Get local machine name
     s.connect(SERVERIMAGE_IP)
-    print("Bild ist " + str(bild))
+    bildname = str(bild).split("/")[-1]
+    print("Bild ist " + str(bildname))
     f = open(bild, "rb")
 
-    s.send((host + "-" + bild).encode())
+    s.send((host + "-" + bildname).encode())
     print('Sending...')
     l = f.read(1024)
     while (l):
