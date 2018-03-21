@@ -196,35 +196,45 @@ class Main:
 
     def Drucken(self):
         global DATA
-        dateiZumDrucken = open("DATA/lieferschein", "r").read()
+        from pyexcel_ods import get_data
+        data = get_data("DATA/lieferschein.ods")
+        import json
+        dateiZumDrucken = json.dumps(data)
+        print(dateiZumDrucken)
 
-        dateiZumDrucken = dateiZumDrucken.replace("datum", DATA["datum"])
-        dateiZumDrucken = dateiZumDrucken.replace("kunde_tel1", "tel1")
-        dateiZumDrucken = dateiZumDrucken.replace("kunde_name", "name")
-        dateiZumDrucken = dateiZumDrucken.replace("kunde_adresse", "adresse")
+        #dateiZumDrucken = open("DATA/lieferschein", "r").read()
+
+        #dateiZumDrucken = dateiZumDrucken.replace("datum", DATA["datum"])
+        #dateiZumDrucken = dateiZumDrucken.replace("kunde_tel1", "tel1")
+        #dateiZumDrucken = dateiZumDrucken.replace("kunde_name", "name")
+        #dateiZumDrucken = dateiZumDrucken.replace("kunde_adresse", "adresse")
+        #dateiZumDrucken = dateiZumDrucken.replace("lieferschein_nummer", DATA["identification"])
 
         for x in range(0, 30):
             try:
                 if str(DATA["bcode"].split("|")[x]) == "": # Fehler
                     int("a")
 
-                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_name", DATA["name"].split("|")[x])
-                if str(DATA["bcode"].split("|")[x]) == "0" or str(DATA["bcode"].split("|")[x]) == "1":
-                    dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", "-")
-                    dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", "-")
-                else:
-                    dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", DATA["preis"].split("|")[x] + "€")
-                    dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", DATA["anzahl"].split("|")[x] + "x")
-                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_total", str(float(DATA["anzahl"].split("|")[x]) * float(DATA["preis"].split("|")[x])) + "€")
+                #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_name", DATA["name"].split("|")[x])
+                #if str(DATA["bcode"].split("|")[x]) == "0" or str(DATA["bcode"].split("|")[x]) == "1":
+                    #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", "-")
+                    #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", "-")
+                #else:
+                    #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", DATA["preis"].split("|")[x] + "€")
+                    #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", DATA["anzahl"].split("|")[x] + "x")
+                #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_total", str(float(DATA["anzahl"].split("|")[x]) * float(DATA["preis"].split("|")[x])) + "€")
             except:
-                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", "")
-                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_name", "")
-                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", "")
-                dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_total", "")
+                #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_anzahl", "")
+                #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_name", "")
+                #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_preis", "")
+                #dateiZumDrucken = dateiZumDrucken.replace(" " + str(x) + "_total", "")
+                True
 
-        dateiZumDrucken = dateiZumDrucken.replace("end_total", str(DATA["total"]))
+        #dateiZumDrucken = dateiZumDrucken.replace("end_total", str(DATA["total"]))
 
-        open("DATA/lieferscheinTMP", "w").write(dateiZumDrucken)
+        from pyexcel_ods import save_data
+        save_data("DATA/lieferscheinTMP.ods", dateiZumDrucken)
+        #open("DATA/lieferscheinTMP", "w").write(dateiZumDrucken)
         os.system("lpr -P drucker DATA/lieferscheinTMP")
         #print(dateiZumDrucken)
 

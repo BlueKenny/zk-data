@@ -47,8 +47,8 @@ class Main:
         self.busy(True)
 
         try:
-            libs.send.GetBarcode("/home/phablet/Pictures/scan.jpg")
-            #barcode = os.popen("zbarimg /home/phablet/Pictures/scan.jpg -q").readlines()[0]#.split(":")[1]
+            libs.send.SendBild("/home/phablet/Pictures/scan.jpg")
+            #libs.send.GetBarcode("/home/phablet/Pictures/scan.jpg")
             print("barcode: " + str(barcode))
         except:
             barcode = "nichts"
