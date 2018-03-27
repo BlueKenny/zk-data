@@ -123,8 +123,8 @@ Rectangle {
                     id: textAnzahl
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
                     font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
-                    width: parent.width / 5
-                    x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 - width / 2
+                    width: vars.isPhone ? parent.width / 5 : parent.width / 10
+                    x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 10 - width / 2
                     y: vars.isPhone ? parent.height / 6 * 2 - height / 2 : parent.height / 2 - height / 2
                     text: anzahl
                     inputMethodHints: Qt.ImhDigitsOnly
@@ -146,8 +146,8 @@ Rectangle {
                     id: textBarcode
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
                     font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
-                    width: vars.isPhone ? window.width / 3 : window.width / 5
-                    x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 2 - width / 2
+                    width: vars.isPhone ? window.width / 3 : window.width / 10
+                    x: vars.isPhone ? window.width / 3 * 2 - width / 2 : textAnzahl.x + textAnzahl.width
                     y: vars.isPhone ? parent.height / 6 * 2 - height / 2 : parent.height / 2 - height / 2
                     text: bcode
                     inputMethodHints: Qt.ImhDigitsOnly
@@ -167,8 +167,8 @@ Rectangle {
                     id: textName
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
                     font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
-                    width: vars.isPhone ? window.width / 3 : window.width / 5
-                    x: vars.isPhone ? window.width / 3 - width / 2 : window.width / 5 * 3 - width / 2
+                    width: vars.isPhone ? window.width / 3 : window.width / 2
+                    x: vars.isPhone ? window.width / 3 - width / 2 : textBarcode.x + textBarcode.width
                     y: vars.isPhone ? parent.height / 6 * 4 - height / 2 : parent.height / 2 - height / 2
                     text: name
                     horizontalAlignment: TextEdit.AlignHCenter
@@ -187,7 +187,7 @@ Rectangle {
                     id: textPreis
                     height: vars.isPhone ? parent.height * 0.2 : parent.height * 0.8
                     font.pixelSize: vars.isPhone ? parent.height * 0.15 : parent.height * 0.3
-                    width: window.width / 5
+                    width: vars.isPhone ? window.width / 5 : window.width / 10
                     x: vars.isPhone ? window.width / 3 * 2 - width / 2 : window.width / 5 * 4 - width / 2
                     y: vars.isPhone ? parent.height / 6 * 4 - height / 2 : parent.height / 2 - height / 2
                     text: preis
