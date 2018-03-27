@@ -1,0 +1,9 @@
+{
+    "template": "cmake",
+    "kill": "qmlscene",
+    "dependencies": [
+        "qml-module-qtquick2",
+        "qml-module-qtquick-controls",
+        "qml-module-qtquick-window2"
+    ]
+}
