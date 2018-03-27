@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Stock
-Keywords=zk-data;stock;
-Path=/home/user/zk-data/
-Exec=/home/user/zk-data/SucheStock.pyw
-Terminal=false
-Type=Application
-StartupNotify=true
-Icon=None
