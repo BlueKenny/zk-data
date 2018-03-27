@@ -47,6 +47,31 @@ def SendBild(bild):
 
 ##############          STOCK
 
+
+def GetKunden(ID):#return Dict
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Dict = {"mode":"GetKunden"}
+        ID = str(ID)
+        sock.connect(SERVERSTOCK_IP)
+        Dict["identification"] = ID
+
+        #Debug("Send " + str(Dict))
+        data = json.dumps(Dict)  # data serialized
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        data = data.decode()
+        data = json.loads(data)
+        sock.close()
+        #Debug("Get " + str(data))
+
+        print("GetKunden(" + str(ID) + ") = " + str(data))
+        return data
+    except:
+        print("GetKunden(" + str(ID) + ") = ERROR")
+        return {}
+
 def NeuerLieferschein():#return Dict
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -244,6 +269,7 @@ def SearchLieferschein(Dict):# Give Dict with Search return List of IDs
         sock.connect(SERVERSTOCK_IP)
 
         Dict["mode"]="SearchLieferschein"
+
         data = json.dumps(Dict)
 
         #Debug("Send " + str(data))
@@ -258,4 +284,27 @@ def SearchLieferschein(Dict):# Give Dict with Search return List of IDs
         return data
     except:
         print("SearchLieferschein(" + str(Dict) + ") = ERROR")
+        return []
+
+
+def SearchKunden(Dict):# Give Dict with Search return List of IDs
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect(SERVERSTOCK_IP)
+
+        Dict["mode"]="SearchKunden"
+        data = json.dumps(Dict)
+
+        #Debug("Send " + str(data))
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        data = data.decode()
+        data = json.loads(data)
+        sock.close()
+        #Debug("Get " + str(data))
+        print("SearchKunden(" + str(Dict) + ") = " + str(data))
+        return data
+    except:
+        print("SearchKunden(" + str(Dict) + ") = ERROR")
         return []

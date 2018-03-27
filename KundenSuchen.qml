@@ -7,7 +7,7 @@ Rectangle {
     width: mainWindow.width
 
 
-    function antwortSearchLieferscheine(item) {
+    function antwortSearchKunden(item) {
         contactModel.clear();
         for (var i=0; i<item.length; i++) {
             contactModel.append(item[i]);
@@ -43,10 +43,9 @@ Rectangle {
         width: mainWindow.width / 10
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20
-        enabled: false
         onAccepted: {
             vars.kundenSuchenTextIdentification = text
-            //python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
+            python.call("KundenSuchen.main.SearchKunden", [textKundenSuchenIdentification.text], function() {});
         }
     }
 
@@ -81,10 +80,10 @@ Rectangle {
 
                 Label {
                     id: labelKundenSucheListeEintrag
-                    text: identification + ", Kunde: " + kunde_id + ", Preis: " + total + "€"
+                    text: identification + ", Name: " + name
                     font.pixelSize: vars.isPhone ? listKundenSuchen.width / 15 : listKundenSuchen.width / 40
                     x: listKundenSuchen.width / 2 - width / 2
-                    color: fertig ? "blue" : "red"
+                    //color: fertig ? "blue" : "red"
 
                     MouseArea {
                         anchors.fill: labelKundenSucheListeEintrag
@@ -108,10 +107,10 @@ Rectangle {
             addImportPath(Qt.resolvedUrl('.'));
             importModule('KundenSuchen', function () {});
 
-            //setHandler("antwortSearchLieferscheine", antwortSearchLieferscheine);
+            setHandler("antwortSearchKunden", antwortSearchKunden);
             setHandler("busy", busy);
 
-            //call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
+            call("KundenSuchen.main.SearchKunden", [textKundenSuchenIdentification.text], function() {});
         }
     }
 }

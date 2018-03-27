@@ -387,17 +387,17 @@ def SearchKunden(Dict):# Give Dict with Search return List of IDs
     for key, var in Dict.items():
         print(str(key) + ": " + str(var))
 
-    kunden_db.connect()
+    kunde_db.connect()
 
     if not Dict["identification"] == "":
-        query = Kunden.select().where(Kunden.identification == Dict["identification"])
+        query = Kunde.select().where(Kunde.identification == Dict["identification"])
     else:
-        query = Kunden.select()
+        query = Kunde.select()
     
     if not Dict["name"] == "":
-        query2 = Kunden.select().where(Kunden.name == Dict["name"])
+        query2 = Kunde.select().where(Kunde.name == Dict["name"])
     else:
-        query2 = Kunden.select()
+        query2 = Kunde.select()
      
     Antwort = []
     while True:
@@ -410,7 +410,7 @@ def SearchKunden(Dict):# Give Dict with Search return List of IDs
                 #else:
                 #    Count = Count + 1
         break
-    kunden_db.close()
+    kunde_db.close()
     return Antwort
 
 
@@ -649,6 +649,24 @@ def GetArt(Dict):# return Dict
     local_db.close()
     return Antwort
 
+def GetKunden(Dict):# return Dict
+    print("GetKunden")
+    kunde_db.connect()
+
+    if True:#try:
+        query = Kunde.select().where(Kunde.identification == str(Dict["identification"]))
+        if query.exists():
+            object = Kunde.get(Kunde.identification == str(Dict["identification"]))
+            Antwort = model_to_dict(object)
+        else:
+            Antwort = {}
+    #except:
+    #    Antwort =  {}
+    
+    kunde_db.close()
+    return Antwort
+
+
 def SetArt(Dict):# return Bool of sucess
     print("SetArt")
     id = str(Dict["identification"])
@@ -796,23 +814,26 @@ while True:
         if mode == "SearchArt":#return List of IDs
             Antwort = SearchArt(DATA)
 
-        if mode == "GetLieferschein":#return Dict
-            Antwort = GetLieferschein(DATA)
-
         if mode == "NeuerLieferschein":#return Dict
             Antwort = NeuerLieferschein()
 
         if mode == "SearchLieferschein":#return List of IDs
             Antwort = SearchLieferschein(DATA)
 
-        if mode == "SetLieferschein":#return Bool of sucess
-            Antwort = SetLieferschein(DATA)
-
         if mode == "GetArt":#return Dict
             Antwort = GetArt(DATA)
 
+        if mode == "GetLieferschein":#return Dict
+            Antwort = GetLieferschein(DATA)
+
+        if mode == "GetKunden":#return Dict
+            Antwort = GetKunden(DATA)
+
         if mode == "SetArt":#return Bool of sucess
             Antwort = SetArt(DATA)
+
+        if mode == "SetLieferschein":#return Bool of sucess
+            Antwort = SetLieferschein(DATA)
 
         if mode == "AddArt":#return Dict
             Antwort = AddArt(DATA)

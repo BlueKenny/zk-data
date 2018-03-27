@@ -32,7 +32,7 @@ class Main:
         for Desktop in Places:
             file = Desktop + "/zk-data.desktop"
             #os.system("rm " + file)
-            if True:#if not os.path.exists(file):
+            if not os.path.exists(file):
                 print("Write Desktop Entry")
                 print("User: " + str(User))
                 print("Desktop: " + str(Desktop))

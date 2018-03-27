@@ -20,21 +20,22 @@ class Main:
         print("LastLieferschein " + str(text))
         libs.BlueFunc.BlueSave("LastLieferschein", text, "DATA/DATA")    
 
-    def GetLieferscheine(self, identification, kunde, fertige, eigene):
-        print("Lieferscheine")
-        Dict = {}
-        Dict["identification"] = str(identification)
-        Dict["kunde_id"] = str(kunde)
-        Dict["fertig"] = bool(fertige)
-        Dict["eigene"] = bool(eigene)
-        
-        listeDerElemente = libs.send.SearchLieferschein(Dict)
+    def SearchKunden(self, identification):
+        print("SearchKunden")
+        if not identification == "":
+            Dict = {}
+            Dict["identification"] = str(identification)
+            Dict["name"] = ""
+            
+            listeDerElemente = libs.send.SearchKunden(Dict)
+        else:
+            listeDerElemente = []
 
         Antwort = []    
         for item in listeDerElemente:
-            DATA = libs.send.GetLieferschein(str(item))
+            DATA = libs.send.GetKunden(str(item))
             Antwort.append(DATA)
-        pyotherside.send("antwortSearchLieferscheine", Antwort)    
+        pyotherside.send("antwortSearchKunden", Antwort)    
 
     def busy(self, status):
         status = bool(status)
