@@ -232,7 +232,7 @@ s = socket.socket()
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 try: s.bind(SERVER_IP)
 except: print("Server Port schon gebunden")
-s.listen(1)
+s.listen(50)
 
 
 def KundenLaden():
