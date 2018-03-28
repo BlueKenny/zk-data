@@ -86,7 +86,7 @@ ApplicationWindow {
     Python {
         id: python
         Component.onCompleted: {
-            addImportPath(Qt.resolvedUrl('.'));
+            addImportPath(Qt.resolvedUrl(''));
             importModule('Main', function () {});
 
             call('Main.main.phone', [], function (boolStatus) {vars.isPhone = boolStatus});
