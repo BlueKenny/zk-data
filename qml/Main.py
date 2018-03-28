@@ -31,7 +31,7 @@ class Main:
         
         for Desktop in Places:
             file = Desktop + "/zk-data.desktop"
-            #os.system("rm " + file)
+            os.system("rm " + file)
             if not os.path.exists(file):
                 print("Write Desktop Entry")
                 print("User: " + str(User))
@@ -49,7 +49,7 @@ class Main:
                 DesktopEntry.write("X-Ubuntu-Touch=true\n")
                 DesktopEntry.write("Type=Application\n")
                 DesktopEntry.write("StartupNotify=true\n")
-                DesktopEntry.write("Icon=/home/" + User + "/zk-data/DATA/icon.png\n")
+                DesktopEntry.write("Icon=/home/" + User + "/zk-data/qml/DATA/icon.png\n")
                  
                 os.system("chmod +x " + file)
             
