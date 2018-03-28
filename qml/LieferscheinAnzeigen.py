@@ -112,7 +112,7 @@ class Main:
         pyotherside.send("antwortGetLieferschein", Antwort, summeTotal, DATA["fertig"])
         self.busy(False)
 
-    def SetLieferschein(self, mode, linie, variable):
+    def SetLieferschein(self, linie, anzahl, barcode, name, preis):
         global DATA
         global LastLieferschein
         #antwort = ""
@@ -121,10 +121,16 @@ class Main:
        
         self.busy(True)
  
-        if mode == "anzahl":
-            listdata = DATA[mode].split("|")
-            listdata[linie] = str(variable)
-            DATA[mode] = "|".join(listdata)
+        mode = "anzahl"
+        variable = str(anzahl)
+         
+        listdata = DATA[mode].split("|")
+        listdata[linie] = str(variable)
+        DATA[mode] = "|".join(listdata)     
+        
+        mode = "bcode"
+        variable = str(bcode)
+        
         if mode == "bcode":
             if not str(variable) == "":
                 listdata = DATA[mode].split("|")
@@ -159,11 +165,17 @@ class Main:
                     #listdata[linie] = ""
                     #DATA["preis"] = "|".join(listdata)
 
+        mode = "name"
+        variable = str(name)
+        
         if mode == "name":
             listdata = DATA[mode].split("|")
             listdata[linie] = str(variable)
             DATA[mode] = "|".join(listdata)
 
+        mode = "preis"
+        variable = str(preis)
+        
         if mode == "preis":
             listdata = DATA[mode].split("|")
             listdata[linie] = str(variable).replace(",", ".")
