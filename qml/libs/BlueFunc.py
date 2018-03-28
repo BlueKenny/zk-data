@@ -5,8 +5,17 @@ import time
 import datetime
 import codecs
 
+
+def BlueMkDir(directory):#	Macht ein verzeichnis wenn es noch nicht existiert
+    directory = forPhone(directory)
+
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        #os.mkdir(directory)
+        
 def forPhone(file):
     if os.path.exists("/home/phablet"):
+    	BlueMkDir("/home/phablet/.local/bluekenny.zk-data")
         if not "/home/phablet/.local/bluekenny.zk-data/" in file:
             file = "/home/phablet/.local/bluekenny.zk-data/" + file
             file = file.replace("//", "/")
@@ -29,12 +38,6 @@ def BlueLenDatei(File):	#	Gibt die anzahl linie zuruck in einem dokument
         Datei.close()
         return len(DateiDatenIndex)
 
-def BlueMkDir(directory):#	Macht ein verzeichnis wenn es noch nicht existiert
-    directory = forPhone(directory)
-
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-        #os.mkdir(directory)
 
 
 
