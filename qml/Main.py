@@ -16,18 +16,16 @@ import libs.BlueFunc
 class Main:    
     def __init__(self):
         print("init")
-        #for user in os.listdir("/home/"):
-        #    print(user)
-        User = os.popen("echo $USER").readlines()[0].rstrip()
+        #User = os.popen("echo $USER").readlines()[0].rstrip()
         
         Places = []
-        if os.path.exists("/home/phablet"):
-            Places.append("/home/phablet/.local/share/applications")
-            #Places.append("/home/phablet/.config/autostart")
-        else:
-            Places.append(os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip())
-            Places.append(os.popen("echo $HOME").readlines()[0].rstrip() + "/.config/autostart")
-            Places.append(os.popen("echo $HOME").readlines()[0].rstrip() + "/.local/share/applications")
+        #if os.path.exists("/home/phablet"):
+        #    Places.append("/home/phablet/.local/share/applications")
+        #    #Places.append("/home/phablet/.config/autostart")
+        #else:
+        #    Places.append(os.popen("echo $(xdg-user-dir DESKTOP)").readlines()[0].rstrip())
+        #    Places.append(os.popen("echo $HOME").readlines()[0].rstrip() + "/.config/autostart")
+        #    Places.append(os.popen("echo $HOME").readlines()[0].rstrip() + "/.local/share/applications")
         
         for Desktop in Places:
             file = Desktop + "/zk-data.desktop"
@@ -53,7 +51,7 @@ class Main:
                  
                 os.system("chmod +x " + file)
             
-        os.system("git pull")
+        #os.system("git pull")
         self.busy(False)
 
     def phone(self):
