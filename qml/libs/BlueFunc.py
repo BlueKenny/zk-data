@@ -15,7 +15,7 @@ def BlueMkDir(directory):#	Macht ein verzeichnis wenn es noch nicht existiert
         
 def forPhone(file):
     if os.path.exists("/home/phablet"):
-        if not os.path.exists("/home/phablet/.local/zk-data.bluekenny"): os.makedirs("/home/phablet/.local/zk-data.bluekenny")
+        if not os.path.exists("/home/phablet/.local/zk-data.bluekenny/DATA"): os.makedirs("/home/phablet/.local/zk-data.bluekenny/DATA")
         if not "/home/phablet/.local/zk-data.bluekenny/" in file:
             file = "/home/phablet/.local/zk-data.bluekenny/" + file
             file = file.replace("//", "/")
