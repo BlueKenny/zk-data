@@ -134,7 +134,7 @@ Rectangle {
 
                     onAccepted: {
                         deselect();
-                        python.call('LieferscheinAnzeigen.main.SetLieferschein', [liste.currentIndex, text, textBarcode.text, textName.text, textPreis.text], function() {});
+                        python.call('LieferscheinAnzeigen.main.SetLieferschein', [liste.currentIndex, textAnzahl.text, textBarcode.text, textName.text, textPreis.text], function() {});
                     }
                     onFocusChanged: {
                         if(focus) {
@@ -155,7 +155,7 @@ Rectangle {
 
                     onAccepted: {
                         deselect();
-                        python.call('LieferscheinAnzeigen.main.SetLieferschein', [liste.currentIndex, text, textBarcode.text, textName.text, textPreis.text], function() {});
+                        python.call('LieferscheinAnzeigen.main.SetLieferschein', [liste.currentIndex, textAnzahl.text, textBarcode.text, textName.text, textPreis.text], function() {});
                     }
                     onFocusChanged: {
                         if(focus) {
@@ -175,7 +175,7 @@ Rectangle {
 
                     onAccepted: {
                         deselect();
-                        python.call('LieferscheinAnzeigen.main.SetLieferschein', [liste.currentIndex, text, textBarcode.text, textName.text, textPreis.text], function() {});
+                        python.call('LieferscheinAnzeigen.main.SetLieferschein', [liste.currentIndex, textAnzahl.text, textBarcode.text, textName.text, textPreis.text], function() {});
                     }
                     onFocusChanged: {
                         if(focus) {
@@ -195,7 +195,7 @@ Rectangle {
                     horizontalAlignment: TextEdit.AlignHCenter
                     onAccepted: {
                         deselect();
-                        python.call('LieferscheinAnzeigen.main.SetLieferschein', [liste.currentIndex, text, textBarcode.text, textName.text, textPreis.text], function() {});
+                        python.call('LieferscheinAnzeigen.main.SetLieferschein', [liste.currentIndex, textAnzahl.text, textBarcode.text, textName.text, textPreis.text], function() {});
                     }
                     onFocusChanged: {
                         if(focus) {

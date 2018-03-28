@@ -127,7 +127,7 @@ Rectangle {
 
         focus: true
         highlightMoveDuration: 0
-        highlight: Rectangle { visible: false ; color: "lightsteelblue"; width: window.width}
+        highlight: Rectangle { visible: false ; color: "lightsteelblue"; width: mainWindow.width}
 
         height: (mainWindow.height / 20) * 13
         width: mainWindow.width

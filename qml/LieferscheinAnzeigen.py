@@ -112,7 +112,7 @@ class Main:
         pyotherside.send("antwortGetLieferschein", Antwort, summeTotal, DATA["fertig"])
         self.busy(False)
 
-    def SetLieferschein(self, linie, anzahl, barcode, name, preis):
+    def SetLieferschein(self, linie, anzahl, bcode, name, preis):
         global DATA
         global LastLieferschein
         #antwort = ""
@@ -126,6 +126,7 @@ class Main:
          
         listdata = DATA[mode].split("|")
         listdata[linie] = str(variable)
+        print("Setze " + mode + " auf " + str(variable))
         DATA[mode] = "|".join(listdata)     
         
         mode = "bcode"
@@ -136,25 +137,24 @@ class Main:
                 listdata = DATA[mode].split("|")
                 listdata[linie] = str(variable)
                 DATA[mode] = "|".join(listdata)
-                try:
+                if True:#try:
                     artikel = libs.send.GetArt(str(variable))
 
                     listdata = DATA["bcode"].split("|")
                     listdata[linie] = artikel["identification"]
+                    print("Setze " + mode + " auf " + str(variable))
                     DATA["bcode"] = "|".join(listdata)
                     
-                    listdata = DATA["name"].split("|")
-                    listdata[linie] = artikel["name_de"]
-                    DATA["name"] = "|".join(listdata)
+                    if name.rstrip() == "": name = artikel["name_de"]
                     
-                    listdata = DATA["preis"].split("|")
-                    listdata[linie] = str(artikel["preisvk"])
-                    DATA["preis"] = "|".join(listdata)
-                except:
+                    if preis == "0.0" or preis.rstrip() == "": preis = str(artikel["preisvk"])
+                    
+                if False:#except:
                     print("Error")
 
                     listdata = DATA[mode].split("|")
                     listdata[linie] = ""
+                    print("Setze " + mode + " auf " + str(variable))
                     DATA[mode] = "|".join(listdata)
 
                     #listdata = DATA["name"].split("|")
@@ -170,7 +170,9 @@ class Main:
         
         if mode == "name":
             listdata = DATA[mode].split("|")
+            print(mode + " ist " + listdata[linie])
             listdata[linie] = str(variable)
+            print("Setze " + mode + " auf " + str(variable))
             DATA[mode] = "|".join(listdata)
 
         mode = "preis"
@@ -178,7 +180,10 @@ class Main:
         
         if mode == "preis":
             listdata = DATA[mode].split("|")
+            print(mode + " ist " + listdata[linie])
+            listdata[linie] = str(variable)
             listdata[linie] = str(variable).replace(",", ".")
+            print("Setze " + mode + " auf " + str(variable))
             DATA[mode] = "|".join(listdata)
 
         summeTotal = 0.0
