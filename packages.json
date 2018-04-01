@@ -1,0 +1,24 @@
+{
+    "armhf": [
+    {
+        "url": "http://old-releases.ubuntu.com/ubuntu/",
+        "dist": "vivid",
+        "component": "main",
+        "packages": [
+            "qml-module-qtquick-controls",
+            "python3"
+        ]
+    }
+    ],
+    "amd64": [
+    {
+        "url": "http://be.archive.ubuntu.com/ubuntu/",
+        "dist": "xenial",
+        "component": "main",
+        "packages": [
+            "qml-module-qtquick-controls",
+            "python3"
+        ]
+    }
+    ]
+}
