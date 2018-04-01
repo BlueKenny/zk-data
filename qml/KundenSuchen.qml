@@ -88,6 +88,12 @@ Rectangle {
                     MouseArea {
                         anchors.fill: labelKundenSucheListeEintrag
                         onClicked: {
+                            if (vars.kundenSuchenVorherigeAnsicht == "frameLieferscheinSuchen") {
+                                vars.kundenSuchenVorherigeAnsicht = ""
+                                vars.lieferscheinSuchenTextName = identification
+                                view.push(frameLieferscheinSuchen)
+                            }
+
                             //python.call("LieferscheinSuchen.main.LastLieferschein", [parent.text], function() {});
                             //view.push(frameLieferscheinAnzeigen)
                         }

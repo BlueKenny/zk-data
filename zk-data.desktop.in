@@ -1,7 +1,0 @@
-[Desktop Entry]
-_Name=ZK-DATA
-Exec=qmlscene qml/Main.qml
-Icon=assets/icon.png
-Terminal=false
-Type=Application
-X-Ubuntu-Touch=true

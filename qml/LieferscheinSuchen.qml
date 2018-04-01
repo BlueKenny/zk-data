@@ -70,7 +70,14 @@ Rectangle {
         y: mainWindow.height / 20 * 2
         onAccepted: {
             vars.lieferscheinSuchenTextName = text
-            python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
+            //python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
+        }
+        MouseArea {
+            anchors.fill: textLieferscheinSuchenName
+            onClicked: {
+                vars.kundenSuchenVorherigeAnsicht = "frameLieferscheinSuchen"
+                view.push(frameKundenSuchen)
+            }
         }
     }
 

@@ -451,36 +451,44 @@ def SearchLieferschein(Dict):# Give Dict with Search return List of IDs
 
     if not Dict["identification"] == "":
         query = Lieferschein.select().where(Lieferschein.identification == Dict["identification"])
+        print("query selected")
     else:
         query = Lieferschein.select()
     
     if not Dict["kunde_id"] == "":
         query2 = Lieferschein.select().where(Lieferschein.kunde_id == Dict["kunde_id"])
+        print("query2 selected")
     else:
         query2 = Lieferschein.select()
 
     if Dict["fertig"] == False:
         query3 = Lieferschein.select().where(Lieferschein.fertig == Dict["fertig"])
+        print("query3 selected")
     else:
         query3 = Lieferschein.select()
 
     if Dict["eigene"] == True:
         query4 = Lieferschein.select().where(Lieferschein.user == str(ipname[0]))
+        print("query4 selected")
     else:
         query4 = Lieferschein.select()
-     
+        
     Antwort = []
     while True:
         Count = 1
         for ID in query:
+            print("Start test of " + ID.identification)
             if ID in query2 and ID in query3 and ID in query4:
+                print("End test of " + ID.identification)
                 Antwort.append(str(ID.identification))
-                #if Count == INDEXLIMIT:
-                #    break
-                #else:
-                #    Count = Count + 1
+                if Count == INDEXLIMIT:
+                    break
+                else:
+                    Count = Count + 1
+        print("End of IDs in query")
         break
-    lieferschein_db.close()
+    try: lieferschein_db.close()# Unfinalized things ?
+    except: True    
     return Antwort
 
 def NeuerLieferschein():# return Dict
