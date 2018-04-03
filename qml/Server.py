@@ -721,7 +721,7 @@ def AddArt(Dict):# return Bool of sucess
         else:
             ZuBestellen = object.minimum - EndErgebnis
         if ZuBestellen > 0:        
-            open("DATA/MINIMUM", "a").write(str(ZuBestellen) + "x  [" + object.name_de + "]  Lieferant : " + object.lieferant + " Artikel : " + object.artikel + "\n")
+            open("DATA/MINIMUM", "a").write(str(ZuBestellen) + "x  [" + object.name_de + "]  [" + object.identification + "] Lieferant : " + object.lieferant + " Artikel : " + object.artikel + "\n")
     else:
         object.anzahl = object.anzahl + float(add)
         
