@@ -111,6 +111,11 @@ Rectangle {
                                 vars.lieferscheinSuchenTextName = identification
                                 view.push(frameLieferscheinSuchen)
                             }
+                            if (vars.kundenSuchenVorherigeAnsicht == "frameLieferscheinAnzeigen") {
+                                vars.kundenSuchenVorherigeAnsicht = ""
+                                vars.lieferscheinAnzeigenKundeID = identification
+                                view.push(frameLieferscheinAnzeigen)
+                            }
 
                             //python.call("LieferscheinSuchen.main.LastLieferschein", [parent.text], function() {});
                             //view.push(frameLieferscheinAnzeigen)

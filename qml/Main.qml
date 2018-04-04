@@ -13,6 +13,7 @@ ApplicationWindow {
         id: vars
         property string lieferscheinSuchenTextIdentification: ""
         property string lieferscheinSuchenTextName: ""
+        property string lieferscheinAnzeigenKundeID: ""
         property string kundenSuchenTextIdentification: ""
         property string kundenSuchenTextName: ""
         property string kundenSuchenVorherigeAnsicht: ""

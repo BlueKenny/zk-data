@@ -40,7 +40,21 @@ Rectangle {
         id: labelLieferscheinAnzeigenKundeID
         text: "Kunde : "
         font.pixelSize: vars.isPhone ? mainWindow.width / 20 : mainWindow.width / 50
-        x: mainWindow.width / 4 * 3 - width / 2
+        x: mainWindow.width / 10 * 7 - width / 2
+    }
+    TextField {
+        id: textLieferscheinAnzeigenKundeID
+        text: ""
+        font.pixelSize: vars.isPhone ? mainWindow.width / 20 : mainWindow.width / 50
+        x: mainWindow.width / 10 * 8
+        width: mainWindow.width / 5
+        MouseArea {
+            anchors.fill: textLieferscheinAnzeigenKundeID
+            onClicked: {
+                vars.kundenSuchenVorherigeAnsicht = "frameLieferscheinAnzeigen"
+                view.push(frameKundenSuchen)
+            }
+        }
     }
 
     Label {
