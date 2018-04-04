@@ -23,6 +23,9 @@ if BlueLoad("SERVERSTOCK", DIR + "DATA/DATA") == None: BlueSave("SERVERSTOCK", "
 
 SERVERSTOCK_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 10000)
 SERVERIMAGE_IP = (BlueLoad("SERVERSTOCK", DIR + "DATA/DATA"), 12345)
+
+print("SERVERSTOCK_IP: " + str(SERVERSTOCK_IP))
+print("SERVERIMAGE_IP: " + str(SERVERIMAGE_IP))
 #####           BILDER
 
 def SendBild(bild):
