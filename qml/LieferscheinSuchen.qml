@@ -69,7 +69,7 @@ Rectangle {
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20 * 2
         onAccepted: {
-            vars.lieferscheinSuchenTextName = text
+            //vars.lieferscheinSuchenTextName = text
             //python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
         }
         MouseArea {
@@ -78,6 +78,18 @@ Rectangle {
                 vars.kundenSuchenVorherigeAnsicht = "frameLieferscheinSuchen"
                 view.push(frameKundenSuchen)
             }
+        }
+    }
+    Button {
+        id: buttonLieferscheinSucheKundenClear
+        text: "X"
+        x: textLieferscheinSuchenName.x + textLieferscheinSuchenName.width
+        y: textLieferscheinSuchenName.y
+        height: textLieferscheinSuchenName.height
+        width: textLieferscheinSuchenName.width / 2
+        onClicked: {
+            textLieferscheinSuchenName.text = ""
+            python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
         }
     }
 
