@@ -1,0 +1,15 @@
+{
+    "name": "zk-data.bluekenny",
+    "description": "zk-data",
+    "architecture": "@CLICK_ARCH@",
+    "title": "ZK-DATA",
+    "hooks": {
+        "zk-data": {
+            "apparmor": "zk-data.apparmor",
+            "desktop":  "zk-data.desktop"
+        }
+    },
+    "version": "2018.04.04.45",
+    "maintainer": "Zaunz Kenny <bluez@linuxmail.org>",
+    "framework" : "ubuntu-sdk-15.04.6"
+}
