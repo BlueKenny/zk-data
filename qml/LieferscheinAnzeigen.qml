@@ -44,6 +44,14 @@ Rectangle {
         font.pixelSize: vars.isPhone ? mainWindow.width / 20 : mainWindow.width / 50
         x: mainWindow.width / 10 * 7 - width / 2
     }
+    Button {
+        text: "X"
+        y: labelLieferscheinAnzeigenKundeID.y
+        x: labelLieferscheinAnzeigenKundeID.x + labelLieferscheinAnzeigenKundeID.width
+        onClicked: {
+            textLieferscheinAnzeigenKundeID.text = ""
+        }
+    }
     TextField {
         id: textLieferscheinAnzeigenKundeID
         text: vars.lieferscheinAnzeigenKundeID
