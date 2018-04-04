@@ -51,7 +51,7 @@ class Main:
                  
                 os.system("chmod +x " + file)
             
-        #os.system("git pull")
+        if not self.phone(): os.system("git pull")
         self.busy(False)
 
     def phone(self):
