@@ -109,7 +109,7 @@ class Main:
         #summeTotal = float(DATA["total"])
         #DATA["total"] = summeTotal   
         summeTotal = str(DATA["total"]) + " €"
-        pyotherside.send("antwortGetLieferschein", Antwort, summeTotal, DATA["fertig"])
+        pyotherside.send("antwortGetLieferschein", Antwort, summeTotal, DATA["fertig"], DATA["kunde_id"], DATA["kunde_name"])
         self.busy(False)
 
     def SetLieferschein(self, linie, anzahl, bcode, name, preis):
@@ -211,6 +211,15 @@ class Main:
         DATA["fertig"] = status
         libs.send.SetLieferschein(DATA)
 
+    def SetKunde(self, kunde_id):
+        print("SetKunde")
+        global DATA        
+        global LastLieferschein
+        DATA["kunde_id"] = kunde_id       
+        libs.send.SetLieferschein(DATA)
+        DATA = libs.send.GetLieferschein(LastLieferschein)
+        return DATA["kunde_name"]
+    
     def Drucken(self):
         global DATA
         from pyexcel_ods import get_data

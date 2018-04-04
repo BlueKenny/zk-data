@@ -16,7 +16,7 @@ class Main:
         self.busy(False)
 
     def LastLieferschein(self, text):
-        text = text.split(", Kunde: ")[0]
+        text = text.split(" | ")[0]
         print("LastLieferschein " + str(text))
         libs.BlueFunc.BlueSave("LastLieferschein", text, "DATA/DATA")    
 

@@ -14,7 +14,7 @@ Rectangle {
         property bool switchFinishChecked: false
     }
 
-    function antwortGetLieferschein(item, summe, fertig) {
+    function antwortGetLieferschein(item, summe, fertig, kunde_id, kunde_name) {
         //console.warn("antwortGetLieferschein")
         //variable.listeIndex = liste.currentIndex
         //console.warn("Current Index: " + variable.listeIndex)
@@ -27,6 +27,8 @@ Rectangle {
         labelTotal.text = summe
         variable.switchFinishChecked = fertig
         switchFinish.text = variable.switchFinishChecked ? "Fertig" : "Nicht Fertig"
+        textLieferscheinAnzeigenKundeID.text = kunde_id
+        labelLieferscheinAnzeigenKundeName.text = kunde_name
     }
 
     Label {
@@ -44,7 +46,7 @@ Rectangle {
     }
     TextField {
         id: textLieferscheinAnzeigenKundeID
-        text: ""
+        text: vars.lieferscheinAnzeigenKundeID
         font.pixelSize: vars.isPhone ? mainWindow.width / 20 : mainWindow.width / 50
         x: mainWindow.width / 10 * 8
         width: mainWindow.width / 5
@@ -55,6 +57,17 @@ Rectangle {
                 view.push(frameKundenSuchen)
             }
         }
+        onTextChanged: {
+            python.call('LieferscheinAnzeigen.main.SetKunde', [text], function(kunde_name) {labelLieferscheinAnzeigenKundeName.text = kunde_name});
+        }
+    }
+    Text {
+        id: labelLieferscheinAnzeigenKundeName
+        text: ""
+        font.pixelSize: vars.isPhone ? mainWindow.width / 20 : mainWindow.width / 50
+        x: mainWindow.width / 10 * 8
+        y: textLieferscheinAnzeigenKundeID.y + textLieferscheinAnzeigenKundeID.height
+        width: mainWindow.width / 5
     }
 
     Label {
