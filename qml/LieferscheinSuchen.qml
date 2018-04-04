@@ -68,10 +68,6 @@ Rectangle {
         width: mainWindow.width / 10
         x: mainWindow.width / 3 * 2 - width / 2
         y: mainWindow.height / 20 * 2
-        onAccepted: {
-            //vars.lieferscheinSuchenTextName = text
-            //python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
-        }
         MouseArea {
             anchors.fill: textLieferscheinSuchenName
             onClicked: {
@@ -88,6 +84,7 @@ Rectangle {
         height: textLieferscheinSuchenName.height
         width: textLieferscheinSuchenName.width / 2
         onClicked: {
+            vars.lieferscheinSuchenTextName = ""
             textLieferscheinSuchenName.text = ""
             python.call("LieferscheinSuchen.main.GetLieferscheine", [textLieferscheinSuchenIdentification.text, textLieferscheinSuchenName.text, checkLieferscheinSuchenFertige.checked, checkLieferscheinSuchenEigene.checked], function() {});
         }
