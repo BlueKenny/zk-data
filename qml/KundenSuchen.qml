@@ -32,7 +32,7 @@ Rectangle {
     }
 
     Label {
-        text: "Kundennummer"
+        text: "Identification"
         font.pixelSize: mainWindow.width / 50
         x: mainWindow.width / 3 - width / 2
         y: mainWindow.height / 20
@@ -45,7 +45,25 @@ Rectangle {
         y: mainWindow.height / 20
         onAccepted: {
             vars.kundenSuchenTextIdentification = text
-            python.call("KundenSuchen.main.SearchKunden", [textKundenSuchenIdentification.text], function() {});
+            python.call("KundenSuchen.main.SearchKunden", [textKundenSuchenIdentification.text, textKundenSuchenName.text], function() {});
+        }
+    }
+
+    Label {
+        text: "Name"
+        font.pixelSize: mainWindow.width / 50
+        x: mainWindow.width / 3 - width / 2
+        y: mainWindow.height / 20 * 2
+    }
+    TextField {
+        id: textKundenSuchenName
+        text: vars.kundenSuchenTextName
+        width: mainWindow.width / 10
+        x: mainWindow.width / 3 * 2 - width / 2
+        y: mainWindow.height / 20 * 2
+        onAccepted: {
+            vars.kundenSuchenTextName = text
+            python.call("KundenSuchen.main.SearchKunden", [textKundenSuchenIdentification.text, textKundenSuchenName.text], function() {});
         }
     }
 
@@ -116,7 +134,7 @@ Rectangle {
             setHandler("antwortSearchKunden", antwortSearchKunden);
             setHandler("busy", busy);
 
-            call("KundenSuchen.main.SearchKunden", [textKundenSuchenIdentification.text], function() {});
+            call("KundenSuchen.main.SearchKunden", [textKundenSuchenIdentification.text, textKundenSuchenName.text], function() {});
         }
     }
 }

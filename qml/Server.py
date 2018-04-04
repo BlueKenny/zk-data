@@ -395,7 +395,8 @@ def SearchKunden(Dict):# Give Dict with Search return List of IDs
         query = Kunde.select()
     
     if not Dict["name"] == "":
-        query2 = Kunde.select().where(Kunde.name == Dict["name"])
+        query2 = Kunde.select().where(Kunde.name.contains(Dict["name"]))
+        #query2 = Kunde.select().where(Dict["name"] in Kunde.name)
     else:
         query2 = Kunde.select()
      
@@ -405,10 +406,10 @@ def SearchKunden(Dict):# Give Dict with Search return List of IDs
         for ID in query:
             if ID in query2:
                 Antwort.append(str(ID.identification))
-                #if Count == INDEXLIMIT:
-                #    break
-                #else:
-                #    Count = Count + 1
+                if Count == INDEXLIMIT:
+                    break
+                else:
+                    Count = Count + 1
         break
     kunde_db.close()
     return Antwort

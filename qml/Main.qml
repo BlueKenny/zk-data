@@ -14,6 +14,7 @@ ApplicationWindow {
         property string lieferscheinSuchenTextIdentification: ""
         property string lieferscheinSuchenTextName: ""
         property string kundenSuchenTextIdentification: ""
+        property string kundenSuchenTextName: ""
         property string kundenSuchenVorherigeAnsicht: ""
         property bool lieferscheinSuchenCheckFertige: false
         property bool lieferscheinSuchenCheckEigene: true

@@ -20,16 +20,17 @@ class Main:
         print("LastLieferschein " + str(text))
         libs.BlueFunc.BlueSave("LastLieferschein", text, "DATA/DATA")    
 
-    def SearchKunden(self, identification):
+    def SearchKunden(self, identification, name):
         print("SearchKunden")
-        if not identification == "":
+        if identification == "" and name == "":
+            print("Keine Kunden Suche gestartet")
+            listeDerElemente = []
+        else:
             Dict = {}
             Dict["identification"] = str(identification)
-            Dict["name"] = ""
+            Dict["name"] = name
             
             listeDerElemente = libs.send.SearchKunden(Dict)
-        else:
-            listeDerElemente = []
 
         Antwort = []    
         for item in listeDerElemente:
