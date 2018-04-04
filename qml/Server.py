@@ -58,6 +58,7 @@ FreeID = 100000
 class Lieferschein(Model):
     identification = CharField(primary_key = True)
     kunde_id = CharField(default="0")
+    kunde_name = CharField(default="")
     datum = CharField(default=str(Date()))
     lastchange = CharField(default=str(Timestamp()))
     linien = CharField(default="")
@@ -184,6 +185,8 @@ try: migrate(lieferschein_migrator.add_column("Lieferschein", "user", CharField(
 except: print("Lieferschein:user:existiert schon")
 try: migrate(lieferschein_migrator.add_column("Lieferschein", "total", FloatField(default=0.0)))
 except: print("Lieferschein:total:existiert schon")
+try: migrate(lieferschein_migrator.add_column("Lieferschein", "kunde_name", CharField(default="")))
+except: print("Lieferschein:kunde_name:existiert schon")
 
 lieferschein_db.close()
 
@@ -533,6 +536,11 @@ def SetLieferschein(Dict):# return Bool of sucess
     lieferschein_db.connect()
     if True:#try:
         Dict["lastchange"] = str(Timestamp())
+        
+        try: Dict["kunde_name"] = GetKunden({"identification":Dict["kunde_id"]})["name"]
+        except: Dict["kunde_name"] = ""
+        
+        
         if Dict["linien"] == "":#wenn er leer ist
             Dict["linien"] = "0"
             Dict["anzahl"] = "1"

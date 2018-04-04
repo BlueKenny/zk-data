@@ -37,6 +37,13 @@ Rectangle {
     }
 
     Label {
+        id: labelLieferscheinAnzeigenKundeID
+        text: "Kunde : "
+        font.pixelSize: vars.isPhone ? mainWindow.width / 20 : mainWindow.width / 50
+        x: mainWindow.width / 4 * 3 - width / 2
+    }
+
+    Label {
         id: labelTitle1
         text: "Anzahl"
         font.pixelSize: labelLieferscheinAnzeigenTitle.font.pixelSize
