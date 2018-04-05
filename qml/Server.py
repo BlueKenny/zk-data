@@ -31,6 +31,39 @@ StockPreisVKHList = {}
 StockPreisVKList = {}
 StockAnzahlList = {}
 
+if BlueLoad("Telegram", "DATA/DATA") == "1":
+    Telegram = True
+    try:
+        from telethon import TelegramClient, utils
+    except:
+        import os
+        print("Module Telethon, not installed, starting Installation...")
+        os.system("pip3 install --user telethon")
+        print("Module Telethon Installed, please restart APP...")
+        
+    api_id = 291651
+    api_hash = '0f734eda64f8fa7dea8ed9558fd447e9'
+    client = TelegramClient('telepygram', api_id, api_hash)
+    isConnected = client.connect() # return True
+    print("Connection: " + str(isConnected))
+    isAuthorized = client.is_user_authorized()
+    print("Authorized: " + str(isAuthorized))
+
+    if not isAuthorized:
+        phone_number = input("Enter your phone number\nIn international format please\n")
+        client.send_code_request(phone_number)
+        authorized_code = input("Please enter code:\n")
+        me = client.sign_in(phone_number, authorized_code)
+
+    TelegramContact = BlueLoad("TelegramContact", "DATA/DATA")
+    client.send_message(TelegramContact, "Server gestarted")
+        
+    Telegram = True
+
+else:
+    Telegram = False
+    BlueSave("Telegram", "0", "DATA/DATA")
+    BlueSave("TelegramContact", "", "DATA/DATA")
 
 try: from peewee import *
 except:
@@ -730,7 +763,9 @@ def AddArt(Dict):# return Bool of sucess
         else:
             ZuBestellen = object.minimum - EndErgebnis
         if ZuBestellen > 0:        
-            open("DATA/MINIMUM", "a").write(str(ZuBestellen) + "x  [" + object.name_de + "]  [" + object.identification + "] Lieferant : " + object.lieferant + " Artikel : " + object.artikel + "\n")
+            ZuBestellenLinie = str(ZuBestellen) + "x  [" + object.name_de + "]  [" + object.identification + "] Lieferant : " + object.lieferant + " Artikel : " + object.artikel + "\n"
+            open("DATA/MINIMUM", "a").write(str(ZuBestellenLinie))
+            client.send_message(TelegramContact, ZuBestellenLinie)    
     else:
         object.anzahl = object.anzahl + float(add)
         
