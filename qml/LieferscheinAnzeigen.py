@@ -137,7 +137,7 @@ class Main:
                 listdata = DATA[mode].split("|")
                 listdata[linie] = str(variable)
                 DATA[mode] = "|".join(listdata)
-                if True:#try:
+                try:
                     artikel = libs.send.GetArt(str(variable))
 
                     listdata = DATA["bcode"].split("|")
@@ -149,8 +149,11 @@ class Main:
                     
                     if preis == "0.0" or preis.rstrip() == "": preis = str(artikel["preisvk"])
                     
-                if False:#except:
+                    os.system("aplay DATA/scan-yes.wav &")
+                    
+                except:
                     print("Error")
+                    os.system("aplay DATA/scan-no.wav &")
 
                     listdata = DATA[mode].split("|")
                     listdata[linie] = ""
