@@ -1,6 +1,6 @@
 {
     "name": "zk-data.bluekenny",
-    "description": "zk-data",
+    "description": "zk-data for Ubuntu Touch, Work i progress ;)",
     "architecture": "@CLICK_ARCH@",
     "title": "ZK-DATA",
     "hooks": {
@@ -9,7 +9,7 @@
             "desktop":  "zk-data.desktop"
         }
     },
-    "version": "2018.04.04.45",
+    "version": "2018.04.04.61",
     "maintainer": "Zaunz Kenny <bluez@linuxmail.org>",
-    "framework" : "ubuntu-sdk-15.04.6"
+    "framework" : "ubuntu-sdk-15.04.5"
 }

@@ -5,4 +5,3 @@ Icon=assets/icon.png
 Terminal=false
 Type=Application
 X-Ubuntu-Touch=true
-Name[de_BE]=zk-data.desktop.in
