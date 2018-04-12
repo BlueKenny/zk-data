@@ -51,6 +51,7 @@ if BlueLoad("Telegram", "DATA/DATA") == "1":
 
     if not isAuthorized:
         phone_number = input("Enter your phone number\nIn international format please\n")
+        print("Phone is " + str(phone_number))
         client.send_code_request(phone_number)
         authorized_code = input("Please enter code:\n")
         me = client.sign_in(phone_number, authorized_code)
