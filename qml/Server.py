@@ -759,14 +759,15 @@ def AddArt(Dict):# return Bool of sucess
         object.anzahl = object.anzahl - float(add)
         EndErgebnis = object.anzahl
         
-        if StartErgebnis < object.minimum:
-            ZuBestellen = Anzahl
-        else:
-            ZuBestellen = object.minimum - EndErgebnis
-        if ZuBestellen > 0:        
-            ZuBestellenLinie = str(ZuBestellen) + "x  [" + object.name_de + "]  [" + object.identification + "] Lieferant : " + object.lieferant + " Artikel : " + object.artikel + "\n"
-            open("DATA/MINIMUM", "a").write(str(ZuBestellenLinie))
-            client.send_message(TelegramContact, ZuBestellenLinie)    
+        if not object.minimum == 0.0:
+            if StartErgebnis < object.minimum:
+                ZuBestellen = Anzahl
+            else:
+                ZuBestellen = object.minimum - EndErgebnis
+            if ZuBestellen > 0:        
+                ZuBestellenLinie = str(ZuBestellen) + "x  [" + object.name_de + "]  [" + object.identification + "] Lieferant : " + object.lieferant + " Artikel : " + object.artikel + "\n"
+                open("DATA/MINIMUM", "a").write(str(ZuBestellenLinie))
+                client.send_message(TelegramContact, ZuBestellenLinie)    
     else:
         object.anzahl = object.anzahl + float(add)
         
