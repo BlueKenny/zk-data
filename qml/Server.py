@@ -765,7 +765,7 @@ def AddArt(Dict):# return Bool of sucess
             else:
                 ZuBestellen = object.minimum - EndErgebnis
             if ZuBestellen > 0:        
-                ZuBestellenLinie = str(ZuBestellen) + "x  [" + object.name_de + "] Rest : " + object.anzahl + " [" + object.identification + "] Lieferant : " + object.lieferant + " Artikel : " + object.artikel + "\n"
+                ZuBestellenLinie = str(ZuBestellen) + "x  [" + object.name_de + "] Rest : " + str(object.anzahl) + " [" + object.identification + "] Lieferant : " + object.lieferant + " Artikel : " + object.artikel + "\n"
                 open("DATA/MINIMUM", "a").write(str(ZuBestellenLinie))
                 client.send_message(TelegramContact, ZuBestellenLinie)    
     else:
