@@ -17,6 +17,8 @@ import threading
 
 SERVER_PORT=10000
 
+BYTE_LENGHT = 2048
+
 StockCreationList = {}
 StockLastChangeList = {}
 StockBarcodeList = {}
@@ -68,7 +70,7 @@ else:
 
 try: from peewee import *
 except:
-    if platform.system() == "Linux": os.system("pip3 install --user peewee")
+    if sys.platform == "linux": os.system("pip3 install --user peewee")
 
 SERVER_SQL=BlueLoad("SERVERSQL", "DATA/DATA")
 if SERVER_SQL == "None":
@@ -223,10 +225,6 @@ try: migrate(lieferschein_migrator.add_column("Lieferschein", "kunde_name", Char
 except: print("Lieferschein:kunde_name:existiert schon")
 
 lieferschein_db.close()
-
-
-
-
 
 
 local_db.connect()
@@ -574,19 +572,23 @@ def SetLieferschein(Dict):# return Bool of sucess
         try: Dict["kunde_name"] = GetKunden({"identification":Dict["kunde_id"]})["name"]
         except: Dict["kunde_name"] = ""
         
-        
         if Dict["linien"] == "":#wenn er leer ist
             Dict["linien"] = "0"
             Dict["anzahl"] = "1"
             Dict["bcode"] = ""
             Dict["name"] = ""
             Dict["preis"] = "0.0"
-        if not Dict["bcode"].split("|")[-1] == "":
-            Dict["linien"] = Dict["linien"] + "|" + str(int(Dict["linien"].split("|")[-1]) + 1)
-            Dict["anzahl"] = Dict["anzahl"] + "|1"
-            Dict["bcode"] = Dict["bcode"] + "|"
-            Dict["name"] = Dict["name"] + "|"
-            Dict["preis"] = Dict["preis"] + "|0.0"
+        if not Dict["bcode"].split("|")[-1] == "":# 1 Neue Linie Hinzufügen
+            ActualSize = float(sys.getsizeof(json.dumps(Dict).encode()))
+            MaxSize = BYTE_LENGHT * 0.8
+            print("\nActualSize: " + str(ActualSize))
+            print("MaxSize: " + str(MaxSize) + "\n")
+            if ActualSize < MaxSize:        
+                Dict["linien"] = Dict["linien"] + "|" + str(int(Dict["linien"].split("|")[-1]) + 1)
+                Dict["anzahl"] = Dict["anzahl"] + "|1"
+                Dict["bcode"] = Dict["bcode"] + "|"
+                Dict["name"] = Dict["name"] + "|"
+                Dict["preis"] = Dict["preis"] + "|0.0"
         # Linien zusammen setzen
         NeuerDict = Dict.copy()
         NeuerDict["linien"] = []
@@ -597,17 +599,17 @@ def SetLieferschein(Dict):# return Bool of sucess
         for linie in Dict["linien"].split("|"):# für jede linie im Dict
             linie = int(linie)
             if Dict["bcode"].split("|")[linie] in NeuerDict["bcode"] and not len(Dict["bcode"].split("|")[linie]) < 3:# wenn schon im Neuen dict
-                print("Schon im Dict " + str(linie))
+                #print("Schon im Dict " + str(linie))
                 NeuerDict["anzahl"][NeuerDict["bcode"].index(Dict["bcode"].split("|")[linie])] = str(int(NeuerDict["anzahl"][NeuerDict["bcode"].index(Dict["bcode"].split("|")[linie])]) + int(Dict["anzahl"].split("|")[linie]))
             else:
-                print("Noch nicht im Dict " + str(linie))
+                #print("Noch nicht im Dict " + str(linie))
                 try: NeuerDict["linien"].append(str(int(NeuerDict["linien"][-1]) + 1))
                 except: NeuerDict["linien"].append("0")
                 NeuerDict["anzahl"].append(str(Dict["anzahl"].split("|")[linie]))
                 NeuerDict["bcode"].append(str(Dict["bcode"].split("|")[linie]))
                 NeuerDict["name"].append(str(Dict["name"].split("|")[linie]))
                 NeuerDict["preis"].append(str(Dict["preis"].split("|")[linie]))
-        print("NeuerDict " + str(NeuerDict))
+        #print("NeuerDict " + str(NeuerDict))
         Dict["linien"] = "|".join(NeuerDict["linien"])
         Dict["anzahl"] = "|".join(NeuerDict["anzahl"])
         Dict["bcode"] = "|".join(NeuerDict["bcode"])
@@ -675,7 +677,8 @@ def SetLieferschein(Dict):# return Bool of sucess
 
 def GetArt(Dict):# return Dict
     print("GetArt")
-    local_db.connect()
+    try: local_db.connect()
+    except: True
 
     try:
         bcode = str(Dict["identification"])
@@ -748,7 +751,8 @@ def AddArt(Dict):# return Bool of sucess
             break
         BeID = BeID + 1
 
-    object = Artikel.get(Artikel.identification == id)
+    try: object = Artikel.get(Artikel.identification == id)
+    except: return False
     object.lastchange = str(Timestamp())
     
     start = float(object.anzahl)
@@ -849,7 +853,7 @@ while True:
     except: ipname = ["nix"]
     Debug("Verbunden mit " + str(ipname[0]))
     while True:
-        DATA = c.recv(4096)
+        DATA = c.recv(BYTE_LENGHT)
         if not DATA:
             Debug("Client sendet nicht mehr")
             break

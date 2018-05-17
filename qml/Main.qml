@@ -8,7 +8,6 @@ ApplicationWindow {
     width: 2000
     title: qsTr("ZK-DATA")
 
-
     Item {
         id: vars
         property string lieferscheinSuchenTextIdentification: ""
