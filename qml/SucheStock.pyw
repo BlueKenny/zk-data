@@ -16,7 +16,8 @@ from libs.barcode import *
 import csv
 
 EntryList=["Barcode", "Artikel", "Artikel2", "Artikel3", "Lieferant", "Name", "Ort", "PreisEK", "PreisVKH", "PreisVK", "Anzahl"]
-appSuche = gui("Search Stock", "800x800")
+appSuche = gui("SucheStock", "800x800")
+appSuche.setIcon("DATA/icon.gif")
 #appSuche.setSticky("news")
 #appSuche.setExpand("both")
 #appSuche.setFont(12)
