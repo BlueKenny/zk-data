@@ -17,9 +17,9 @@ Rectangle {
     Button {
         id: buttonLieferschein
         text: "Lieferscheine"
-        width: vars.isPhone ? window.width / 2 : window.width / 5
+        width: vars.isPhone ? window.width / 2: window.width / 5
         height: window.height / 5
-        x: window.width / 3 - width / 2
+        x: vars.isPhone ? 0 : window.width / 3 - width / 2
         y: window.height / 5 - height / 2
         onClicked: {
             view.push(frameLieferscheinSuchen)
@@ -31,8 +31,9 @@ Rectangle {
         text: "Stock"
         width: vars.isPhone ? window.width / 2 : window.width / 5
         height: window.height / 5
-        x: window.width / 3 * 2 - width / 2
+        x: vars.isPhone ? window.width / 2 : window.width / 3 * 2 - width / 2
         y: window.height / 5 - height / 2
+        enabled: false
         onClicked: {
             view.push(frameStock)
         }
@@ -43,10 +44,22 @@ Rectangle {
         text: "Kunden"
         width: vars.isPhone ? window.width / 2 : window.width / 5
         height: window.height / 5
-        x: window.width / 3 - width / 2
+        x: vars.isPhone ? 0 : window.width / 3 - width / 2
         y: window.height / 5 * 3 - height / 2
         onClicked: {
             view.push(frameKundenSuchen)
+        }
+    }
+
+    Button {
+        id: buttonEinstellung
+        text: "Einstellungen"
+        width: vars.isPhone ? window.width / 2 : window.width / 5
+        height: window.height / 5
+        x: vars.isPhone ? window.width / 2 : window.width / 3 * 2 - width / 2
+        y: window.height / 5 * 3 - height / 2
+        onClicked: {
+            view.push(frameEinstellungen)
         }
     }
 }

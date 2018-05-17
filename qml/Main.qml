@@ -18,6 +18,8 @@ ApplicationWindow {
         property string kundenSuchenVorherigeAnsicht: ""
         property bool lieferscheinSuchenCheckFertige: false
         property bool lieferscheinSuchenCheckEigene: true
+        property string druckerIP: "NULL"
+        property string serverIP: "NULL"
 
         property bool isPhone: false
     }
@@ -83,6 +85,10 @@ ApplicationWindow {
         Component {
             id: frameStock
             Stock {}
+        }
+        Component {
+           id: frameEinstellungen
+           Einstellungen {}
         }
     }
 
