@@ -9,7 +9,7 @@
             "desktop":  "zk-data.desktop"
         }
     },
-    "version": "2018.5.17.84",
+    "version": "2018.5.18.86",
     "maintainer": "Zaunz Kenny <bluez@linuxmail.org>",
     "framework" : "ubuntu-sdk-15.04.5"
 }
