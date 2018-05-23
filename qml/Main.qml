@@ -20,6 +20,7 @@ ApplicationWindow {
         property bool lieferscheinSuchenCheckEigene: true
         property string druckerIP: "NULL"
         property string serverIP: "NULL"
+        property string namePC: "NULL"
 
         property bool isPhone: false
     }

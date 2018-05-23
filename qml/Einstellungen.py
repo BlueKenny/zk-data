@@ -9,6 +9,8 @@ except: True
 import libs.send
 import libs.BlueFunc
 
+import socket
+
 class Main:    
     def __init__(self):
         print("init")
@@ -22,6 +24,19 @@ class Main:
         IP = str(IP)
         libs.BlueFunc.BlueSave("SERVERSTOCK", IP, "DATA/DATA")
         print("SetServer(" + IP + ")")
+    
+    def SetName(self, Name):
+        Name = str(Name)
+        libs.BlueFunc.BlueSave("PCNAME", Name, "DATA/DATA")
+        print("SetName(" + Name + ")")
+        
+    def GetName(self):
+        Name = str(libs.BlueFunc.BlueLoad("PCNAME", "DATA/DATA"))
+        print("GetName() = " + Name)
+        if Name == "None":
+            Name = str(socket.gethostname())
+            print("GetName() = " + Name)
+        return Name
         
     def GetDrucker(self):
         IP = str(libs.BlueFunc.BlueLoad("PrinterIP", "DATA/DATA"))

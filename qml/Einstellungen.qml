@@ -63,6 +63,23 @@ Rectangle {
         }
     }
 
+    Label {
+        text: "PC Name"
+        font.pixelSize: mainWindow.width / 50
+        x: mainWindow.width / 3 - width / 2
+        y: mainWindow.height / 20 * 3
+    }
+    TextField {
+        id: textPCName
+        text: vars.namePC
+        width: mainWindow.width / 10
+        x: mainWindow.width / 3 * 2 - width / 2
+        y: mainWindow.height / 20 * 3
+        onAccepted: {
+            python.call("Einstellungen.main.SetName", [text], function() {});
+        }
+    }
+
     Python {
         id: python
         Component.onCompleted: {
@@ -72,6 +89,7 @@ Rectangle {
 
             call("Einstellungen.main.GetServer", [], function(ipAdr) {vars.serverIP = ipAdr});
             call("Einstellungen.main.GetDrucker", [], function(ipAdr) {vars.druckerIP = ipAdr});
+            call("Einstellungen.main.GetName", [], function(namePC) {vars.namePC = namePC});
 
             //setHandler("antwortSearchKunden", antwortSearchKunden);
             //setHandler("busy", busy);
