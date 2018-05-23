@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Clipboard
+Exec=qmlscene /home/$USER/zk-data/qml/Clipboard.qml
+Icon=/home/$USER/zk-data/qml/clipboard.png
+Terminal=false
+Type=Application
+X-Ubuntu-Touch=true
