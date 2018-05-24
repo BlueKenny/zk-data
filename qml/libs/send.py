@@ -99,6 +99,30 @@ def NeuerLieferschein():#return Dict
         print("NeuerLieferschein() = ERROR")
         return {}
 
+
+def GetGewinn(DATUM):#return Float
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Dict = {"mode":"GetGewinn"}
+        sock.connect(SERVERSTOCK_IP)
+        Dict["datum"] = str(DATUM)
+
+        #Debug("Send " + str(Dict))
+        data = json.dumps(Dict)  # data serialized
+        data = data.encode()
+        sock.sendto(data, SERVERSTOCK_IP)
+        data = sock.recv(2048)
+        data = data.decode()
+        data = json.loads(data)
+        sock.close()
+        #Debug("Get " + str(data))
+
+        print("GetGewinn(" + str(DATUM) + ") = " + str(data))
+        return float(data)
+    except:
+        print("GetGewinn(" + str(DATUM) + ") = ERROR")
+        return 0.0
+
 def GetLieferschein(ID):#return Dict
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -800,6 +800,20 @@ def AddArt(Dict):# return Bool of sucess
     local_db.close()
     return Antwort
 
+def GetGewinn(Dict): #return Float
+    print("GetGewinn")
+    
+    try: local_db.connect()
+    except: True
+    query = Bewegung.select().where(Bewegung.datum == str(Dict["datum"]))
+    local_db.close()
+    Summe = 0.0
+    for Each in query:
+        Anzahl = Each.start - Each.end
+        Summe = Summe + ((Each.preisvkh - Each.preisek) * Anzahl)
+    
+    return Summe
+    
 def GetID():# return Dict
     global FreeID
     print("GetID")
@@ -911,6 +925,9 @@ while True:
 
         if mode == "GetBarcode":#return String
             Antwort = GetBarcode(DATA["position"], DATA["bytes"], ipname[0])
+        
+        if mode == "GetGewinn": # return Float
+            Antwort = GetGewinn(DATA)
 
         Debug("Sende : " + str(Antwort))
         Antwort = json.dumps(Antwort)  # data serialized
