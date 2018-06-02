@@ -71,8 +71,8 @@ def PrintBarcode(IP, ID, Barcode, Name, Price):
     print("Barcode")
 
     ID = str(ID)
+    ID = ID[0] + ID[1] + " " + ID[2] + ID[3] + " " + ID[4] + ID[5]
     Barcode = str(Barcode)
-    Barcode = Barcode[0] + Barcode[1] + " " + Barcode[2] + Barcode[3] + " " + Barcode[4] + Barcode[5]
     Name = str(Name)
     Price = str(Price) + " Euro"
 
