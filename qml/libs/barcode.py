@@ -81,7 +81,7 @@ def PrintBarcode(IP, ID, Barcode, Name, Price):
     BarcodeString = "^FD" + Barcode + "^FS"
     Barcode = BarcodePos + BarcodeType + BarcodeString
 
-    IDPos = "^FO120,30^BY2"
+    IDPos = "^FO100,30^BY2"
     IDText = "^ACB^FD" + ID + "^FS"  # ^AOB^FD
     ID = IDPos + IDText
 
